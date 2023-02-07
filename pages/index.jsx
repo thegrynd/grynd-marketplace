@@ -8,9 +8,12 @@ import Section3 from "pages-sections/landing/Section3";
 import Section4 from "pages-sections/landing/Section4";
 import Section6 from "pages-sections/landing/Section6";
 import Section5 from "pages-sections/landing/Section5";
+
 const IndexPage = () => {
   const [filterDemo, setFilterDemo] = useState("");
-  return <Box id="top" overflow="hidden" bgcolor="background.paper">
+
+  return (
+    <Box id="top" overflow="hidden" bgcolor="background.paper">
       <Section1 />
       <Section6 setFilterDemo={setFilterDemo} />
       <Section2 />
@@ -19,6 +22,7 @@ const IndexPage = () => {
       <Section4 />
       <Footer />
       <Setting />
-    </Box>;
+    </Box>
+  );
 };
 export default IndexPage;
