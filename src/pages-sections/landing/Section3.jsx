@@ -43,13 +43,13 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
         }}
       >
         <Box maxWidth="830px" mx="auto" mb="2.5rem" textAlign="center">
-          <H4 color="primary.main" fontSize="58px" fontWeight="900">
+          {/* <H4 color="primary.main" fontSize="58px" fontWeight="900">
             58+
           </H4>
 
           <Paragraph color="primary.main" fontSize="18px">
             Server side rendered
-          </Paragraph>
+          </Paragraph> */}
 
           <H2
             mb={4}
@@ -59,7 +59,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
             color="secondary.main"
             textTransform="uppercase"
           >
-            Demos & Pages
+            Products and Categories
           </H2>
         </Box>
 
