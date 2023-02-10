@@ -8,6 +8,7 @@ import Section3 from "pages-sections/landing/Section3";
 import Section4 from "pages-sections/landing/Section4";
 import Section6 from "pages-sections/landing/Section6";
 import Section5 from "pages-sections/landing/Section5";
+import Footer1 from "../src/components/footer/Footer1";
 
 const IndexPage = () => {
   const [filterDemo, setFilterDemo] = useState("");
@@ -22,6 +23,7 @@ const IndexPage = () => {
       <Section4 />
       <Footer />
       <Setting />
+      <Footer1 />
     </Box>
   );
 };
