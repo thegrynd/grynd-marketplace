@@ -1,7 +1,6 @@
 import React from "react";
 import { FlexBox } from "components/flex-box";
 import Avatar from "@mui/material/Avatar";
-import Image from "next/image";
 
 const TestimonialCard = ({ src }) => {
   return (
