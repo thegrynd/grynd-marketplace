@@ -108,7 +108,7 @@ const Header = () => {
                 >
                   <Typography
                     className="link"
-                    color="grey.600"
+                    color="#066344"
                     p="0.25rem 1.25rem"
                   >
                     Features
@@ -123,22 +123,29 @@ const Header = () => {
                 >
                   <Typography
                     className="link"
-                    color="grey.600"
+                    color="#066344"
                     p="0.25rem 1.25rem"
                   >
-                    Demos
+                    Products
                   </Typography>
                 </Scroll>
 
-                <a href="https://bazaar-doc.netlify.app/" target="__blank">
+                {/* <a href="https://bazaar-doc.netlify.app/" target="__blank"> */}
+                <Scroll
+                  to="#"
+                  duration={400}
+                  offset={-headerHeight - 16}
+                  smooth={true}
+                >
                   <Typography
                     className="link"
-                    color="grey.600"
+                    color="#066344"
                     p="0.25rem 1.25rem"
                   >
-                    Documentation
+                    Testimonials
                   </Typography>
-                </a>
+                </Scroll>
+                {/* </a> */}
               </FlexBox>
 
               {!downSM && (

@@ -4,35 +4,35 @@ import { H2, Paragraph } from "components/Typography";
 import Router from "next/router";
 const list = [
   {
-    title: "Niche Demos",
-    thumbnail: "/assets/images/landing/niche-demos.png",
+    title: "Tubers",
+    thumbnail: "/assets/images/landing/yam.png",
     subTitle:
       "9 Niche shop demos for online store. Super store, Fashion, Electronic, Grocery and etc",
     category: "homepage",
-    buttonText: "Browse Demos",
+    buttonText: "Browse Tubers",
   },
   {
-    title: "Shop Pages",
-    thumbnail: "/assets/images/landing/inner-pages.png",
+    title: "Veggies",
+    thumbnail: "/assets/images/landing/habanero.png",
     subTitle:
       "Clean Shop inner pages. Vendor shop, Sale/discount pages, checkout, cart and etc.",
     category: "shop",
-    buttonText: "Browse Pages",
+    buttonText: "Browse Veggies",
   },
   {
-    title: "User Dashboard",
-    thumbnail: "/assets/images/landing/user-dashboard.png",
+    title: "Fruits",
+    thumbnail: "/assets/images/landing/plantain.png",
     subTitle:
       "Structured user dashboard for managing user account, orders, address and etc.",
     category: "user",
-    buttonText: "Browse User Dashboard",
+    buttonText: "Browse Fruits",
   },
   {
-    title: "Admin Dashboard",
-    thumbnail: "/assets/images/landing/admin-dashboard.png",
+    title: "Cash crops",
+    thumbnail: "/assets/images/landing/avocado.jpg",
     subTitle: "30+ Super admin and vendor dashboard interfaces.",
     category: "admin",
-    buttonText: "Browse Admin Dashboard",
+    buttonText: "Browse Cash crops",
   },
 ];
 
@@ -61,11 +61,11 @@ const Section6 = ({ setFilterDemo }) => {
           fontSize={28}
           textAlign="center"
           fontWeight="700"
-          color="secondary.main"
+          color="primary"
           mb={8}
           textTransform="uppercase"
         >
-          What You Get?
+          Check out products that suit your need
         </H2>
 
         <Grid container spacing={6}>
@@ -94,7 +94,7 @@ const Section6 = ({ setFilterDemo }) => {
                 />
 
                 <FlexBox flexDirection="column" alignItems="flex-start">
-                  <H2 fontSize={22} mb={1}>
+                  <H2 fontSize={22} mb={1} color="green">
                     {item.title}
                   </H2>
                   <Paragraph mb={2}>{item.subTitle}</Paragraph>
