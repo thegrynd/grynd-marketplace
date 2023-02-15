@@ -13,6 +13,7 @@ import {
   BsFillHandThumbsUpFill,
 } from "react-icons/bs";
 import { MdPayment } from "react-icons/md";
+import Link from "next/link";
 
 const Section1 = () => {
   return (
@@ -100,20 +101,22 @@ const Section1 = () => {
 
           <FlexBox justifyContent="center" mb={3}>
             <Scroll to="get" duration={400} offset={-72 - 16} smooth={true}>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="large"
-                sx={{
-                  m: "0.5rem",
-                  ":hover": {
-                    backgroundColor: "#DC143C",
-                    color: "black",
-                  },
-                }}
-              >
-                Create Seller Account
-              </Button>
+              <Link href="#">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{
+                    m: "0.5rem",
+                    ":hover": {
+                      backgroundColor: "#DC143C",
+                      color: "black",
+                    },
+                  }}
+                >
+                  Create Seller Account
+                </Button>
+              </Link>
             </Scroll>
 
             <Scroll to="demos" duration={400} offset={-72 - 16} smooth={true}>

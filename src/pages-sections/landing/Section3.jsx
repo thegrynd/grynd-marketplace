@@ -32,8 +32,18 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
       mb={14}
       id="demos"
       sx={{
-        background:
-          "url(/assets/images/landing/landing-bg-2.svg) center/contain no-repeat",
+        position: "relative",
+        ":before": {
+          content: `""`,
+          background:
+            "url(/assets/images/landing/gryndlogo.svg) center/contain no-repeat",
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          opacity: 0.1,
+        },
       }}
     >
       <Container
@@ -58,6 +68,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
             textAlign="center"
             color="secondary.main"
             textTransform="uppercase"
+            id="products"
           >
             Products and Categories
           </H2>
@@ -79,7 +90,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
                 onClick={() => setFilterDemo("homepage")}
                 selected={filterDemo === "homepage" ? 1 : 0}
               >
-                Homepages
+                Tubers
               </FilterButton>
 
               <FilterButton
@@ -87,7 +98,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
                 onClick={() => setFilterDemo("shop")}
                 selected={filterDemo === "shop" ? 1 : 0}
               >
-                Shop
+                Veggies
               </FilterButton>
 
               <FilterButton
@@ -95,7 +106,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
                 onClick={() => setFilterDemo("user")}
                 selected={filterDemo === "user" ? 1 : 0}
               >
-                User Dashboard
+                Fruits
               </FilterButton>
 
               <FilterButton
@@ -103,7 +114,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
                 onClick={() => setFilterDemo("admin")}
                 selected={filterDemo === "admin" ? 1 : 0}
               >
-                Admin Dashboard
+                Cash crops
               </FilterButton>
             </FlexRowCenter>
           </Grid>
@@ -119,8 +130,8 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
             ))}
         </Grid>
 
-        <Link href="https://tinyurl.com/get-bazaar" passHref legacyBehavior>
-          <a>
+        <Link href="../vendor/upload-product" passHref legacyBehavior>
+          <a target="_blank">
             <Button
               color="primary"
               variant="contained"
@@ -129,9 +140,10 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
                 mt: "2.25rem",
                 display: "block",
                 minWidth: "125px",
+                backgroundColor: "#066344",
               }}
             >
-              Purchase Now
+              Upload Your Product
             </Button>
           </a>
         </Link>
@@ -141,7 +153,7 @@ const Section3 = ({ filterDemo, setFilterDemo }) => {
 };
 const demoPageList = [
   {
-    imgUrl: "/assets/images/landing/home/super-store.jpg",
+    imgUrl: "/assets/images/landing/categories/yam.png",
     previewUrl: "/market-1",
     title: (
       <>
@@ -151,7 +163,7 @@ const demoPageList = [
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/market-2.jpg",
+    imgUrl: "/assets/images/landing/categories/habanero.png",
     previewUrl: "/market-2",
     title: (
       <>
@@ -162,7 +174,7 @@ const demoPageList = [
     status: "New",
   },
   {
-    imgUrl: "/assets/images/landing/home/fashion-2.jpg",
+    imgUrl: "/assets/images/landing/categories/irish-potato.jpg",
     previewUrl: "/fashion-shop-2",
     title: (
       <>
@@ -173,13 +185,13 @@ const demoPageList = [
     status: "New",
   },
   {
-    imgUrl: "/assets/images/landing/home/gift-shop.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/gift-shop",
     title: "Gift",
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/grocery1.jpg",
+    imgUrl: "/assets/images/landing/categories/greenchilli.png",
     previewUrl: "/grocery1",
     title: (
       <>
@@ -189,19 +201,19 @@ const demoPageList = [
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/gadget-electronics.jpg",
+    imgUrl: "/assets/images/landing/categories/greenchilli.png",
     previewUrl: "/gadget-shop",
     title: "Gadget & Electronics",
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/furniture.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/furniture-shop",
     title: "Furniture",
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/grocery2.jpg",
+    imgUrl: "/assets/images/landing/categories/irish-potato.jpg",
     previewUrl: "/grocery2",
     title: (
       <>
@@ -211,7 +223,7 @@ const demoPageList = [
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/grocery3.jpg",
+    imgUrl: "/assets/images/landing/categories/habanero.png",
     previewUrl: "/grocery3",
     title: (
       <>
@@ -221,13 +233,13 @@ const demoPageList = [
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/healthbeauty.jpg",
+    imgUrl: "/assets/images/landing/categories/greenchilli.png",
     previewUrl: "/healthbeauty-shop",
     title: "Health and Beauty",
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/page-3.png",
+    imgUrl: "/assets/images/landing/categories/yam.png",
     previewUrl: "/fashion-shop-1",
     title: (
       <>
@@ -237,7 +249,7 @@ const demoPageList = [
     page: "homepage",
   },
   {
-    imgUrl: "/assets/images/landing/home/fashion-3.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/fashion-shop-3",
     title: (
       <>
@@ -250,19 +262,19 @@ const demoPageList = [
 ];
 const shopPageList = [
   {
-    imgUrl: "/assets/images/landing/shop/sale-page-1.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/sale-page-1",
     title: "Sale Page",
     page: "shop",
   },
   {
-    imgUrl: "/assets/images/landing/shop/sale-page-2.jpg",
+    imgUrl: "/assets/images/landing/categories/yam.png",
     previewUrl: "/sale-page-2",
     title: "Sale Page (Small Navigation)",
     page: "shop",
   },
   {
-    imgUrl: "/assets/images/landing/shop/vendor-store.jpg",
+    imgUrl: "/assets/images/landing/categories/irish-potato.jpg",
     previewUrl: "/shops/scarlett-beauty",
     title: "Vendor Shop",
     page: "shop",
@@ -270,21 +282,21 @@ const shopPageList = [
 ];
 const vendorPageList = [
   {
-    imgUrl: "/assets/images/landing/vendor/dashboard.jpg",
+    imgUrl: "/assets/images/landing/categories/irish-potato.jpg",
     previewUrl: "/vendor/dashboard",
     title: "Dashboard",
     status: "New",
     page: "admin",
   },
   {
-    imgUrl: "/assets/images/landing/vendor/product-list.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/admin/products",
     title: "Product List",
     status: "New",
     page: "admin",
   },
   {
-    imgUrl: "/assets/images/landing/vendor/create-product.jpg",
+    imgUrl: "/assets/images/landing/categories/plantain.png",
     previewUrl: "/admin/products/create",
     title: "Create Product",
     status: "New",
@@ -293,7 +305,7 @@ const vendorPageList = [
 ];
 const customerPageList = [
   {
-    imgUrl: "/assets/images/landing/customer/profile.jpg",
+    imgUrl: "/assets/images/landing/categories/greenchilli.png",
     previewUrl: "/profile",
     title: "Profile",
     page: "user",

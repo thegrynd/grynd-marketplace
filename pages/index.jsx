@@ -21,9 +21,8 @@ const IndexPage = () => {
       <Section5 />
       <Section3 filterDemo={filterDemo} setFilterDemo={setFilterDemo} />
       <Section4 />
-      <Footer />
       <Setting />
-      <Footer1 />
+      <Footer />
     </Box>
   );
 };
