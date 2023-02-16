@@ -101,7 +101,7 @@ const Section1 = () => {
 
           <FlexBox justifyContent="center" mb={3}>
             <Scroll to="get" duration={400} offset={-72 - 16} smooth={true}>
-              <Link href="#">
+              <Link href="/vendor/signup-user">
                 <Button
                   variant="outlined"
                   color="primary"

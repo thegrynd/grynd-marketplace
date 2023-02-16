@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "contexts/AuthContext";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Button, Grid, TextField } from "@mui/material";
@@ -15,6 +16,11 @@ const validationSchema = yup.object().shape({
 });
 
 const SignUpForm = () => {
+  const [user, setUser] = useContext(AuthContext);
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   const initialValues = {
     email: "",
     password: "",
