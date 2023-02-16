@@ -112,7 +112,7 @@ const Footer1 = () => {
                 <Box py={0.6} mb={2} color="grey.500">
                   Phone: +234 8140165999
                 </Box>
-
+                {/* 
                 <FlexBox className="flex" mx={-0.625}>
                   {iconList.map((item, ind) => (
                     <a
@@ -138,7 +138,7 @@ const Footer1 = () => {
                       </IconButton>
                     </a>
                   ))}
-                </FlexBox>
+                </FlexBox> */}
               </Grid>
             </Grid>
           </Box>
