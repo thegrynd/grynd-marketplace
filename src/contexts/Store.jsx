@@ -7,7 +7,7 @@ const Store = ({ children }) => {
   const [user, setUser] = useState([]);
 
   const url = "https://gryndtech.com";
-  const header = {
+  const headers = {
     "Content-Type": "application/json",
   };
 
@@ -19,7 +19,7 @@ const Store = ({ children }) => {
           email: "seller1@gmail.com",
           password: "password$1",
         },
-        header
+        headers
       )
       .then(
         (response) => {

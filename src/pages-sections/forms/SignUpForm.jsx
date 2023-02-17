@@ -27,7 +27,8 @@ const SignUpForm = () => {
   };
 
   const handleFormSubmit = async (values) => {
-    console.log(values);
+    values.preventDefault();
+    console.log("hey", values);
   };
   return (
     <Formik
@@ -45,7 +46,7 @@ const SignUpForm = () => {
         isSubmitting,
       }) => (
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleFormSubmit}
           encType="multipart/form-data"
           style={{
             marginTop: "5rem",
