@@ -17,6 +17,7 @@ import { FlexBox } from "components/flex-box";
 import Sidenav from "components/Sidenav";
 import debounce from "lodash/debounce";
 import Link from "next/link";
+
 const headerHeight = 72;
 const slideFromTop = keyframes`
 from { top: -${headerHeight}px; }
@@ -116,7 +117,7 @@ const Header = () => {
                 </Scroll>
 
                 <Scroll
-                  to="demos"
+                  to="products"
                   duration={400}
                   offset={-headerHeight - 16}
                   smooth={true}
@@ -132,7 +133,7 @@ const Header = () => {
 
                 {/* <a href="https://bazaar-doc.netlify.app/" target="__blank"> */}
                 <Scroll
-                  to="#"
+                  to="testimonials"
                   duration={400}
                   offset={-headerHeight - 16}
                   smooth={true}
@@ -149,8 +150,8 @@ const Header = () => {
               </FlexBox>
 
               {!downSM && (
-                <a target="__blank" href="https://tinyurl.com/get-bazaar">
-                  <Button variant="outlined">Sign Up</Button>
+                <a target="__blank" href="./vendor/login-user">
+                  <Button variant="outlined">Login</Button>
                 </a>
               )}
 

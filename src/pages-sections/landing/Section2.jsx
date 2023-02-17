@@ -55,8 +55,9 @@ const Section2 = () => {
         textAlign="center"
         color="secondary.main"
         textTransform="uppercase"
+        id="features"
       >
-        Powerful Features
+        Features
       </H2>
     </Container>
   );
