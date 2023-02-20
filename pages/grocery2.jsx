@@ -4,7 +4,6 @@ import Setting from "components/Setting";
 import { Footer2 } from "components/footer";
 import Scrollbar from "components/Scrollbar";
 import Newsletter from "components/Newsletter";
-import ShopLayout2 from "components/layouts/ShopLayout2";
 import SidenavContainer from "components/SidenavContainer";
 import { MobileNavigationBar2 } from "components/mobile-navigation";
 import Grocery2SideNav from "components/page-sidenav/Grocery2Sidenav";
@@ -17,12 +16,18 @@ import ProductCarousel from "pages-sections/grocery2/ProductCarousel";
 import api from "utils/__api__/grocery2-shop";
 // ========================================================
 
-const Grocery2 = props => {
-  return <ShopLayout2 showTopbar={false}>
+const Grocery2 = (props) => {
+  return (
+    <>
       <SEO title="Grocery store template v2" />
       <Box id="grocerySection" />
 
-      <SidenavContainer navFixedComponentID="grocerySection" SideNav={() => <Grocery2SideNav groceryNavigation={props.navigationList} />}>
+      <SidenavContainer
+        navFixedComponentID="grocerySection"
+        SideNav={() => (
+          <Grocery2SideNav groceryNavigation={props.navigationList} />
+        )}
+      >
         <Stack spacing={6}>
           {/* TOP HERO AREA */}
           <Section1 carouselData={props.mainCarouselData} />
@@ -34,19 +39,31 @@ const Grocery2 = props => {
           <Section3 categories={props.categories} />
 
           {/* FEATURED ITEMS AREA */}
-          <ProductCarousel title="Featured Items" products={props.featuredProducts} />
+          <ProductCarousel
+            title="Featured Items"
+            products={props.featuredProducts}
+          />
 
           {/* BEST SELLER IN YOUR AREA */}
-          <ProductCarousel title="Best Seller in Your Area" products={props.bestSellProducts} />
+          <ProductCarousel
+            title="Best Seller in Your Area"
+            products={props.bestSellProducts}
+          />
 
           {/* DISCOUNT BANNER AREA */}
           <Section6 cardList={props.discountBanners} />
 
           {/* BEST OF HOME ESSENTIALS PRODUCTS AREA  */}
-          <ProductCarousel title="Best of Home Essentials" products={props.bestHomeProducts} />
+          <ProductCarousel
+            title="Best of Home Essentials"
+            products={props.bestHomeProducts}
+          />
 
           {/* SNACKS-DRINKS-DAIRY PRODUCTS AREA */}
-          <ProductCarousel title="Snacks, Drinks, Dairy & More" products={props.dairyProducts} />
+          <ProductCarousel
+            title="Snacks, Drinks, Dairy & More"
+            products={props.dairyProducts}
+          />
 
           {/* CLIENT TESTIMONIALS AREA */}
           <Section9 testimonials={props.testimonials} />
@@ -68,7 +85,8 @@ const Grocery2 = props => {
           <Grocery2SideNav groceryNavigation={props.navigationList} />
         </Scrollbar>
       </MobileNavigationBar2>
-    </ShopLayout2>;
+    </>
+  );
 };
 export const getStaticProps = async () => {
   const serviceList = await api.getServices();
@@ -92,8 +110,8 @@ export const getStaticProps = async () => {
       featuredProducts,
       bestSellProducts,
       bestHomeProducts,
-      mainCarouselData
-    }
+      mainCarouselData,
+    },
   };
 };
 export default Grocery2;
