@@ -3,7 +3,6 @@ import SEO from "components/SEO";
 import Setting from "components/Setting";
 import { Footer3 } from "components/footer";
 import Newsletter from "components/Newsletter";
-import ShopLayout2 from "components/layouts/ShopLayout2";
 import SidenavContainer from "components/SidenavContainer";
 import { MobileNavigationBar2 } from "components/mobile-navigation";
 import HealthBeautySidenav from "components/page-sidenav/HealthBeautySideNav";
@@ -15,15 +14,19 @@ import Section5 from "pages-sections/health-beauty/Section5";
 import api from "utils/__api__/healthbeauty-shop";
 // ===============================================
 
-const HealthAndBeauty = props => {
-  return <ShopLayout2>
+const HealthAndBeauty = (props) => {
+  return (
+    <>
       <SEO title="Health & beauty shop template" />
       {/* TOP HERO CAROUSEL AREA */}
       <Box id="healthBeautySection1">
         <Section1 carouselData={props.mainCarouselData} />
       </Box>
 
-      <SidenavContainer navFixedComponentID="healthBeautySection1" SideNav={() => <HealthBeautySidenav navList={props.navigationList} />}>
+      <SidenavContainer
+        navFixedComponentID="healthBeautySection1"
+        SideNav={() => <HealthBeautySidenav navList={props.navigationList} />}
+      >
         <Stack spacing={6}>
           {/* BANNER AREA */}
           <Section2 />
@@ -38,10 +41,13 @@ const HealthAndBeauty = props => {
           <Section5 services={props.serviceList} />
 
           {/* FOOTER AREA */}
-          <Footer3 id="footer" sx={{
-          borderRadius: "8px",
-          backgroundColor: "primary.800"
-        }} />
+          <Footer3
+            id="footer"
+            sx={{
+              borderRadius: "8px",
+              backgroundColor: "primary.800",
+            }}
+          />
         </Stack>
       </SidenavContainer>
 
@@ -55,7 +61,8 @@ const HealthAndBeauty = props => {
       <MobileNavigationBar2>
         <HealthBeautySidenav navList={props.navigationList} />
       </MobileNavigationBar2>
-    </ShopLayout2>;
+    </>
+  );
 };
 export const getStaticProps = async () => {
   const serviceList = await api.getServices();
@@ -69,8 +76,8 @@ export const getStaticProps = async () => {
       allProducts,
       topNewProducts,
       navigationList,
-      mainCarouselData
-    }
+      mainCarouselData,
+    },
   };
 };
 export default HealthAndBeauty;
