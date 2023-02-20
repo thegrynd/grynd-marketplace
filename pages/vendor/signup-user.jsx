@@ -4,9 +4,7 @@ import Store from "../../src/contexts/Store";
 const signupUser = () => {
   return (
     <div>
-      <Store>
-        <SignUpForm />
-      </Store>
+      <SignUpForm />
     </div>
   );
 };

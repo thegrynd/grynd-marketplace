@@ -14,11 +14,14 @@ import {
 } from "react-icons/bs";
 import { MdPayment } from "react-icons/md";
 import Link from "next/link";
+import Store from "contexts/Store";
 
 const Section1 = () => {
   return (
     <Box>
-      <Header />
+      <Store>
+        <Header />
+      </Store>
 
       <Container
         id="section-1"
