@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useContext } from "react";
 import { Link as Scroll } from "react-scroll";
 import {
   Box,
@@ -17,6 +17,14 @@ import { FlexBox } from "components/flex-box";
 import Sidenav from "components/Sidenav";
 import debounce from "lodash/debounce";
 import Link from "next/link";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { LoginContext } from "contexts/LoginContext";
+import { Small } from "components/Typography";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+
 const headerHeight = 72;
 const slideFromTop = keyframes`
 from { top: -${headerHeight}px; }
@@ -55,6 +63,10 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 const Header = () => {
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const router = useRouter();
+  const { data: authUser } = getAuthUser;
+  console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
   const downSM = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -68,6 +80,28 @@ const Header = () => {
     window.addEventListener("scroll", scrollListener);
     return () => window.removeEventListener("scroll", scrollListener);
   }, [scrollListener]);
+
+  // text for user chip
+  const AvatarText = () => {
+    return (
+      <>
+        <Small fontSize="10px">
+          <span style={{ color: "red", fontWeight: 700 }}>
+            {" "}
+            {`${authUser.data.firstname} ${authUser.data.surname}`}
+          </span>
+          <br />
+          <div> {authUser.data.username ?? "User"}</div>
+        </Small>
+      </>
+    );
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("authToken");
+    router.push("/");
+  };
+
   return (
     <Fragment>
       <HeaderWrapper>
@@ -116,7 +150,7 @@ const Header = () => {
                 </Scroll>
 
                 <Scroll
-                  to="demos"
+                  to="products"
                   duration={400}
                   offset={-headerHeight - 16}
                   smooth={true}
@@ -132,7 +166,7 @@ const Header = () => {
 
                 {/* <a href="https://bazaar-doc.netlify.app/" target="__blank"> */}
                 <Scroll
-                  to="#"
+                  to="testimonials"
                   duration={400}
                   offset={-headerHeight - 16}
                   smooth={true}
@@ -148,10 +182,77 @@ const Header = () => {
                 {/* </a> */}
               </FlexBox>
 
-              {!downSM && (
-                <a target="__blank" href="https://tinyurl.com/get-bazaar">
-                  <Button variant="outlined">Sign Up</Button>
+              {!downSM && authUser?.success === false ? (
+                <a target="__blank" href="./vendor/login-user">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "green",
+                      color: "white",
+                      "&:hover": {
+                        color: "black",
+                        backgroundColor: "grey",
+                      },
+                    }}
+                  >
+                    Log In
+                  </Button>
                 </a>
+              ) : !downSM && authUser?.success === undefined ? (
+                <a target="__blank" href="./vendor/login-user">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "green",
+                      color: "white",
+                      "&:hover": {
+                        color: "black",
+                        backgroundColor: "grey",
+                      },
+                    }}
+                  >
+                    Log In
+                  </Button>
+                </a>
+              ) : !downSM && authUser?.success === true ? (
+                // <a target="__blank" href="./vendor/login-user">
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "green",
+                    color: "white",
+                    "&:hover": {
+                      color: "black",
+                      backgroundColor: "grey",
+                    },
+                  }}
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </Button>
+              ) : (
+                ""
+              )}
+
+              {authUser?.success === true && (
+                <Stack direction="row" spacing={1} ml="1rem">
+                  {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
+                  <Chip
+                    avatar={
+                      <Avatar
+                        alt={authUser.data.username ?? "Logged in user"}
+                        src={
+                          authUser.data.avatar.url
+                            ? authUser.data.avatar.url
+                            : ""
+                        }
+                      />
+                    }
+                    label={<AvatarText />}
+                    variant="outlined"
+                    sx={{ boxSizing: "border-box", padding: "1rem 0" }}
+                  />
+                </Stack>
               )}
 
               {/* mobile menu */}

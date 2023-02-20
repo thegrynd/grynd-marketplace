@@ -4,7 +4,7 @@ import { Box, Card, styled, Tab } from "@mui/material";
 import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import TopbarForm from "pages-sections/site-settings/TopbarForm";
 import FooterForm from "pages-sections/site-settings/FooterForm";
-import GeneralForm from "pages-sections/site-settings/GeneralForm";
+// import GeneralForm from "pages-sections/site-settings/GeneralForm";
 import BannerSlider from "pages-sections/site-settings/BannerSlider";
 import ShippingVatForm from "pages-sections/site-settings/ShippingVatForm";
 import SocialLinksForm from "pages-sections/site-settings/SocialLinksForm";
@@ -13,17 +13,15 @@ import SocialLinksForm from "pages-sections/site-settings/SocialLinksForm";
 const StyledTabPanel = styled(TabPanel)({
   paddingLeft: 0,
   paddingRight: 0,
-  paddingBottom: 0
+  paddingBottom: 0,
 });
-const StyledTabList = styled(TabList)(({
-  theme
-}) => ({
+const StyledTabList = styled(TabList)(({ theme }) => ({
   "& .MuiTab-root.Mui-selected": {
-    color: theme.palette.info.main
+    color: theme.palette.info.main,
   },
   "& .MuiTabs-indicator": {
-    background: theme.palette.info.main
-  }
+    background: theme.palette.info.main,
+  },
 }));
 
 // =============================================================================
@@ -34,17 +32,25 @@ SiteSettings.getLayout = function getLayout(page) {
 
 export default function SiteSettings() {
   const [selectTab, setSelectTab] = useState("general");
-  return <Box py={4}>
-      <Card sx={{
-      px: 3,
-      py: 2
-    }}>
+  return (
+    <Box py={4}>
+      <Card
+        sx={{
+          px: 3,
+          py: 2,
+        }}
+      >
         <TabContext value={selectTab}>
-          <Box sx={{
-          borderBottom: 1,
-          borderColor: "grey.300"
-        }}>
-            <StyledTabList onChange={(_, value) => setSelectTab(value)} variant="scrollable">
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "grey.300",
+            }}
+          >
+            <StyledTabList
+              onChange={(_, value) => setSelectTab(value)}
+              variant="scrollable"
+            >
               <Tab label="General" value="general" disableRipple />
               <Tab label="Topbar" value="topbar" disableRipple />
               <Tab label="Footer" value="footer" disableRipple />
@@ -54,9 +60,9 @@ export default function SiteSettings() {
             </StyledTabList>
           </Box>
 
-          <StyledTabPanel value="general">
+          {/* <StyledTabPanel value="general">
             <GeneralForm />
-          </StyledTabPanel>
+          </StyledTabPanel> */}
 
           <StyledTabPanel value="topbar">
             <TopbarForm />
@@ -79,5 +85,6 @@ export default function SiteSettings() {
           </StyledTabPanel>
         </TabContext>
       </Card>
-    </Box>;
+    </Box>
+  );
 }

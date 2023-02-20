@@ -1,9 +1,6 @@
 import { Box, Card, Container, Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import TestimonialCard from "components/carousel-cards/TestimonialCard";
 import Carousel from "components/carousel/Carousel";
-import { FlexBox } from "components/flex-box";
-import LazyImage from "components/LazyImage";
 import { H3, H4 } from "components/Typography";
 
 const Section4 = () => {
@@ -27,6 +24,7 @@ const Section4 = () => {
         color="secondary.main"
         mb={8}
         textTransform="uppercase"
+        id="testimonials"
       >
         Testimonials
       </H3>

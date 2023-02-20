@@ -92,6 +92,7 @@ export const H3 = ({
     </StyledBox>
   );
 };
+
 export const H4 = ({
   children,
   className,
@@ -135,7 +136,7 @@ export const H5 = ({
       component="h5"
       mb={0}
       mt={0}
-      fontSize="16px"
+      fontSize="12px"
       fontWeight="600"
       lineHeight="1.5"
       {...props}
