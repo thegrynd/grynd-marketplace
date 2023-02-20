@@ -98,17 +98,6 @@ const Header = ({ isFixed, className, searchInput }) => {
               <MobileMenu />
             </Box>
 
-            {/* MIDDLE CONTENT - LOGO */}
-            <Link href="/">
-              <a>
-                <Image
-                  height={44}
-                  src="/assets/images/gryndlogo.svg"
-                  alt="logo"
-                />
-              </a>
-            </Link>
-
             {/* RIGHT CONTENT - LOGIN, CART, SEARCH BUTTON */}
             <FlexBox justifyContent="end" flex={1}>
               <Box component={IconButton} onClick={toggleSearchBar}>
@@ -167,16 +156,6 @@ const Header = ({ isFixed, className, searchInput }) => {
       <StyledContainer>
         {/* LEFT CONTENT - LOGO AND CATEGORY */}
         <FlexBox mr={2} minWidth="170px" alignItems="center">
-          <Link href="/">
-            <a>
-              <Image
-                height={44}
-                src="/assets/images/gryndlogo.svg"
-                alt="logo"
-              />
-            </a>
-          </Link>
-
           {/* SHOW DROP DOWN CATEGORY BUTTON WHEN HEADER FIXED */}
           {isFixed && (
             <CategoryMenu>

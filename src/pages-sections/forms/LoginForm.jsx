@@ -3,20 +3,12 @@ import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-import * as yup from "yup";
+import * as Yup from "yup";
 import { Button, Grid, TextField } from "@mui/material";
 import { H3 } from "components/Typography";
 import { H5 } from "components/Typography";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-// form field validation
-const validationSchema = yup.object().shape({
-  cropName: yup.string().required("crop name is required"),
-  cropSize: yup.string().required("crop size is required"),
-  cropCategory: yup.string().required("select a category for the crop"),
-  cropDescription: yup.string().required("crop description is required"),
-});
 
 const LoginForm = () => {
   const router = useRouter();

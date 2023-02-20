@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "contexts/LoginContext";
 import { useFormik } from "formik";
-import * as yup from "yup";
+import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Button, Grid, TextField } from "@mui/material";
@@ -17,22 +17,8 @@ import "react-phone-number-input/style.css";
 import { useRouter } from "next/router";
 import PhoneInput from "react-phone-number-input";
 
-// form field validation
-const validationSchema = yup.object().shape({
-  username: yup.string().required("Username is required"),
-  surname: yup.string().required("Please fill in your surname"),
-  firstname: yup.string().required("Please fill in your first name"),
-  email: yup.string().required("email is required"),
-  gender: yup.string().required("Please select your gender"),
-  phone: yup.string().required("Please "),
-  password: yup.string().required("username is required"),
-  country: yup.string().required("username is required"),
-  referralCode: yup.string().optional(),
-});
-
 const SignUpForm = () => {
   const router = useRouter();
-  const [value, setValue] = useState();
 
   const submitData = async (values) => {
     const url = "https://grynd-staging.vercel.app";
@@ -47,7 +33,7 @@ const SignUpForm = () => {
       })
       .then((response) => {
         console.log("response", response);
-        if (response.status === true) {
+        if (response.data.status === true) {
           router.push("/vendor/login-user");
         }
       })
@@ -67,6 +53,33 @@ const SignUpForm = () => {
       firstname: "",
       referralCode: "",
     },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .max(15, "Must be 15 characters or less")
+        .required("Required"),
+      firstname: Yup.string()
+        .max(20, "Must be 20 characters or less")
+        .required("Required"),
+      surname: Yup.string()
+        .max(20, "Must be 20 characters or less")
+        .required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      gender: Yup.string().required("Please select your gender"),
+      password: Yup.string()
+        .min(
+          8,
+          "Password must include a special character eg: @ ? & $ and must be at least 8 characters"
+        )
+        .max(20)
+        .required(),
+      phone: Yup.string()
+        .matches(
+          /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+          "Phone number is not valid"
+        )
+        .required(),
+      country: Yup.string().required("Country is required"),
+    }),
     onSubmit: async (values) => {
       submitData(values);
     },
@@ -111,6 +124,9 @@ const SignUpForm = () => {
             // error={!!formik. && !!errors.username}
             // helperText={touched.username && errors.username}
           />
+          {formik.touched.username && formik.errors.username ? (
+            <div>{formik.errors.username}</div>
+          ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
           <TextField
@@ -127,6 +143,9 @@ const SignUpForm = () => {
             // error={!!touched.firstname && !!errors.firstname}
             // helperText={touched.firstname && errors.firstname}
           />
+          {formik.touched.firstname && formik.errors.firstname ? (
+            <div>{formik.errors.firstname}</div>
+          ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
           <TextField
@@ -143,6 +162,9 @@ const SignUpForm = () => {
             // error={!!touched.surname && !!errors.surname}
             // helperText={touched.surname && errors.surname}
           />
+          {formik.touched.surname && formik.errors.surname ? (
+            <div>{formik.errors.surname}</div>
+          ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
           <TextField
@@ -159,6 +181,9 @@ const SignUpForm = () => {
             // error={!!touched.email && !!errors.email}
             // helperText={touched.email && errors.email}
           />
+          {formik.touched.email && formik.errors.email ? (
+            <div>{formik.errors.email}</div>
+          ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
@@ -175,23 +200,11 @@ const SignUpForm = () => {
               <MenuItem value="Female">Female</MenuItem>
             </Select>
           </FormControl>
+          {formik.touched.gender && formik.errors.gender ? (
+            <div>{formik.errors.gender}</div>
+          ) : null}
         </Grid>
-        {/* <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            type="tel"
-            color="info"
-            size="medium"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            name="phone"
-            id="phone"
-            label="Phone"
-            value={formik.values.phone}
-            // error={!!touched.phone && !!errors.phone}
-            // helperText={touched.phone && errors.phone}
-          />
-        </Grid> */}
+
         <Grid item md={6} xs={12}>
           <TextField
             fullWidth
@@ -207,6 +220,9 @@ const SignUpForm = () => {
             // error={!!touched.password && !!errors.password}
             // helperText={touched.password && errors.password}
           />
+          {formik.touched.password && formik.errors.password ? (
+            <div>{formik.errors.password}</div>
+          ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
           <TextField
@@ -223,15 +239,37 @@ const SignUpForm = () => {
             // error={!!touched.country && !!errors.country}
             // helperText={touched.country && errors.country}
           />
+          {formik.touched.country && formik.errors.country ? (
+            <div>{formik.errors.country}</div>
+          ) : null}
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <TextField
+            fullWidth
+            type="tel"
+            color="info"
+            size="medium"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            name="phone"
+            id="phone"
+            label="Phone"
+            value={formik.values.phone}
+            // error={!!touched.phone && !!errors.phone}
+            // helperText={touched.phone && errors.phone}
+          />
+          {formik.touched.phone && formik.errors.phone ? (
+            <div>{formik.errors.phone}</div>
+          ) : null}
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        {/* <Grid item md={6} xs={12}>
           <PhoneInput
             placeholder="+234080000000000"
-            value={value}
-            onChange={setValue}
+            value={formik.values.phone}
+            onChange={formik.handleChange}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item md={6} xs={12}>
           <TextField
@@ -263,7 +301,7 @@ const SignUpForm = () => {
               },
             }}
           >
-            Login
+            Sign Up For Grynd
           </Button>
         </Grid>
         <Grid item xs={12}>

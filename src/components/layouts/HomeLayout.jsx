@@ -16,21 +16,18 @@ import SearchInput from "components/search-box/SearchInput";
 
 // =======================================================
 
-const ShopLayout2 = ({
-  children,
-  showTopbar = true,
-  showNavbar = true
-}) => {
+const ShopLayout2 = ({ children, showTopbar = true, showNavbar = true }) => {
   const [isFixed, setIsFixed] = useState(false);
-  const toggleIsFixed = useCallback(fixed => setIsFixed(fixed), []);
-  return <Fragment>
+  const toggleIsFixed = useCallback((fixed) => setIsFixed(fixed), []);
+  return (
+    <Fragment>
       {/* TOPBAR */}
       {showTopbar && <Topbar />}
 
       {/* HEADER */}
-      <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={70}>
+      {/* <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={70}>
         <Header isFixed={isFixed} searchInput={<SearchInput />} />
-      </Sticky>
+      </Sticky> */}
 
       <Box zIndex={4} position="relative" className="section-after-sticky">
         {/* NAVIGATION BAR */}
@@ -39,6 +36,7 @@ const ShopLayout2 = ({
         {/* BODY CONTENT */}
         {children}
       </Box>
-    </Fragment>;
+    </Fragment>
+  );
 };
 export default ShopLayout2;
