@@ -7,6 +7,7 @@ import {
   IconButton,
   Typography,
   useMediaQuery,
+  Badge,
 } from "@mui/material";
 import Menu from "@mui/icons-material/Menu";
 import { styled } from "@mui/material/styles";
@@ -24,6 +25,8 @@ import { LoginContext } from "contexts/LoginContext";
 import { Small } from "components/Typography";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { useAppContext } from "contexts/AppContext";
+import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
 
 const headerHeight = 72;
 const slideFromTop = keyframes`
@@ -64,8 +67,9 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 }));
 const Header = () => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { state } = useAppContext();
   const router = useRouter();
-  const { data: authUser } = getAuthUser;
+  const { data: authUser } = getAuthUser || {};
   console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
@@ -254,6 +258,19 @@ const Header = () => {
                   />
                 </Stack>
               )}
+
+              <FlexBox gap={1.5} alignItems="center">
+                <Badge badgeContent={state.cart.length} color="primary">
+                  <Box
+                    p={1.25}
+                    bgcolor="grey.200"
+                    component={IconButton}
+                    onClick={toggleSidenav}
+                  >
+                    <ShoppingBagOutlined />
+                  </Box>
+                </Badge>
+              </FlexBox>
 
               {/* mobile menu */}
               {downSM && (
