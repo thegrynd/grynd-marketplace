@@ -13,6 +13,7 @@ import nextI18NextConfig from "../next-i18next.config";
 import "nprogress/nprogress.css";
 import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
+import "../styles.css";
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());

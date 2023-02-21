@@ -1,171 +1,102 @@
-import { Box, Button, Container } from "@mui/material";
-import { Link as Scroll } from "react-scroll";
-import DoneIcon from "@mui/icons-material/Done";
-import LazyImage from "components/LazyImage";
-import { FlexBox, FlexRowCenter } from "components/flex-box";
-import { H1, Paragraph, Span } from "components/Typography";
-import Header from "./Header";
-import Tooltip from "@mui/material/Tooltip";
-import HelpIcon from "@mui/icons-material/Help";
-import { IconContext } from "react-icons";
-import {
-  BsFillLightningChargeFill,
-  BsFillHandThumbsUpFill,
-} from "react-icons/bs";
-import { MdPayment } from "react-icons/md";
-import Link from "next/link";
-import Store from "contexts/Store";
+import { Box, Button, styled, TextField } from "@mui/material";
+import { H1 } from "components/Typography";
+import { SearchOutlinedIcon } from "components/search-box/styled";
+const leftImg = "/assets/images/landing/yam.png";
+const midImg = "/assets/images/landing/habanero.png";
+const rightImg = "/assets/images/landing/greenchilli.png";
 
+// styled component
+const Container = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: 650,
+  padding: 20,
+  paddingTop: 160,
+  backgroundColor: theme.palette.grey[100],
+  backgroundSize: "40%, 40%",
+  backgroundPosition: "left bottom, right bottom",
+  backgroundRepeat: "no-repeat, no-repeat",
+  transition: "all .3s",
+  backgroundImage:
+    theme.direction === "ltr"
+      ? `url('${leftImg}'), url('${rightImg}'), url('${rightImg}'), url('${midImg}'), url('${leftImg}')`
+      : `url('${rightImg}'), url('${leftImg}')`,
+  "& h1": {
+    fontSize: 42,
+    textAlign: "center",
+    marginBottom: 40,
+    lineHeight: 1.3,
+  },
+  "& .searchBox": {
+    margin: "auto",
+    maxWidth: "600px",
+    borderRadius: "8px",
+    overflow: "hidden",
+    boxShadow: theme.shadows[2],
+  },
+  [theme.breakpoints.up("md")]: {
+    backgroundSize: "450px, 450px",
+  },
+  [theme.breakpoints.down("md")]: {
+    height: 550,
+    paddingTop: 130,
+    "& h1": {
+      fontSize: 38,
+      textAlign: "center",
+    },
+  },
+  [theme.breakpoints.down("sm")]: {
+    height: 480,
+    paddingTop: 100,
+    "& h1": {
+      fontSize: 30,
+    },
+    "& .searchBox": {
+      margin: 0,
+    },
+  },
+}));
 const Section1 = () => {
+  const SEARCH_BUTTON = (
+    <Button
+      color="primary"
+      disableElevation
+      variant="contained"
+      sx={{
+        px: "2rem",
+        height: "100%",
+        borderRadius: "0 8px 8px 0",
+        background: "green",
+      }}
+    >
+      Search
+    </Button>
+  );
   return (
-    <Box>
-      <Store>
-        <Header />
-      </Store>
+    <Container>
+      <H1 maxWidth={600} mx="auto" color="#066344">
+        Your Number One Agro Marketplace
+      </H1>
 
-      <Container
-        id="section-1"
-        sx={{
-          mt: 12,
-          position: "relative",
-        }}
-      >
-        <Box maxWidth="830px" mx="auto" mb={12} textAlign="center">
-          <H1 fontSize="40px" mb={3} fontWeight="900">
-            <Span color="#066344">Your Number One Agro E-commerce Store</Span>
-            {/* <Box color="primary.main" lineHeight={1.2}>
-              Bazaar
-            </Box> */}
-          </H1>
-
-          <Paragraph
-            fontSize="18px"
-            fontWeight={500}
-            maxWidth="540px"
-            mx="auto"
-            mb={3}
-          >
-            Buy, sell, advertise different agro products in a seamless way
-          </Paragraph>
-
-          <FlexRowCenter
-            sx={{
-              mb: 5,
-              flexDirection: {
-                md: "row",
-                xs: "column",
+      <Box className="searchBox">
+        <TextField
+          placeholder="Searching products"
+          fullWidth
+          InputProps={{
+            sx: {
+              height: 50,
+              paddingRight: 0,
+              color: "grey.700",
+              background: "#fff",
+              "& fieldset": {
+                border: "none",
               },
-            }}
-          >
-            <FlexBox
-              my={1}
-              mr={2}
-              alignItems="center"
-              fontWeight={500}
-              color="grey.900"
-            >
-              <IconContext.Provider
-                value={{ color: "#DC143C", className: "global-class-name" }}
-              >
-                <BsFillLightningChargeFill />
-              </IconContext.Provider>{" "}
-              &nbsp; Fast Delivery/Sales
-            </FlexBox>
-
-            <FlexBox
-              my={1}
-              mr={2}
-              alignItems="center"
-              fontWeight={500}
-              color="grey.900"
-            >
-              <IconContext.Provider
-                value={{ color: "green", className: "global-class-name" }}
-              >
-                <BsFillHandThumbsUpFill />
-              </IconContext.Provider>{" "}
-              &nbsp; Quality Products
-            </FlexBox>
-
-            <FlexBox
-              my={1}
-              alignItems="center"
-              fontWeight={500}
-              color="grey.900"
-            >
-              <IconContext.Provider
-                value={{ color: "orange", className: "global-class-name" }}
-              >
-                <MdPayment />
-              </IconContext.Provider>{" "}
-              &nbsp; Seamless Payments
-            </FlexBox>
-          </FlexRowCenter>
-
-          <FlexBox justifyContent="center" mb={3}>
-            <Scroll to="get" duration={400} offset={-72 - 16} smooth={true}>
-              <Link href="/vendor/signup-user">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  sx={{
-                    m: "0.5rem",
-                    ":hover": {
-                      backgroundColor: "#DC143C",
-                      color: "black",
-                    },
-                  }}
-                >
-                  Create Seller Account
-                </Button>
-              </Link>
-            </Scroll>
-
-            <Scroll to="demos" duration={400} offset={-72 - 16} smooth={true}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                sx={{
-                  m: "0.5rem",
-                  backgroundColor: "green",
-                  ":hover": {
-                    backgroundColor: "grey",
-                    color: "black",
-                  },
-                }}
-              >
-                View Products
-              </Button>
-            </Scroll>
-          </FlexBox>
-        </Box>
-        <FlexBox justifyContent="center" mb={3}>
-          <LazyImage
-            alt="cover"
-            width={500}
-            height={500}
-            // layout="responsive"
-            src="/assets/images/landing/habanero.png"
-          />
-          <LazyImage
-            alt="cover"
-            width={500}
-            height={500}
-            // layout="responsive"
-            src="/assets/images/landing/greenchilli.png"
-          />
-          <LazyImage
-            alt="cover"
-            width={500}
-            height={500}
-            // layout="responsive"
-            src="/assets/images/landing/yam.png"
-          />
-        </FlexBox>
-      </Container>
-    </Box>
+            },
+            endAdornment: SEARCH_BUTTON,
+            startAdornment: <SearchOutlinedIcon fontSize="small" />,
+          }}
+        />
+      </Box>
+    </Container>
   );
 };
 export default Section1;
