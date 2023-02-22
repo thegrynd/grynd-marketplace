@@ -34,7 +34,9 @@ const SignUpForm = () => {
       .then((response) => {
         console.log("response", response);
         if (response.data.status === true) {
-          router.push("/vendor/login-user");
+          Cookies.set("VerificationToken", response.data.verificationKey);
+          Cookies.set("SignUpToken", response.data.token);
+          router.push("/vendor/signup-success");
         }
       })
       .catch((err) => {
@@ -55,7 +57,8 @@ const SignUpForm = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .max(15, "Must be 15 characters or less")
+        .min(5, "Username must have at least 5 characters")
+        .max(15, "Username must be 15 characters or less")
         .required("Required"),
       firstname: Yup.string()
         .max(20, "Must be 20 characters or less")
@@ -71,12 +74,6 @@ const SignUpForm = () => {
           "Password must include a special character eg: @ ? & $ and must be at least 8 characters"
         )
         .max(20)
-        .required(),
-      phone: Yup.string()
-        .matches(
-          /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-          "Phone number is not valid"
-        )
         .required(),
       country: Yup.string().required("Country is required"),
     }),
@@ -217,8 +214,6 @@ const SignUpForm = () => {
             id="password"
             label="Password"
             value={formik.values.password}
-            // error={!!touched.password && !!errors.password}
-            // helperText={touched.password && errors.password}
           />
           {formik.touched.password && formik.errors.password ? (
             <div>{formik.errors.password}</div>
@@ -236,14 +231,12 @@ const SignUpForm = () => {
             id="country"
             label="Country"
             value={formik.values.country}
-            // error={!!touched.country && !!errors.country}
-            // helperText={touched.country && errors.country}
           />
           {formik.touched.country && formik.errors.country ? (
             <div>{formik.errors.country}</div>
           ) : null}
         </Grid>
-        <Grid item md={6} xs={12}>
+        {/* <Grid item md={6} xs={12}>
           <TextField
             fullWidth
             type="tel"
@@ -261,15 +254,20 @@ const SignUpForm = () => {
           {formik.touched.phone && formik.errors.phone ? (
             <div>{formik.errors.phone}</div>
           ) : null}
-        </Grid>
+        </Grid> */}
 
-        {/* <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12}>
           <PhoneInput
             placeholder="+234080000000000"
+            defaultCountry="RW"
             value={formik.values.phone}
-            onChange={formik.handleChange}
+            onChange={(e) => formik.setFieldValue("phone", e)}
+            onBlur={formik.handleBlur("phone")}
           />
-        </Grid> */}
+          {formik.touched.phone && formik.errors.phone ? (
+            <div>{formik.errors.phone}</div>
+          ) : null}
+        </Grid>
 
         <Grid item md={6} xs={12}>
           <TextField
@@ -283,8 +281,6 @@ const SignUpForm = () => {
             id="referralCode"
             label="Referral Code (Optional)"
             value={formik.values.referralCode}
-            // error={!!touched.referralCode && !!errors.referralCode}
-            // helperText={touched.referralCode && errors.referralCode}
           />
         </Grid>
 

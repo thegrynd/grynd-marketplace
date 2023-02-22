@@ -103,7 +103,7 @@ const Header = () => {
 
   const handleLogout = () => {
     Cookies.remove("authToken");
-    router.push("/");
+    router.reload();
   };
 
   return (
@@ -198,6 +198,7 @@ const Header = () => {
                         backgroundColor: "grey",
                       },
                     }}
+                    className="login-btn"
                   >
                     Log In
                   </Button>
@@ -214,6 +215,7 @@ const Header = () => {
                         backgroundColor: "grey",
                       },
                     }}
+                    className="login-btn"
                   >
                     Log In
                   </Button>
