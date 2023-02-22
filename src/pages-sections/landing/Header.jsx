@@ -215,6 +215,7 @@ const Header = () => {
                         backgroundColor: "grey",
                       },
                     }}
+                    className="login-btn"
                   >
                     Log In
                   </Button>

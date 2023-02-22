@@ -31,7 +31,10 @@ const HomePage = (props) => {
           category: selectedCategory,
         },
       })
-      .then(({ data }) => setFilterProducts(data));
+      .then(({ data }) => {
+        console.log("data", data);
+        setFilterProducts(data);
+      });
   }, [selectedCategory]);
 
   // HANDLE CHANGE CATEGORY
@@ -58,7 +61,7 @@ const HomePage = (props) => {
         <Section1 />
 
         {/* SERVICE AREA */}
-        <Section2 id="grocery1Services" />
+        <Section2 id="" />
 
         {/* SIDEBAR WITH OTHER CONTENTS */}
         <SidenavContainer
@@ -68,7 +71,12 @@ const HomePage = (props) => {
           <Stack spacing={6} mt={2}>
             {selectedCategory ? (
               // FILTERED PRODUCT LIST
-              <AllProducts products={filterProducts} title={selectedCategory} />
+              <Store>
+                <AllProducts
+                  products={filterProducts}
+                  title={selectedCategory}
+                />
+              </Store>
             ) : (
               <Fragment>
                 {/* POPULAR PRODUCTS AREA */}
@@ -76,13 +84,11 @@ const HomePage = (props) => {
                   title="Popular Products"
                   products={props.popularProducts}
                 />
-
                 {/* TRENDING PRODUCTS AREA */}
                 <ProductCarousel
                   title="Trending Products"
                   products={props.trendingProducts}
                 />
-
                 {/* ALL PRODUCTS AREA */}
                 <AllProducts products={props.products} />
               </Fragment>

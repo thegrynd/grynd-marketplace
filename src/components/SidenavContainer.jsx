@@ -73,6 +73,7 @@ const SidenavContainer = (props) => {
       elementBottom + window.scrollY - layoutConstant.headerHeight;
     setSidenavFixed(window.pageYOffset > position);
   }, []);
+
   useEffect(() => {
     window.addEventListener("scroll", scrollListener);
     return () => window.removeEventListener("scroll", scrollListener);
