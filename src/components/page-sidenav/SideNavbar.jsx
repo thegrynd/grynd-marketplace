@@ -17,6 +17,7 @@ const NavbarRoot = styled(BazaarCard)(({ isfixed, theme, sidebarstyle }) => ({
     transition: "all 0.2s",
     padding: "8px 20px",
   },
+  background: "#066344",
   ...(sidebarstyle === "style2" && {
     height: "auto",
     paddingBottom: 10,
@@ -53,8 +54,9 @@ const BorderBox = styled(FlexBetween)(({ theme, linestyle }) => ({
 }));
 const ColorBorder = styled(Span)(({ grey, theme }) => ({
   borderRadius: "2px 0 0 2px",
+  width: "8px",
   height: grey ? "2px" : "3px",
-  background: grey ? theme.palette.grey[400] : theme.palette.primary[200],
+  background: grey ? "green" : theme.palette.primary.main,
 }));
 const Circle = styled("span")({
   width: "4px",
@@ -78,6 +80,7 @@ const SideNavbar = (props) => {
     handleSelect = () => {},
   } = props;
 
+  // const Icon = appIcons[item.icon];
   const { palette } = useTheme();
   const renderChild = (childList) => {
     return childList.map((item) => (
@@ -104,7 +107,80 @@ const SideNavbar = (props) => {
       }}
     >
       <NavbarRoot isfixed={isFixed} sidebarstyle={sidebarStyle}>
-        {navList.map((item, ind) => {
+        <Box sx={{ color: "white" }}>
+          <Box padding="16px 20px 5px 20px">
+            <H5>Tubers</H5>
+            <BorderBox linestyle={lineStyle}>
+              <ColorBorder />
+              <ColorBorder grey={1} />
+            </BorderBox>
+          </Box>
+          <Box mb="2px" color="grey.700">
+            <Accordion>
+              <AccordionHeader
+                px={0}
+                py={0.75}
+                className="linkList"
+                sx={{
+                  color: "white",
+                  ":hover": {
+                    color: palette.primary.main,
+                  },
+                }}
+              >
+                <FlexBox gap={1.5} alignItems="center">
+                  {/* <Icon fontSize="small" /> */}
+                  <Span fontWeight="600" color="white">
+                    Yam
+                  </Span>
+                </FlexBox>
+              </AccordionHeader>
+              <StyledList
+                // onClick={() => handleSelect(item.title)}
+                sx={{
+                  color: "red",
+                  cursor: "pointer",
+                }}
+              >
+                <Span py={0.2} flex="1 1 0">
+                  Abuja yam
+                </Span>
+              </StyledList>
+            </Accordion>
+            <Box
+              // key={item.title}
+              onClick={() => handleSelect}
+              sx={{
+                color: "grey.700",
+                cursor: "pointer",
+              }}
+            >
+              <FlexBox gap={1.5} className="linkList" py={0.75}>
+                {/* <Icon fontSize="small" /> */}
+                <Span fontWeight="600" color="white">
+                  Potato
+                </Span>
+              </FlexBox>
+            </Box>
+            <Box
+              // key={item.title}
+              onClick={() => handleSelect}
+              sx={{
+                color: "grey.700",
+                cursor: "pointer",
+              }}
+            >
+              <FlexBox gap={1.5} className="linkList" py={0.75}>
+                {/* <Icon fontSize="small" /> */}
+                <Span fontWeight="600" color="white">
+                  Potato
+                </Span>
+              </FlexBox>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* {navList.map((item, ind) => {
           return (
             <Box key={ind}>
               <Box padding="16px 20px 5px 20px">
@@ -160,7 +236,7 @@ const SideNavbar = (props) => {
               })}
             </Box>
           );
-        })}
+        })} */}
       </NavbarRoot>
     </Scrollbar>
   );

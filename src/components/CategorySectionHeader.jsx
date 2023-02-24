@@ -8,16 +8,11 @@ import { FlexBetween, FlexBox } from "./flex-box";
 
 // ===================================================
 
-const CategorySectionHeader = props => {
-  const {
-    title,
-    seeMoreLink,
-    icon
-  } = props;
-  const {
-    settings
-  } = useSettings();
-  return <FlexBetween mb={3}>
+const CategorySectionHeader = (props) => {
+  const { title, seeMoreLink, icon } = props;
+  const { settings } = useSettings();
+  return (
+    <FlexBetween mb={3}>
       <FlexBox alignItems="center" gap={1}>
         {icon && <FlexBox alignItems="center">{icon}</FlexBox>}
         <H2 fontWeight="bold" lineHeight="1">
@@ -25,14 +20,26 @@ const CategorySectionHeader = props => {
         </H2>
       </FlexBox>
 
-      {seeMoreLink && <Link href={seeMoreLink}>
+      {seeMoreLink && (
+        <Link href={seeMoreLink}>
           <a>
-            <FlexBox alignItems="center" color="grey.600">
-              View all
-              {settings.direction === "ltr" ? <ArrowRight fontSize="small" color="inherit" /> : <ArrowLeft fontSize="small" color="inherit" />}
+            <FlexBox
+              alignItems="center"
+              color="grey.600"
+              className="view-all"
+              data-replace="this link"
+            >
+              <span> View all</span>
+              {settings.direction === "ltr" ? (
+                <ArrowRight fontSize="small" color="inherit" />
+              ) : (
+                <ArrowLeft fontSize="small" color="inherit" />
+              )}
             </FlexBox>
           </a>
-        </Link>}
-    </FlexBetween>;
+        </Link>
+      )}
+    </FlexBetween>
+  );
 };
 export default CategorySectionHeader;

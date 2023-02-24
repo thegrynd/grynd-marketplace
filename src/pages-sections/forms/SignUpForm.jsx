@@ -13,18 +13,20 @@ import { H3 } from "components/Typography";
 import { H5 } from "components/Typography";
 import Link from "next/link";
 import "react-phone-number-input/style.css";
+import { ThreeCircles } from "react-loader-spinner";
 
 import { useRouter } from "next/router";
 import PhoneInput from "react-phone-number-input";
 
 const SignUpForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitData = async (values) => {
     const url = "https://grynd-staging.vercel.app";
 
     console.log("values", values);
-
+    setIsLoading(true);
     return axios
       .post(`${url}/api/v1/auth/register`, values, {
         headers: {
@@ -41,7 +43,8 @@ const SignUpForm = () => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   const formik = useFormik({
     initialValues: {
@@ -175,8 +178,6 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             value={formik.values.email}
-            // error={!!touched.email && !!errors.email}
-            // helperText={touched.email && errors.email}
           />
           {formik.touched.email && formik.errors.email ? (
             <div>{formik.errors.email}</div>
@@ -236,25 +237,6 @@ const SignUpForm = () => {
             <div>{formik.errors.country}</div>
           ) : null}
         </Grid>
-        {/* <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            type="tel"
-            color="info"
-            size="medium"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            name="phone"
-            id="phone"
-            label="Phone"
-            value={formik.values.phone}
-            // error={!!touched.phone && !!errors.phone}
-            // helperText={touched.phone && errors.phone}
-          />
-          {formik.touched.phone && formik.errors.phone ? (
-            <div>{formik.errors.phone}</div>
-          ) : null}
-        </Grid> */}
 
         <Grid item md={6} xs={12}>
           <PhoneInput
@@ -297,7 +279,22 @@ const SignUpForm = () => {
               },
             }}
           >
-            Sign Up For Grynd
+            {isLoading ? (
+              <ThreeCircles
+                height="30"
+                width="30"
+                color="#fff"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="three-circles-rotating"
+                outerCircleColor=""
+                innerCircleColor=""
+                middleCircleColor=""
+              />
+            ) : (
+              "Sign Up For Grynd"
+            )}
           </Button>
         </Grid>
         <Grid item xs={12}>

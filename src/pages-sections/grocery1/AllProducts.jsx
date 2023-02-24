@@ -22,7 +22,7 @@ const AllProducts = ({ products, title = "All Products" }) => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   return (
-    <CategorySectionCreator title={title} seeMoreLink="#">
+    <CategorySectionCreator title={title}>
       <SubTitle>Browse through quality agro products for you</SubTitle>
 
       <Grid container spacing={3}>
