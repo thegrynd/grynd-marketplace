@@ -13,18 +13,20 @@ import { H3 } from "components/Typography";
 import { H5 } from "components/Typography";
 import Link from "next/link";
 import "react-phone-number-input/style.css";
+import { ThreeCircles } from "react-loader-spinner";
 
 import { useRouter } from "next/router";
 import PhoneInput from "react-phone-number-input";
 
 const SignUpForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitData = async (values) => {
     const url = "https://grynd-staging.vercel.app";
 
     console.log("values", values);
-
+    setIsLoading(true);
     return axios
       .post(`${url}/api/v1/auth/register`, values, {
         headers: {
@@ -34,12 +36,15 @@ const SignUpForm = () => {
       .then((response) => {
         console.log("response", response);
         if (response.data.status === true) {
-          router.push("/vendor/login-user");
+          Cookies.set("VerificationToken", response.data.verificationKey);
+          Cookies.set("SignUpToken", response.data.token);
+          router.push("/vendor/signup-success");
         }
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   const formik = useFormik({
     initialValues: {
@@ -55,7 +60,8 @@ const SignUpForm = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .max(15, "Must be 15 characters or less")
+        .min(5, "Username must have at least 5 characters")
+        .max(15, "Username must be 15 characters or less")
         .required("Required"),
       firstname: Yup.string()
         .max(20, "Must be 20 characters or less")
@@ -71,12 +77,6 @@ const SignUpForm = () => {
           "Password must include a special character eg: @ ? & $ and must be at least 8 characters"
         )
         .max(20)
-        .required(),
-      phone: Yup.string()
-        .matches(
-          /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-          "Phone number is not valid"
-        )
         .required(),
       country: Yup.string().required("Country is required"),
     }),
@@ -178,8 +178,6 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             value={formik.values.email}
-            // error={!!touched.email && !!errors.email}
-            // helperText={touched.email && errors.email}
           />
           {formik.touched.email && formik.errors.email ? (
             <div>{formik.errors.email}</div>
@@ -217,8 +215,6 @@ const SignUpForm = () => {
             id="password"
             label="Password"
             value={formik.values.password}
-            // error={!!touched.password && !!errors.password}
-            // helperText={touched.password && errors.password}
           />
           {formik.touched.password && formik.errors.password ? (
             <div>{formik.errors.password}</div>
@@ -236,40 +232,24 @@ const SignUpForm = () => {
             id="country"
             label="Country"
             value={formik.values.country}
-            // error={!!touched.country && !!errors.country}
-            // helperText={touched.country && errors.country}
           />
           {formik.touched.country && formik.errors.country ? (
             <div>{formik.errors.country}</div>
           ) : null}
         </Grid>
+
         <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            type="tel"
-            color="info"
-            size="medium"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            name="phone"
-            id="phone"
-            label="Phone"
+          <PhoneInput
+            placeholder="+234080000000000"
+            defaultCountry="RW"
             value={formik.values.phone}
-            // error={!!touched.phone && !!errors.phone}
-            // helperText={touched.phone && errors.phone}
+            onChange={(e) => formik.setFieldValue("phone", e)}
+            onBlur={formik.handleBlur("phone")}
           />
           {formik.touched.phone && formik.errors.phone ? (
             <div>{formik.errors.phone}</div>
           ) : null}
         </Grid>
-
-        {/* <Grid item md={6} xs={12}>
-          <PhoneInput
-            placeholder="+234080000000000"
-            value={formik.values.phone}
-            onChange={formik.handleChange}
-          />
-        </Grid> */}
 
         <Grid item md={6} xs={12}>
           <TextField
@@ -283,8 +263,6 @@ const SignUpForm = () => {
             id="referralCode"
             label="Referral Code (Optional)"
             value={formik.values.referralCode}
-            // error={!!touched.referralCode && !!errors.referralCode}
-            // helperText={touched.referralCode && errors.referralCode}
           />
         </Grid>
 
@@ -301,7 +279,22 @@ const SignUpForm = () => {
               },
             }}
           >
-            Sign Up For Grynd
+            {isLoading ? (
+              <ThreeCircles
+                height="30"
+                width="30"
+                color="#fff"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="three-circles-rotating"
+                outerCircleColor=""
+                innerCircleColor=""
+                middleCircleColor=""
+              />
+            ) : (
+              "Sign Up For Grynd"
+            )}
           </Button>
         </Grid>
         <Grid item xs={12}>

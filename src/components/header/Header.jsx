@@ -10,15 +10,13 @@ import clsx from "clsx";
 import Icon from "components/icons";
 import { layoutConstant } from "utils/constants";
 import Login from "pages-sections/sessions/Login";
-import { useAppContext } from "contexts/AppContext";
-import Image from "components/BazaarImage";
+
 import MiniCart from "components/MiniCart";
 import Category from "components/icons/Category";
 import { Paragraph } from "components/Typography";
 import MobileMenu from "components/navbar/MobileMenu";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import CategoryMenu from "components/categories/CategoryMenu";
-import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
 
 // styled component
 export const HeaderWrapper = styled(Box)(({ theme }) => ({
@@ -45,7 +43,7 @@ const StyledContainer = styled(Container)({
 
 const Header = ({ isFixed, className, searchInput }) => {
   const theme = useTheme();
-  const { state } = useAppContext();
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sidenavOpen, setSidenavOpen] = useState(false);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -175,27 +173,6 @@ const Header = ({ isFixed, className, searchInput }) => {
         </FlexBox>
 
         {/* LOGIN AND CART BUTTON */}
-        <FlexBox gap={1.5} alignItems="center">
-          <Box
-            component={IconButton}
-            p={1.25}
-            bgcolor="grey.200"
-            onClick={toggleDialog}
-          >
-            <PersonOutline />
-          </Box>
-
-          <Badge badgeContent={state.cart.length} color="primary">
-            <Box
-              p={1.25}
-              bgcolor="grey.200"
-              component={IconButton}
-              onClick={toggleSidenav}
-            >
-              <ShoppingBagOutlined />
-            </Box>
-          </Badge>
-        </FlexBox>
 
         {/* LOGIN FORM DIALOG AND CART SIDE BAR  */}
         {DIALOG_DRAWER}

@@ -1,14 +1,13 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import SEO from "components/SEO";
 import Setting from "components/Setting";
-import Newsletter from "components/Newsletter";
 import HomeLayout from "components/layouts/HomeLayout";
 import SidenavContainer from "components/SidenavContainer";
 import SideNavbar from "components/page-sidenav/SideNavbar";
-import Section1 from "pages-sections/grocery1/Section1";
-import Section2 from "pages-sections/grocery1/Section2";
+import Section1 from "pages-sections/landing/Section1";
+import Section2 from "pages-sections/landing/Section2";
 import AllProducts from "pages-sections/grocery1/AllProducts";
 import DiscountSection from "pages-sections/grocery1/DiscountSection";
 import ProductCarousel from "pages-sections/grocery1/ProductCarousel";
@@ -19,6 +18,7 @@ import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
 
 const HomePage = (props) => {
+  console.log("props", props);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filterProducts, setFilterProducts] = useState([]);
 
@@ -30,7 +30,10 @@ const HomePage = (props) => {
           category: selectedCategory,
         },
       })
-      .then(({ data }) => setFilterProducts(data));
+      .then(({ data }) => {
+        console.log("data", data);
+        setFilterProducts(data);
+      });
   }, [selectedCategory]);
 
   // HANDLE CHANGE CATEGORY
@@ -52,12 +55,12 @@ const HomePage = (props) => {
         <Header />
       </Store>
       <HomeLayout showNavbar={false} showTopbar={false}>
-        <SEO title="Grocery store template v1" />
+        <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
-        <Section1 />
+        <Section1 id="search" />
 
         {/* SERVICE AREA */}
-        <Section2 id="grocery1Services" services={props.serviceList} />
+        <Section2 id="services" />
 
         {/* SIDEBAR WITH OTHER CONTENTS */}
         <SidenavContainer
@@ -67,23 +70,33 @@ const HomePage = (props) => {
           <Stack spacing={6} mt={2}>
             {selectedCategory ? (
               // FILTERED PRODUCT LIST
-              <AllProducts products={filterProducts} title={selectedCategory} />
+
+              <Store>
+                <AllProducts
+                  products={filterProducts}
+                  title={selectedCategory}
+                />
+              </Store>
             ) : (
               <Fragment>
                 {/* POPULAR PRODUCTS AREA */}
                 <ProductCarousel
-                  title="Popular Products"
+                  title="Tuber Products"
                   products={props.popularProducts}
                 />
-
                 {/* TRENDING PRODUCTS AREA */}
                 <ProductCarousel
-                  title="Trending Products"
+                  title="Vegetable Products"
                   products={props.trendingProducts}
                 />
-
-                {/* ALL PRODUCTS AREA */}
-                <AllProducts products={props.products} />
+                <ProductCarousel
+                  title="Grain Products"
+                  products={props.trendingProducts}
+                />
+                <ProductCarousel
+                  title="Fruit Products"
+                  products={props.trendingProducts}
+                />
               </Fragment>
             )}
 
@@ -96,7 +109,7 @@ const HomePage = (props) => {
         </SidenavContainer>
 
         {/* POPUP NEWSLETTER FORM */}
-        <Newsletter image="/assets/images/newsletter/bg-2.png" />
+        {/* <Newsletter image="/assets/images/newsletter/bg-2.png" /> */}
 
         {/* SETTINGS IS USED ONLY FOR DEMO, YOU CAN REMOVE THIS */}
         <Setting />

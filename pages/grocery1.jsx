@@ -7,8 +7,6 @@ import { Footer2 } from "components/footer";
 import Newsletter from "components/Newsletter";
 import SidenavContainer from "components/SidenavContainer";
 import SideNavbar from "components/page-sidenav/SideNavbar";
-import Section1 from "pages-sections/grocery1/Section1";
-import Section2 from "pages-sections/grocery1/Section2";
 import AllProducts from "pages-sections/grocery1/AllProducts";
 import DiscountSection from "pages-sections/grocery1/DiscountSection";
 import ProductCarousel from "pages-sections/grocery1/ProductCarousel";
@@ -51,10 +49,6 @@ const Grocery1 = (props) => {
     <>
       {" "}
       <SEO title="Grocery store template v1" />
-      {/* TOP HERO AREA */}
-      <Section1 />
-      {/* SERVICE AREA */}
-      <Section2 id="grocery1Services" services={props.serviceList} />
       {/* SIDEBAR WITH OTHER CONTENTS */}
       <SidenavContainer
         navFixedComponentID="grocery1Services"

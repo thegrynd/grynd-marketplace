@@ -24,5 +24,5 @@ export default {
   getProducts,
   getPopularProducts,
   getTrendingProducts,
-  getGrocery1Navigation
+  getGrocery1Navigation,
 };
