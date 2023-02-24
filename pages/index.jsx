@@ -1,9 +1,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import SEO from "components/SEO";
 import Setting from "components/Setting";
-import Newsletter from "components/Newsletter";
 import HomeLayout from "components/layouts/HomeLayout";
 import SidenavContainer from "components/SidenavContainer";
 import SideNavbar from "components/page-sidenav/SideNavbar";
@@ -58,10 +57,10 @@ const HomePage = (props) => {
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
-        <Section1 />
+        <Section1 id="search" />
 
         {/* SERVICE AREA */}
-        <Section2 id="" />
+        <Section2 id="services" />
 
         {/* SIDEBAR WITH OTHER CONTENTS */}
         <SidenavContainer
@@ -71,6 +70,7 @@ const HomePage = (props) => {
           <Stack spacing={6} mt={2}>
             {selectedCategory ? (
               // FILTERED PRODUCT LIST
+
               <Store>
                 <AllProducts
                   products={filterProducts}
@@ -81,16 +81,22 @@ const HomePage = (props) => {
               <Fragment>
                 {/* POPULAR PRODUCTS AREA */}
                 <ProductCarousel
-                  title="Popular Products"
+                  title="Tuber Products"
                   products={props.popularProducts}
                 />
                 {/* TRENDING PRODUCTS AREA */}
                 <ProductCarousel
-                  title="Trending Products"
+                  title="Vegetable Products"
                   products={props.trendingProducts}
                 />
-                {/* ALL PRODUCTS AREA */}
-                <AllProducts products={props.products} />
+                <ProductCarousel
+                  title="Grain Products"
+                  products={props.trendingProducts}
+                />
+                <ProductCarousel
+                  title="Fruit Products"
+                  products={props.trendingProducts}
+                />
               </Fragment>
             )}
 
@@ -103,7 +109,7 @@ const HomePage = (props) => {
         </SidenavContainer>
 
         {/* POPUP NEWSLETTER FORM */}
-        <Newsletter image="/assets/images/newsletter/bg-2.png" />
+        {/* <Newsletter image="/assets/images/newsletter/bg-2.png" /> */}
 
         {/* SETTINGS IS USED ONLY FOR DEMO, YOU CAN REMOVE THIS */}
         <Setting />

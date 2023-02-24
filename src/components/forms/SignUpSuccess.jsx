@@ -5,13 +5,16 @@ import Cookies from "js-cookie";
 import OtpInput from "react18-input-otp";
 import axios from "axios";
 import { Audio } from "react-loader-spinner";
+
 import Link from "next/link";
 
 const SignUpSuccess = () => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [getVerifiedData, setGetVerifiedData] = useState({});
+  const [getErrorData, setGetErrorData] = useState("");
   const [verified, setVerified] = useState(false);
+
   const handleChange = (enteredOtp) => {
     setOtp(enteredOtp);
   };
@@ -46,7 +49,8 @@ const SignUpSuccess = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        setGetErrorData(err.response?.data.message);
+        console.log("ye", getVerifiedData);
       })
       .finally(() => setIsLoading(false));
   };
@@ -87,6 +91,7 @@ const SignUpSuccess = () => {
               inputStyle={{ fontSize: "2rem" }}
             />
           </Box>
+          <Small color="red"> {getErrorData} </Small>
           <Button
             variant="contained"
             sx={{
@@ -128,7 +133,7 @@ const SignUpSuccess = () => {
             <Paragraph fontWeight={600} textAlign="center" marginTop="1rem">
               {getVerifiedData.data.message}
             </Paragraph>
-            <Link href="../../../pages/vendor/login-user">
+            <Link href="/vendor/login-user">
               <Button
                 variant="contained"
                 sx={{
