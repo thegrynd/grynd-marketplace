@@ -1,11 +1,11 @@
 import { Fragment, useCallback, useState } from "react";
 import Sticky from "components/Sticky";
 import Topbar from "components/Topbar";
-import { Footer1 } from "components/footer";
 import Header from "components/header/Header";
 import Navbar from "components/navbar/Navbar";
 import { MobileNavigationBar } from "components/mobile-navigation";
 import SearchInputWithCategory from "components/search-box/SearchInputWithCategory";
+import Footer from "pages-sections/landing/Footer";
 
 /**
  *  Used in:
@@ -52,7 +52,7 @@ const ShopLayout1 = ({
       <MobileNavigationBar />
 
       {/* FOOTER */}
-      <Footer1 />
+      <Footer />
     </Fragment>
   );
 };

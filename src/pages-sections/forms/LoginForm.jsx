@@ -26,7 +26,7 @@ const LoginForm = () => {
         },
       })
       .then((response) => {
-        console.log("response", response);
+        // console.log("response", response);
         if (response) {
           Cookies.set("authToken", response.data.token);
           router.push("/");
@@ -142,7 +142,7 @@ const LoginForm = () => {
         </Grid>
         <Grid item xs={12}>
           <H5>
-            Don&apos;t have a seller account?{" "}
+            Don&apos;t have a Grynd account?{" "}
             <span style={{ color: "#066344" }}>
               <Link href="../vendor/signup-user"> Create One</Link>
             </span>

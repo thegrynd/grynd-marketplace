@@ -176,3 +176,10 @@
 }
 
 /* view-all products link */
+
+/* hr styling */
+hr.hr-1 {
+  height: 12px;
+  border: 0;
+  box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
+}
