@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "contexts/LoginContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -25,7 +24,7 @@ const SignUpForm = () => {
   const submitData = async (values) => {
     const url = "https://grynd-staging.vercel.app";
 
-    console.log("values", values);
+    // console.log("values", values);
     setIsLoading(true);
     return axios
       .post(`${url}/api/v1/auth/register`, values, {
@@ -34,7 +33,7 @@ const SignUpForm = () => {
         },
       })
       .then((response) => {
-        console.log("response", response);
+        // console.log("response", response);
         if (response.data.status === true) {
           Cookies.set("VerificationToken", response.data.verificationKey);
           Cookies.set("SignUpToken", response.data.token);
@@ -125,7 +124,7 @@ const SignUpForm = () => {
             // helperText={touched.username && errors.username}
           />
           {formik.touched.username && formik.errors.username ? (
-            <div>{formik.errors.username}</div>
+            <H5 color="red">{formik.errors.username}</H5>
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
@@ -144,7 +143,7 @@ const SignUpForm = () => {
             // helperText={touched.firstname && errors.firstname}
           />
           {formik.touched.firstname && formik.errors.firstname ? (
-            <div>{formik.errors.firstname}</div>
+            <H5 color="red">{formik.errors.firstname}</H5>
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
@@ -163,7 +162,7 @@ const SignUpForm = () => {
             // helperText={touched.surname && errors.surname}
           />
           {formik.touched.surname && formik.errors.surname ? (
-            <div>{formik.errors.surname}</div>
+            <H5 color="red">{formik.errors.surname}</H5>
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
@@ -180,7 +179,7 @@ const SignUpForm = () => {
             value={formik.values.email}
           />
           {formik.touched.email && formik.errors.email ? (
-            <div>{formik.errors.email}</div>
+            <H5 color="red">{formik.errors.email}</H5>
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
@@ -199,7 +198,7 @@ const SignUpForm = () => {
             </Select>
           </FormControl>
           {formik.touched.gender && formik.errors.gender ? (
-            <div>{formik.errors.gender}</div>
+            <H5 color="red">{formik.errors.gender}</H5>
           ) : null}
         </Grid>
 
@@ -217,7 +216,7 @@ const SignUpForm = () => {
             value={formik.values.password}
           />
           {formik.touched.password && formik.errors.password ? (
-            <div>{formik.errors.password}</div>
+            <H5 color="red">{formik.errors.password}</H5>
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
@@ -234,7 +233,7 @@ const SignUpForm = () => {
             value={formik.values.country}
           />
           {formik.touched.country && formik.errors.country ? (
-            <div>{formik.errors.country}</div>
+            <H5 color="red">{formik.errors.country}</H5>
           ) : null}
         </Grid>
 
@@ -247,7 +246,7 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur("phone")}
           />
           {formik.touched.phone && formik.errors.phone ? (
-            <div>{formik.errors.phone}</div>
+            <H5 color="red">{formik.errors.phone}</H5>
           ) : null}
         </Grid>
 

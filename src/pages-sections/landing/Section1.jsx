@@ -1,9 +1,13 @@
+import React, { useContext } from "react";
 import { Box, Button, styled, TextField } from "@mui/material";
-import { H1 } from "components/Typography";
+import { H1, H5 } from "components/Typography";
 import { SearchOutlinedIcon } from "components/search-box/styled";
+import { LoginContext } from "contexts/LoginContext";
+import Link from "next/link";
 const leftImg = "/assets/images/landing/yam.png";
 const midImg = "/assets/images/landing/habanero.png";
 const rightImg = "/assets/images/landing/greenchilli.png";
+import { Grid } from "@mui/material";
 
 // styled component
 const Container = styled(Box)(({ theme }) => ({
@@ -56,6 +60,9 @@ const Container = styled(Box)(({ theme }) => ({
   },
 }));
 const Section1 = () => {
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+  console.log("checking", authUser);
   const SEARCH_BUTTON = (
     <Button
       color="primary"
@@ -73,10 +80,17 @@ const Section1 = () => {
   );
   return (
     <Container>
-      <H1 maxWidth={600} mx="auto" color="#066344">
-        Your Number One Agro Marketplace
-      </H1>
-
+      <Grid container>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
+          <H1 maxWidth={600} mx="auto" color="#066344">
+            The Best Online Agro Store
+            <H5 marginTop="1rem" color="grey">
+              Buy products and deliver to your doorstep. Sell products to online
+              buyers
+            </H5>
+          </H1>
+        </Grid>
+      </Grid>
       <Box className="searchBox">
         <TextField
           placeholder="Searching products"
@@ -96,6 +110,26 @@ const Section1 = () => {
           }}
         />
       </Box>
+      {authUser?.data.isSeller === false ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
+          <Link href={"/vendor/create-seller"}>
+            <Button
+              sx={{
+                borderRadius: "4px",
+                background: "green",
+                color: "white",
+                padding: "0.5rem 1rem",
+                ":hover": {
+                  backgroundColor: "grey",
+                  color: "black",
+                },
+              }}
+            >
+              Become a Seller
+            </Button>
+          </Link>
+        </Box>
+      ) : null}
     </Container>
   );
 };
