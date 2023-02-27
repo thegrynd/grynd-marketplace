@@ -155,6 +155,7 @@ const Profile = ({ user }) => {
       </TableRow>
     </CustomerDashboardLayout>
   );
+  xs;
 };
 const TableRowItem = ({ title, value }) => {
   return (
@@ -168,6 +169,7 @@ const TableRowItem = ({ title, value }) => {
 };
 export const getStaticProps = async () => {
   const user = await api.getUser();
+
   return {
     props: {
       user,

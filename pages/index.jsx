@@ -57,7 +57,9 @@ const HomePage = (props) => {
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
-        <Section1 id="search" />
+        <Store>
+          <Section1 id="search" />
+        </Store>
 
         {/* SERVICE AREA */}
         <Section2 id="services" />
