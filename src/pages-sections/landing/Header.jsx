@@ -66,9 +66,9 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 const Header = () => {
-  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { state } = useAppContext();
   const router = useRouter();
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
@@ -90,10 +90,12 @@ const Header = () => {
     return (
       <>
         <Small fontSize="10px">
-          <span style={{ color: "red", fontWeight: 700 }}>
-            {" "}
-            {`${authUser.data.firstname} ${authUser.data.surname}`}
-          </span>
+          <a href={authUser?.data.isSeller === true ? "/profile" : "/profile"}>
+            <span style={{ color: "red", fontWeight: 700, cursor: "pointer" }}>
+              {" "}
+              {`${authUser.data.firstname} ${authUser.data.surname}`}
+            </span>
+          </a>
           <br />
           <div> {authUser.data.username ?? "User"}</div>
         </Small>
@@ -187,7 +189,7 @@ const Header = () => {
               </FlexBox>
 
               {!downSM && authUser?.success === false ? (
-                <a target="__blank" href="./vendor/login-user">
+                <a href="./vendor/login-user">
                   <Button
                     variant="contained"
                     sx={{
@@ -204,7 +206,7 @@ const Header = () => {
                   </Button>
                 </a>
               ) : !downSM && authUser?.success === undefined ? (
-                <a target="__blank" href="./vendor/login-user">
+                <a href="./vendor/login-user">
                   <Button
                     variant="contained"
                     sx={{

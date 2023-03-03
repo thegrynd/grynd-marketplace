@@ -65,7 +65,7 @@ const CreateSellerForm = () => {
       .then((response) => {
         console.log("response", response);
         if (response.data.status === true) {
-          router.push("/profile");
+          router.replace("/profile");
         }
       })
       .catch((err) => {
@@ -82,7 +82,13 @@ const CreateSellerForm = () => {
         address: "",
         city: "",
         country: "",
-        coordinates: "na wa",
+        coordinates: "",
+      },
+      socialHandles: {
+        facebook: "https://facebook.com",
+        instagram: "https://instagram.com",
+        youtube: "https://youtube.com",
+        twitter: "https://twitter.com",
       },
       email: "",
       phone: "",
@@ -104,8 +110,15 @@ const CreateSellerForm = () => {
         country: Yup.string().required("Please select country"),
         coordinates: Yup.string().required("Please set your location"),
       }),
+      socialHandles: Yup.object().shape({
+        facebook: Yup.string().required("Must be a valid url"),
+        instagram: Yup.string().required("Must be a valid url"),
+        youtube: Yup.string().required("Must be a valid url"),
+        twitter: Yup.string().required("Must be a valid url"),
+      }),
 
       email: Yup.string().email("Invalid email address"),
+      // phone: Yup.string().min(10).max(14).required(),
     }),
     onSubmit: async (values) => {
       submitData(values);
@@ -147,7 +160,7 @@ const CreateSellerForm = () => {
             label="Name of Store"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-            value={formik.values.username}
+            value={formik.values.name}
             autoComplete={authUser?.data?.country}
           />
           {formik.touched.name && formik.errors.name ? (
@@ -283,8 +296,82 @@ const CreateSellerForm = () => {
           ) : null}
         </Grid>
         <Grid item md={6} xs={12}>
+          <TextField
+            fullWidth
+            defaultValue="facebook.com"
+            color="info"
+            type="url"
+            size="medium"
+            id="socialHandles.facebook"
+            name="socialHandles.facebook"
+            label="Facebook "
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.socialHandles.facebook}
+          />
+          {formik.touched.socialHandles && formik.errors.socialHandles ? (
+            <H5 color="red">{formik.errors.socialHandles.facebook}</H5>
+          ) : null}
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <TextField
+            fullWidth
+            defaultValue="instagram.com"
+            color="info"
+            type="url"
+            size="medium"
+            id="socialHandles.instagram"
+            name="socialHandles.instagram"
+            label=" Instagram"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.socialHandles.instagram}
+          />
+          {formik.touched.socialHandles && formik.errors.socialHandles ? (
+            <H5 color="red">{formik.errors.socialHandles.instagram}</H5>
+          ) : null}
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <TextField
+            fullWidth
+            defaultValue="youtube.com"
+            color="info"
+            type="url"
+            size="medium"
+            id="socialHandles.youtube"
+            name="socialHandles.youtube"
+            label="YouTube"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.socialHandles.youtube}
+          />
+          {formik.touched.socialHandles && formik.errors.socialHandles ? (
+            <H5 color="red">{formik.errors.socialHandles.youtube}</H5>
+          ) : null}
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <TextField
+            fullWidth
+            defaultValue="twitter.com"
+            color="info"
+            type="url"
+            size="medium"
+            id="socialHandles.twitter"
+            name="socialHandles.twitter"
+            label="Twitter"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.socialHandles.twitter}
+          />
+          {formik.touched.socialHandles && formik.errors.socialHandles ? (
+            <H5 color="red">{formik.errors.socialHandles.twitter}</H5>
+          ) : null}
+        </Grid>
+
+        <Grid item md={6} xs={12}>
           <PhoneInput
-            placeholder="+234080000000000"
+            placeholder="Input Phone"
             defaultCountry="RW"
             value={formik.values.phone}
             onChange={(e) => formik.setFieldValue("phone", e)}

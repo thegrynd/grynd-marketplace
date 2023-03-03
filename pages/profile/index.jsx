@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { LoginContext } from "../../src/contexts/LoginContext";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Person } from "@mui/icons-material";
@@ -18,19 +20,29 @@ import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import { currency } from "lib";
 import api from "utils/__api__/users";
+import Image from "next/image";
+import { parseCookies } from "../../helpers/validation";
+import axios from "axios";
+
 // ============================================================
 
-const Profile = ({ user }) => {
+const Profile = ({ authUser }) => {
   const downMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const { data: user } = authUser || {};
+  console.log("user", user);
 
   // SECTION TITLE HEADER LINK
   const HEADER_LINK = (
-    <Link href={`/profile/${user.id}`} passHref>
+    <Link href={`/profile/${authUser ? user.id : null}`} passHref>
       <Button
         color="primary"
         sx={{
           px: 4,
-          bgcolor: "primary.light",
+          bgcolor: "#066344",
+          color: "#ffffff",
+          ":hover": {
+            color: "#000000",
+          },
         }}
       >
         Edit Profile
@@ -59,8 +71,8 @@ const Profile = ({ user }) => {
     <CustomerDashboardLayout>
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
-        icon={Person}
-        title="My Profile"
+        // icon={Person}
+        title="User"
         button={HEADER_LINK}
         navigation={<CustomerDashboardNavigation />}
       />
@@ -72,40 +84,70 @@ const Profile = ({ user }) => {
             <Card
               sx={{
                 display: "flex",
+                flexDirection: "column",
                 p: "14px 32px",
                 height: "100%",
                 alignItems: "center",
               }}
             >
-              <Avatar
-                src={user.avatar}
-                sx={{
-                  height: 64,
-                  width: 64,
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
-              />
-
+              >
+                <div>
+                  <Image
+                    width={400}
+                    height={100}
+                    objectFit="cover"
+                    src="/gryndlogo.png"
+                    alt="user cover image"
+                  />
+                </div>
+                <div>
+                  <Avatar
+                    // src={authUser ? authUser?.data.}
+                    sx={{
+                      height: 64,
+                      width: 64,
+                      mx: "auto",
+                    }}
+                  />
+                </div>
+              </div>
               <Box ml={1.5} flex="1 1 0">
-                <FlexBetween flexWrap="wrap">
+                <FlexBetween flexWrap="wrap" flexDirection="column">
                   <div>
-                    <H5 my="0px">{`${user.name.firstName} ${user.name.lastName}`}</H5>
+                    <H3 my="0px" color="primary.main">{`${
+                      authUser ? user.firstname : ""
+                    } ${authUser ? user.surname : ""}`}</H3>
                     <FlexBox alignItems="center">
-                      <Typography color="grey.600">Balance:</Typography>
+                      <Typography color="black.900">Balance:</Typography>
                       <Typography ml={0.5} color="primary.main">
                         {currency(500)}
                       </Typography>
                     </FlexBox>
                   </div>
-
-                  <Typography color="grey.600" letterSpacing="0.2em">
-                    SILVER USER
-                  </Typography>
+                  <FlexBox alignItems="flex-start" justifyContent="flex-start">
+                    <Typography color="black.900">Country: </Typography>
+                    <FlexBox alignItems="center">
+                      <Typography color="grey.600" ml={0.5}>
+                        {" "}
+                        {authUser ? user.country : ""}
+                      </Typography>
+                    </FlexBox>
+                  </FlexBox>
                 </FlexBetween>
               </Box>
             </Card>
           </Grid>
 
           <Grid item md={6} xs={12}>
+            <H3 mb="0.5rem" color="green">
+              Orders & Payments
+            </H3>
             <Grid container spacing={4}>
               {infoList.map((item) => (
                 <Grid item lg={3} sm={6} xs={6} key={item.subtitle}>
@@ -133,6 +175,9 @@ const Profile = ({ user }) => {
         </Grid>
       </Box>
 
+      <H3 mb="0.5rem" color="green">
+        Personal Details
+      </H3>
       <TableRow
         sx={{
           cursor: "auto",
@@ -144,14 +189,15 @@ const Profile = ({ user }) => {
           }),
         }}
       >
-        <TableRowItem title="First Name" value={user.name.firstName} />
-        <TableRowItem title="Last Name" value={user.name.lastName} />
-        <TableRowItem title="Email" value={user.email} />
-        <TableRowItem title="Phone" value={user.phone} />
         <TableRowItem
-          title="Birth date"
-          value={format(new Date(user.dateOfBirth), "dd MMM, yyyy")}
+          title="First Name"
+          value={authUser ? user.firstname : ""}
         />
+        <TableRowItem title="Last Name" value={authUser ? user.surname : ""} />
+        <TableRowItem title="Username" value={authUser ? user.username : ""} />
+        <TableRowItem title="Email" value={authUser ? user.email : ""} />
+        <TableRowItem title="Phone" value={authUser ? user.phone : ""} />
+        <TableRowItem title="Country" value={authUser ? user.country : ""} />
       </TableRow>
     </CustomerDashboardLayout>
   );
@@ -160,20 +206,45 @@ const Profile = ({ user }) => {
 const TableRowItem = ({ title, value }) => {
   return (
     <FlexBox flexDirection="column" p={1}>
-      <Small color="grey.600" mb={0.5} textAlign="left">
+      <Small color="#066344" fontWeight={700} mb={0.5} textAlign="left">
         {title}
       </Small>
       <span>{value}</span>
     </FlexBox>
   );
 };
-export const getStaticProps = async () => {
-  const user = await api.getUser();
 
-  return {
-    props: {
-      user,
+export async function getServerSideProps(context) {
+  const { authToken } = parseCookies(context.req);
+
+  const url = "https://grynd-staging.vercel.app";
+
+  const response = await axios.get(`${url}/api/v1/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
+  });
+  const authUser = response.data;
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { authUser },
   };
-};
+}
+
+// export const getStaticProps = async () => {
+//   const user = await api.getUser();
+
+//   return {
+//     props: {
+//       user,
+//     },
+//   };
+// };
 export default Profile;

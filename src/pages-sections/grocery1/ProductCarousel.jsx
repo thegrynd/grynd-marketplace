@@ -36,7 +36,7 @@ const ProductCarousel = ({ products, title }) => {
 
       <Carousel
         infinite={true}
-        totalSlides={products.length}
+        totalSlides={products?.length}
         visibleSlides={visibleSlides}
         sx={{
           "& #backArrowButton, #backForwardButton": {
@@ -48,7 +48,7 @@ const ProductCarousel = ({ products, title }) => {
           },
         }}
       >
-        {products.map((item) => (
+        {products?.map((item) => (
           <Box pb={2} key={item.id}>
             <ProductCard13
               id={item.id}
