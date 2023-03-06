@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import cookie from "cookie";
 
 export const getUser = async () => {
   const response = await axios.get("/api/user-list/1");
@@ -10,20 +11,7 @@ export const getUserIds = async () => {
   return response.data;
 };
 
-export const getLoggedUser = async () => {
-  const url = "https://grynd-staging.vercel.app";
-  const token = Cookies.get("authToken");
-  const response = await axios.get(`${url}/api/v1/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-};
-
 export default {
   getUser,
   getUserIds,
-  getLoggedUser,
 };
