@@ -11,7 +11,7 @@ node_modules
 # next.js
 /.next/
 /out/
-/pages/vendor/upload-product
+
 
 # production
 /build
