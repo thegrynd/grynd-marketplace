@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Button, Stack } from "@mui/material";
 import SEO from "components/SEO";
@@ -16,12 +16,27 @@ import api from "utils/__api__/grocery1-shop";
 import Header from "../src/pages-sections/landing/Header";
 import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
+import { LoginContext } from "contexts/LoginContext";
+import Cookies from "js-cookie";
 
 const HomePage = (props) => {
-  console.log("props", props);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filterProducts, setFilterProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sellerProducts, setSellerProducts] = useState([]);
 
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+  // console.log("authUser", authUser);
+
+  const url = "https://grynd-staging.vercel.app";
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
     axios
@@ -31,10 +46,25 @@ const HomePage = (props) => {
         },
       })
       .then(({ data }) => {
-        console.log("data", data);
+        // console.log("data", data);
         setFilterProducts(data);
       });
   }, [selectedCategory]);
+
+  // FETCH ALL PRODUCTS FOR A SELLER ACCOUNT
+  useEffect(() => {
+    if (authUser?.data.isSeller === true) {
+      setIsLoading(true);
+      axios
+        .get(`${url}/api/v2/products`, config)
+        .then(({ data }) => {
+          setSellerProducts(data);
+          // console.log("sellerProducts", sellerProducts);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
 
   // HANDLE CHANGE CATEGORY
   const handleSelectCategory = (category) => setSelectedCategory(category);
@@ -69,45 +99,41 @@ const HomePage = (props) => {
           navFixedComponentID="grocery1Services"
           SideNav={SideNav}
         >
-          <Stack spacing={6} mt={2}>
-            {selectedCategory ? (
-              // FILTERED PRODUCT LIST
+          {authUser?.data.isSeller === true ? (
+            <Stack spacing={6} mt={2}>
+              {selectedCategory ? (
+                // FILTERED PRODUCT LIST
 
-              <Store>
-                <AllProducts
-                  products={filterProducts}
-                  title={selectedCategory}
-                />
-              </Store>
-            ) : (
-              <Fragment>
-                {/* POPULAR PRODUCTS AREA */}
-                <ProductCarousel
-                  title="Tuber Products"
-                  products={props.popularProducts}
-                />
-                {/* TRENDING PRODUCTS AREA */}
-                <ProductCarousel
-                  title="Vegetable Products"
-                  products={props.trendingProducts}
-                />
-                <ProductCarousel
-                  title="Grain Products"
-                  products={props.trendingProducts}
-                />
-                <ProductCarousel
-                  title="Fruit Products"
-                  products={props.trendingProducts}
-                />
-              </Fragment>
-            )}
+                <Store>
+                  <AllProducts
+                    products={sellerProducts}
+                    title={selectedCategory}
+                  />
+                </Store>
+              ) : (
+                <Fragment>
+                  {/* POPULAR PRODUCTS AREA */}
+                  <Store>
+                    <ProductCarousel
+                      title="All Products"
+                      products={sellerProducts}
+                    />
+                  </Store>
+                  {/* TRENDING PRODUCTS AREA */}
+                  {/* <ProductCarousel
+                    title="Vegetable Products"
+                    products={props.trendingProducts}
+                  /> */}
+                </Fragment>
+              )}
 
-            {/* DISCOUNT BANNER AREA */}
-            <DiscountSection />
+              {/* DISCOUNT BANNER AREA */}
+              <DiscountSection />
 
-            {/* FOOTER AREA */}
-            <Footer />
-          </Stack>
+              {/* FOOTER AREA */}
+              <Footer />
+            </Stack>
+          ) : null}
         </SidenavContainer>
 
         {/* POPUP NEWSLETTER FORM */}
@@ -124,20 +150,47 @@ const HomePage = (props) => {
     </>
   );
 };
-export const getStaticProps = async () => {
-  const products = await api.getProducts();
-  const serviceList = await api.getServices();
-  const popularProducts = await api.getPopularProducts();
-  const trendingProducts = await api.getTrendingProducts();
-  const grocery1NavList = await api.getGrocery1Navigation();
-  return {
-    props: {
-      products,
-      serviceList,
-      grocery1NavList,
-      popularProducts,
-      trendingProducts,
-    },
-  };
-};
+
+// export async function getServerSideProps(context) {
+//   const { authToken } = parseCookies(context.req);
+
+// const url = "https://grynd-staging.vercel.app";
+
+//   const response = await axios.get(`${url}/api/v2/products`, {
+//     headers: {
+//       Authorization: `Bearer ${authToken}`,
+//     },
+//   });
+//   console.log(response.data.status);
+//   const sellerAllProducts = response.data;
+
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/vendor/login-user",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { sellerAllProducts },
+//   };
+// }
+
+// export const getStaticProps = async () => {
+//   const products = await api.getProducts();
+//   const serviceList = await api.getServices();
+//   const popularProducts = await api.getPopularProducts();
+//   const trendingProducts = await api.getTrendingProducts();
+//   const grocery1NavList = await api.getGrocery1Navigation();
+//   return {
+//     props: {
+//       products,
+//       serviceList,
+//       grocery1NavList,
+//       popularProducts,
+//       trendingProducts,
+//     },
+//   };
+// };
 export default HomePage;
