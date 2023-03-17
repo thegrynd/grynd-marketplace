@@ -10,9 +10,7 @@ import { H2, H5 } from "components/Typography";
 // ===================================================
 
 const ProductReview = () => {
-  const handleFormSubmit = async (values, {
-    resetForm
-  }) => {
+  const handleFormSubmit = async (values, { resetForm }) => {
     resetForm();
   };
   const {
@@ -24,14 +22,17 @@ const ProductReview = () => {
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue
+    setFieldValue,
   } = useFormik({
     onSubmit: handleFormSubmit,
     initialValues: initialValues,
-    validationSchema: reviewSchema
+    validationSchema: reviewSchema,
   });
-  return <Box>
-      {commentList.map((item, ind) => <ProductComment {...item} key={ind} />)}
+  return (
+    <Box>
+      {commentList.map((item, ind) => (
+        <ProductComment {...item} key={ind} />
+      ))}
 
       <H2 fontWeight="600" mt={7} mb={2.5}>
         Write a Review for this product
@@ -44,7 +45,12 @@ const ProductReview = () => {
             <H5 color="error.main">*</H5>
           </FlexBox>
 
-          <Rating color="warn" size="medium" value={values.rating} onChange={(_, value) => setFieldValue("rating", value)} />
+          <Rating
+            color="warn"
+            size="medium"
+            value={values.rating}
+            onChange={(_, value) => setFieldValue("rating", value)}
+          />
         </Box>
 
         <Box mb={3}>
@@ -53,41 +59,66 @@ const ProductReview = () => {
             <H5 color="error.main">*</H5>
           </FlexBox>
 
-          <TextField rows={8} multiline fullWidth name="comment" variant="outlined" onBlur={handleBlur} value={values.comment} onChange={handleChange} placeholder="Write a review here..." error={!!touched.comment && !!errors.comment} helperText={touched.comment && errors.comment} />
+          <TextField
+            rows={8}
+            multiline
+            fullWidth
+            name="comment"
+            variant="outlined"
+            onBlur={handleBlur}
+            value={values.comment}
+            onChange={handleChange}
+            placeholder="Write a review here..."
+            error={!!touched.comment && !!errors.comment}
+            helperText={touched.comment && errors.comment}
+          />
         </Box>
 
-        <Button variant="contained" color="primary" type="submit" disabled={!(dirty && isValid)}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={!(dirty && isValid)}
+        >
           Submit
         </Button>
       </form>
-    </Box>;
+    </Box>
+  );
 };
-const commentList = [{
-  name: "Jannie Schumm",
-  imgUrl: "/assets/images/faces/7.png",
-  rating: 4.7,
-  date: "2021-02-14",
-  comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account."
-}, {
-  name: "Joe Kenan",
-  imgUrl: "/assets/images/faces/6.png",
-  rating: 4.7,
-  date: "2019-08-10",
-  comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account."
-}, {
-  name: "Jenifer Tulio",
-  imgUrl: "/assets/images/faces/8.png",
-  rating: 4.7,
-  date: "2021-02-05",
-  comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account."
-}];
+const commentList = [
+  {
+    name: "Jannie Schumm",
+    imgUrl: "",
+    rating: 4.7,
+    date: "2021-02-14",
+    comment:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
+  },
+  {
+    name: "Joe Kenan",
+    imgUrl: "",
+    rating: 4.7,
+    date: "2019-08-10",
+    comment:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
+  },
+  {
+    name: "Jenifer Tulio",
+    imgUrl: "",
+    rating: 4.7,
+    date: "2021-02-05",
+    comment:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida egestas ac account.",
+  },
+];
 const initialValues = {
   rating: 0,
   comment: "",
-  date: new Date().toISOString()
+  date: new Date().toISOString(),
 };
 const reviewSchema = yup.object().shape({
   rating: yup.number().required("required"),
-  comment: yup.string().required("required")
+  comment: yup.string().required("required"),
 });
 export default ProductReview;
