@@ -85,6 +85,7 @@ const ProductCarousel = ({ products, title }) => {
                   minWidth: "125px",
                   backgroundColor: "#066344",
                 }}
+                disabled
               >
                 Upload Your Product
               </Button>
