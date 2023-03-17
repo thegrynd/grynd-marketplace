@@ -4,44 +4,38 @@ import Sidenav from "components/Sidenav";
 import { H2 } from "components/Typography";
 import { FlexBox } from "components/flex-box";
 import useWindowSize from "hooks/useWindowSize";
-const StyledBox = styled(Box)(({
-  theme
-}) => ({
+const StyledBox = styled(Box)(({ theme }) => ({
   display: "flex",
   marginTop: theme.spacing(-2),
   marginBottom: theme.spacing(3),
   "& .headerHold": {
     flexGrow: 1,
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   [theme.breakpoints.up("md")]: {
     "& .sidenav": {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   [theme.breakpoints.down("md")]: {
-    flexDirection: "column"
-  }
+    flexDirection: "column",
+  },
 }));
 
 // ==============================================================
 
 // ==============================================================
 
-const UserDashboardHeader = ({
-  title,
-  button,
-  navigation,
-  ...props
-}) => {
+const UserDashboardHeader = ({ title, button, navigation, ...props }) => {
   const width = useWindowSize();
   const isTablet = width < 1025;
-  return <StyledBox>
+  return (
+    <StyledBox>
       <FlexBox mt={2} className="headerHold">
         <FlexBox alignItems="center">
           {props.icon && <props.icon color="primary" />}
-          <H2 ml={1.5} my="0px" lineHeight="1" whiteSpace="pre">
+          <H2 ml={1.5} my="0px" lineHeight="2" whiteSpace="pre">
             {title}
           </H2>
         </FlexBox>
@@ -56,6 +50,7 @@ const UserDashboardHeader = ({
       </FlexBox>
 
       {isTablet && !!button && <Box mt={2}>{button}</Box>}
-    </StyledBox>;
+    </StyledBox>
+  );
 };
 export default UserDashboardHeader;

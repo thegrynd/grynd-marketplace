@@ -12,6 +12,7 @@ node_modules
 /.next/
 /out/
 
+
 # production
 /build
 tools/output

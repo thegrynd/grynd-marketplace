@@ -147,7 +147,7 @@ const ProductCard13 = (props) => {
           <StyledChip color="primary" size="small" label={`${off}% off`} />
         )} */}
 
-        <Link href={`/product/${slug}`}>
+        <Link href={`/product/seller/${id}`}>
           <a>
             <LazyImage
               alt={title}

@@ -107,9 +107,9 @@ const Header = ({ isFixed, className, searchInput }) => {
               </Box>
 
               <Box component={IconButton} onClick={toggleSidenav}>
-                <Badge badgeContent={state.cart.length} color="primary">
-                  <Icon.CartBag sx={ICON_STYLE} />
-                </Badge>
+                {/* <Badge badgeContent={state.cart.length} color="primary"> */}
+                <Icon.CartBag sx={ICON_STYLE} />
+                {/* </Badge> */}
               </Box>
             </FlexBox>
           </FlexBetween>

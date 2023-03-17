@@ -62,7 +62,7 @@ const Container = styled(Box)(({ theme }) => ({
 const Section1 = () => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  console.log("checking", authUser);
+  // console.log("checking", authUser);
   const SEARCH_BUTTON = (
     <Button
       color="primary"
@@ -84,11 +84,13 @@ const Section1 = () => {
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <H1 maxWidth={600} mx="auto" color="#066344">
             The Best Online Agro Store
-            <H5 marginTop="1rem" color="grey">
-              Buy products and deliver to your doorstep. Sell products to online
-              buyers
-            </H5>
           </H1>
+        </Grid>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
+          <H5 color="grey" textAlign="center">
+            Buy products and deliver to your doorstep. Sell products to online
+            buyers
+          </H5>
         </Grid>
       </Grid>
       <Box className="searchBox">
