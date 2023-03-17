@@ -25,7 +25,7 @@ const Store = ({ children }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [token]);
 
   return (
     <LoginContext.Provider value={[getAuthUser, setGetAuthUser]}>

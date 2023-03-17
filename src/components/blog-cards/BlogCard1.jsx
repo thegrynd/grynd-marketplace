@@ -7,23 +7,29 @@ import { NavLink2 } from "components/nav-link";
 import { H3, Paragraph } from "components/Typography";
 // ===========================================================
 
-const BlogCard1 = ({
-  blog
-}) => {
+const BlogCard1 = ({ blog }) => {
   // common icon style
   const iconStyle = {
     color: "grey.600",
     mr: "0.3rem",
-    fontSize: "1rem"
+    fontSize: "1rem",
   };
-  return <Box>
-      <LazyImage width={588} height={272} alt="blog-image" src={blog.thumbnail} layout="responsive" sx={{
-      transition: "transform 0.3s",
-      "&:hover": {
-        transform: "scale(1.1)",
-        cursor: "pointer"
-      }
-    }} />
+  return (
+    <Box>
+      <LazyImage
+        width={588}
+        height={272}
+        alt="blog-image"
+        src={blog.thumbnail}
+        layout="responsive"
+        sx={{
+          transition: "transform 0.3s",
+          "&:hover": {
+            transform: "scale(1.1)",
+            cursor: "pointer",
+          },
+        }}
+      />
       <Box py="1.5rem">
         <H3 lineHeight={1.3} color="secondary.900">
           {blog.title}
@@ -49,6 +55,7 @@ const BlogCard1 = ({
 
         <NavLink2 title="CONTINUE READING" url="#" />
       </Box>
-    </Box>;
+    </Box>
+  );
 };
 export default BlogCard1;

@@ -15,20 +15,26 @@ import ShopLayout1 from "components/layouts/ShopLayout1";
 
 // ======================================================
 
-const CustomerDashboardLayout = ({
-  children
-}) => <ShopLayout1>
-    <Container sx={{
-    my: "2rem"
-  }}>
+const CustomerDashboardLayout = ({ children }) => (
+  <ShopLayout1>
+    <Container
+      sx={{
+        my: "2rem",
+      }}
+    >
       <Grid container spacing={3}>
-        <Grid item lg={3} xs={12} sx={{
-        display: {
-          xs: "none",
-          sm: "none",
-          md: "block"
-        }
-      }}>
+        <Grid
+          item
+          lg={3}
+          xs={12}
+          sx={{
+            display: {
+              xs: "none",
+              sm: "none",
+              md: "block",
+            },
+          }}
+        >
           <Navigations />
         </Grid>
 
@@ -37,5 +43,6 @@ const CustomerDashboardLayout = ({
         </Grid>
       </Grid>
     </Container>
-  </ShopLayout1>;
+  </ShopLayout1>
+);
 export default CustomerDashboardLayout;

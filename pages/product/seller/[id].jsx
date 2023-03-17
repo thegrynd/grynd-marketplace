@@ -14,6 +14,8 @@ import {
   getRelatedProducts,
 } from "utils/__api__/related-products";
 import api from "utils/__api__/products";
+import { parseCookies } from "../../../helpers/validation";
+import axios from "axios";
 
 // styled component
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -32,9 +34,12 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 // ===============================================================
 
-const ProductDetails = (props) => {
+const ProductDetailsSeller = ({ sellerSingleProduct }, props) => {
   const { frequentlyBought, relatedProducts, product } = props;
-  console.log("productslug", product);
+
+  const { data: singleProduct } = sellerSingleProduct || {};
+  console.log("singleProduct", singleProduct);
+
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
@@ -43,6 +48,7 @@ const ProductDetails = (props) => {
   if (router.isFallback) {
     return <h1>Loading...</h1>;
   }
+
   return (
     <ShopLayout1>
       <Container
@@ -51,7 +57,7 @@ const ProductDetails = (props) => {
         }}
       >
         {/* PRODUCT DETAILS INFO AREA */}
-        {product ? <ProductIntro product={product} /> : <H2>Loading...</H2>}
+        {<ProductIntro product={singleProduct} />}
 
         {/* PRODUCT DESCRIPTION AND REVIEW */}
         <StyledTabs
@@ -69,13 +75,13 @@ const ProductDetails = (props) => {
           {selectedOption === 1 && <ProductReview />}
         </Box>
 
-        {frequentlyBought && (
+        {/* {frequentlyBought && (
           <FrequentlyBought productsData={frequentlyBought} />
-        )}
+        )} */}
 
-        <AvailableShops />
+        {/* <AvailableShops /> */}
 
-        {relatedProducts && <RelatedProducts productsData={relatedProducts} />}
+        {/* {relatedProducts && <RelatedProducts productsData={relatedProducts} />} */}
       </Container>
     </ShopLayout1>
   );
@@ -90,6 +96,33 @@ const ProductDetails = (props) => {
 //   };
 // };
 
+export async function getServerSideProps(context) {
+  const { authToken } = parseCookies(context.req);
+  const { id } = context.params;
+
+  const url = "https://grynd-staging.vercel.app";
+
+  const response = await axios.get(`${url}/api/v2/products/${id}`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+  console.log(response.data.status);
+  const sellerSingleProduct = response.data;
+
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { sellerSingleProduct },
+  };
+}
+
 // export const getStaticProps = async ({ params }) => {
 //   const relatedProducts = await getRelatedProducts();
 //   const frequentlyBought = await getFrequentlyBought();
@@ -102,4 +135,4 @@ const ProductDetails = (props) => {
 //     },
 //   };
 // };
-export default ProductDetails;
+export default ProductDetailsSeller;

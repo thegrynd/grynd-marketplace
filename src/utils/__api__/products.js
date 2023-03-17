@@ -6,11 +6,11 @@ const getSlugs = async () => {
 };
 
 // get product based on slug
-const getProduct = async slug => {
+const getProduct = async (slug) => {
   const response = await axios.get("/api/products/slug", {
     params: {
-      slug
-    }
+      slug,
+    },
   });
   return response.data;
 };
@@ -20,13 +20,28 @@ const searchProducts = async (name, category) => {
   const response = await axios.get("/api/products/search", {
     params: {
       name,
-      category
-    }
+      category,
+    },
   });
   return response.data;
 };
+
+// //////////////////////////////////////
+// Get All Products
+const getAllProducts = async (name, category) => {
+  const url = "https://grynd-staging.vercel.app";
+
+  const response = await axios.get("/api/v2/products", {
+    params: {
+      name,
+      category,
+    },
+  });
+  return response.data;
+};
+
 export default {
   getSlugs,
   getProduct,
-  searchProducts
+  searchProducts,
 };

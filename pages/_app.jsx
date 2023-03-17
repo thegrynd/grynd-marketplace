@@ -14,6 +14,7 @@ import "nprogress/nprogress.css";
 import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
 import "../styles.css";
+import Store from "../src/contexts/Store";
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
@@ -44,7 +45,9 @@ const App = ({ Component, pageProps }) => {
         <AppProvider>
           <MuiTheme>
             <SnackbarProvider>
-              <RTL>{getLayout(<AnyComponent {...pageProps} />)}</RTL>
+              <Store>
+                <RTL>{getLayout(<AnyComponent {...pageProps} />)}</RTL>
+              </Store>
             </SnackbarProvider>
           </MuiTheme>
         </AppProvider>

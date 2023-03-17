@@ -112,43 +112,48 @@ const Section2 = () => {
           </Grid>
         ))}
       </Grid>
-
-      <H1
-        textTransform="uppercase"
-        textAlign="center"
-        marginTop="2rem"
-        color="grey"
-        fontFamily='"Lucida Console", Courier, monospace'
-      >
-        Order In 3 Easy Steps
-      </H1>
-      <hr className="hr-1" />
-      <Grid container spacing={3}>
-        {orderData.map((order) => (
-          <Grid item lg={3} md={6} sm={6} xs={12}>
-            <StyledFlexBox2 alignItems="center" justifyContent="center" gap={2}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+      <Grid>
+        <H1
+          textTransform="uppercase"
+          textAlign="center"
+          marginTop="2rem"
+          color="grey"
+          fontFamily='"Lucida Console", Courier, monospace'
+        >
+          Order In 3 Easy Steps
+        </H1>
+        <hr className="hr-1" />
+        <Grid container spacing={3}>
+          {orderData.map((order) => (
+            <Grid item lg={3} md={6} sm={6} xs={12}>
+              <StyledFlexBox2
+                alignItems="center"
+                justifyContent="center"
+                gap={2}
               >
-                <FlexBox alignItems="center" color="#066344" fontSize="50px">
-                  {order.icon}
-                </FlexBox>
-                <div style={{ color: "#066344", fontWeight: 700 }}>
-                  {order.text}
-                </div>
-              </Box>
-              <Box>
-                <H4 color="grey.900" fontSize="1rem" fontWeight="500">
-                  <Span color="grey.600">{order.description}</Span>
-                </H4>
-              </Box>
-            </StyledFlexBox2>
-          </Grid>
-        ))}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <FlexBox alignItems="center" color="#066344" fontSize="50px">
+                    {order.icon}
+                  </FlexBox>
+                  <div style={{ color: "#066344", fontWeight: 700 }}>
+                    {order.text}
+                  </div>
+                </Box>
+                <Box>
+                  <H4 color="grey.900" fontSize="1rem" fontWeight="500">
+                    <Span color="grey.600">{order.description}</Span>
+                  </H4>
+                </Box>
+              </StyledFlexBox2>
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </Container>
   );

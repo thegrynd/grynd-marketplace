@@ -6,6 +6,9 @@ module.exports = {
   publicRuntimeConfig: {
     // Available on both server and client
     theme: "DEFAULT",
-    currency: "USD",
+    currency: "RWF",
+  },
+  images: {
+    domains: ["res.cloudinary.com"],
   },
 };

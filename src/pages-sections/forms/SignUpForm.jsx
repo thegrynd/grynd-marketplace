@@ -61,6 +61,10 @@ const SignUpForm = () => {
       username: Yup.string()
         .min(5, "Username must have at least 5 characters")
         .max(15, "Username must be 15 characters or less")
+        .matches(
+          /^[a-zA-Z0-9@]+$/,
+          "Username cannot contain white space and special character"
+        )
         .required("Required"),
       firstname: Yup.string()
         .max(20, "Must be 20 characters or less")
