@@ -22,7 +22,7 @@ import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { LoginContext } from "contexts/LoginContext";
-import { Small } from "components/Typography";
+import { H3, H6, Small } from "components/Typography";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useAppContext } from "contexts/AppContext";
@@ -263,18 +263,24 @@ const Header = () => {
                 </Stack>
               )}
 
-              <FlexBox gap={1.5} alignItems="center">
-                <Badge badgeContent={state.cart.length} color="primary">
-                  <Box
-                    p={1.25}
-                    bgcolor="grey.200"
-                    component={IconButton}
-                    onClick={toggleSidenav}
-                  >
-                    <ShoppingBagOutlined />
-                  </Box>
-                </Badge>
-              </FlexBox>
+              {authUser?.data.role !== "admin" ? (
+                <FlexBox gap={1.5} alignItems="center">
+                  <Badge badgeContent={state.cart.length} color="primary">
+                    <Box
+                      p={1.25}
+                      bgcolor="grey.200"
+                      component={IconButton}
+                      onClick={toggleSidenav}
+                    >
+                      <ShoppingBagOutlined />
+                    </Box>
+                  </Badge>
+                </FlexBox>
+              ) : (
+                <FlexBox alignItems="center" ml="1rem" flexDirection="column">
+                  <H3 color="red">Admin</H3>
+                </FlexBox>
+              )}
 
               {/* mobile menu */}
               {downSM && (

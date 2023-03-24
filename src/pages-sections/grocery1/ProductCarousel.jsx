@@ -41,7 +41,7 @@ const ProductCarousel = ({ products, title }) => {
       seeMoreLink="/product/all-products"
       mb={0}
     >
-      <SubTitle>Best collection in 2021 for you!</SubTitle>
+      <SubTitle>The Best Agro Collection For You!</SubTitle>
 
       <Carousel
         infinite={true}
@@ -61,6 +61,7 @@ const ProductCarousel = ({ products, title }) => {
           <Box pb={2} key={item.id}>
             <ProductCard13
               id={item.id}
+              name={item.name}
               slug={item.slug}
               title={item.title}
               price={item.price}
@@ -85,6 +86,7 @@ const ProductCarousel = ({ products, title }) => {
                   minWidth: "125px",
                   backgroundColor: "#066344",
                 }}
+                disabled
               >
                 Upload Your Product
               </Button>

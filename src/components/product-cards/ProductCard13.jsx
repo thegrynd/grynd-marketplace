@@ -103,6 +103,7 @@ const ProductCard13 = (props) => {
   const {
     off,
     id,
+    name,
     title,
     price,
     imgUrl,
@@ -200,7 +201,7 @@ const ProductCard13 = (props) => {
 
       <ContentWrapper>
         <Box flex="1 1 0" minWidth="0px" mr={1}>
-          <Link href={`/product/${slug}`}>
+          <Link href={`/product/seller/${id}`}>
             <a>
               <H3
                 mb={1}
@@ -211,7 +212,7 @@ const ProductCard13 = (props) => {
                 className="title"
                 color="text.secondary"
               >
-                {title}
+                {name}
               </H3>
             </a>
           </Link>
