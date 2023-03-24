@@ -18,7 +18,7 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 
 // ========================================================
 
-const AllProducts = ({ products, title = "All Products" }) => {
+const FilteredProducts = ({ products, title = "All Products" }) => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   const { docs } = products?.data || {};
@@ -67,4 +67,4 @@ const AllProducts = ({ products, title = "All Products" }) => {
     </CategorySectionCreator>
   );
 };
-export default AllProducts;
+export default FilteredProducts;
