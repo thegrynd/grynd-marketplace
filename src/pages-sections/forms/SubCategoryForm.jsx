@@ -8,8 +8,12 @@ import { H3, H5 } from "components/Typography";
 import { useRouter } from "next/router";
 import { ThreeCircles } from "react-loader-spinner";
 import PreviewImage from "pages-sections/forms/PreviewImage";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
-const SubCategoryForm = () => {
+const SubCategoryForm = ({ categoryIdData }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [resData1, setResData1] = useState();
@@ -17,6 +21,9 @@ const SubCategoryForm = () => {
   const [inputFile1, setInputFile1] = useState();
 
   const [errorMsg, setErrorMsg] = useState();
+
+  const { docs } = categoryIdData.data;
+  console.log("docs", docs);
 
   useEffect(() => {
     uploadIconToCloudinary();
@@ -35,7 +42,7 @@ const SubCategoryForm = () => {
     setIsLoading(true);
 
     return axios
-      .post(`${url}/api/v2/categories`, values, {
+      .post(`${url}/api/v2/subcategories`, values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -88,10 +95,14 @@ const SubCategoryForm = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .min(5, "Category name must have at least 5 characters")
-        .max(50, "Category name must be 15 characters or less")
-        .required("The category name is required")
-        .matches(/^[aA-zZ\s]+$/, "Category Name must contain only alphabets"),
+        .min(5, "Sub-Category name must have at least 5 characters")
+        .max(50, "Sub-Category name must be 15 characters or less")
+        .required("The Sub-Category name is required")
+        .matches(
+          /^[aA-zZ\s]+$/,
+          "Sub-Category name must contain only alphabets"
+        ),
+      category: Yup.string().required("The parent category is required "),
 
       icon: Yup.object().shape({
         public_id: Yup.string(),
@@ -124,12 +135,6 @@ const SubCategoryForm = () => {
         p={8}
         sx={{ backgroundColor: "white" }}
       >
-        {/* <Grid item md={12} xs={12}>
-          {" "}
-          <H3 textAlign="center" color="#066344">
-            Create A New Category
-          </H3>
-        </Grid> */}
         <Grid item md={12} xs={12}>
           <TextField
             fullWidth
@@ -138,7 +143,7 @@ const SubCategoryForm = () => {
             size="medium"
             id="name"
             name="name"
-            label="Name of Category"
+            label="Name of Sub Category"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             value={formik.values.name}
@@ -147,19 +152,25 @@ const SubCategoryForm = () => {
             <H5 color="red">{formik.errors.name}</H5>
           ) : null}
         </Grid>
-        <Grid item md={12} xs={12}>
-          <TextField
-            fullWidth
-            type="text"
-            color="info"
-            size="medium"
-            id="category"
-            name="name"
-            label="Category"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.category}
-          />
+
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="category"
+              name="category"
+              value={formik.values.accountType}
+              label="Category"
+              onChange={formik.handleChange}
+            >
+              {docs.map((catId) => (
+                <MenuItem value={catId.id} key={catId._id}>
+                  {catId.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           {formik.touched.category && formik.errors.category ? (
             <H5 color="red">{formik.errors.category}</H5>
           ) : null}
@@ -210,7 +221,7 @@ const SubCategoryForm = () => {
                 middleCircleColor=""
               />
             ) : (
-              "Save Category"
+              "Save Sub Category"
             )}
           </Button>
         </Grid>

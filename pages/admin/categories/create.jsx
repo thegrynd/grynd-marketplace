@@ -15,7 +15,7 @@ CreateCategory.getLayout = function getLayout(page) {
 };
 // =============================================================================
 
-export default function CreateCategory() {
+export default function CreateCategory({ categoryIdData }) {
   return (
     <>
       <Box py={4}>
@@ -30,7 +30,7 @@ export default function CreateCategory() {
           Create A New Sub-Category
         </H3>
 
-        <SubCategoryForm />
+        <SubCategoryForm categoryIdData={categoryIdData} />
       </Box>
     </>
   );
@@ -49,6 +49,10 @@ export async function getServerSideProps(context) {
   const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
   console.log(authResponse.data);
   const authUser = authResponse.data;
+
+  const categoryResponse = await axios.get(`${url}/api/v2/categories`, config);
+  console.log(authResponse.data);
+  const categoryIdData = categoryResponse.data;
 
   if (authUser.success === false) {
     return {
@@ -75,6 +79,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { authUser },
+    props: { authUser, categoryIdData },
   };
 }
