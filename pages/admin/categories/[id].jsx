@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import * as yup from "yup";
 import { H3 } from "components/Typography";
 import UpdateCategory from "../../../src/pages-sections/forms/UpdateCategory";
-import UpdateSubCategory from "../../../src/pages-sections/forms/UpdateCategory";
+import UpdateSubCategory from "../../../src/pages-sections/forms/UpdateSubCategory";
 import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import axios from "axios";
 import { parseCookies } from "../../../helpers/validation";
