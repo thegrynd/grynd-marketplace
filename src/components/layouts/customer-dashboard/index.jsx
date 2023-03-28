@@ -1,4 +1,5 @@
-import { Container, Grid } from "@mui/material";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import Navigations from "./Navigations";
 import ShopLayout1 from "components/layouts/ShopLayout1";
 

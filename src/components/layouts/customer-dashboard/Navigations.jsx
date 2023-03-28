@@ -1,7 +1,12 @@
 import { Fragment } from "react";
 import { useRouter } from "next/router";
-import { Card, styled, Typography } from "@mui/material";
-import { CreditCard, FavoriteBorder, Person, Place } from "@mui/icons-material";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import { styled } from "@mui/system";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import PersonIcon from "@mui/icons-material/Person";
+import PlaceIcon from "@mui/icons-material/Place";
 import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
 import { FlexBox } from "components/flex-box";
 import CustomerService from "components/icons/CustomerService";
@@ -88,7 +93,7 @@ const linkList = [
       {
         href: "/wish-list",
         title: "Wishlist",
-        icon: FavoriteBorder,
+        icon: FavoriteBorderIcon,
         count: 19,
       },
       {
@@ -105,19 +110,19 @@ const linkList = [
       {
         href: "/profile",
         title: "Profile Info",
-        icon: Person,
+        icon: PersonIcon,
         count: 3,
       },
       {
         href: "/address",
         title: "Pickup Addresses",
-        icon: Place,
+        icon: PlaceIcon,
         count: 16,
       },
       {
         href: "/payment-methods",
         title: "Payment Methods",
-        icon: CreditCard,
+        icon: CreditCardIcon,
         count: 4,
       },
     ],
