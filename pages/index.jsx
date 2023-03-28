@@ -20,7 +20,7 @@ import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
 import { parseCookies } from "../helpers/validation";
 
-const HomePage = ({ sellerAllProducts }, ...props) => {
+const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filterProducts, setFilterProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,21 @@ const HomePage = ({ sellerAllProducts }, ...props) => {
   const { data: authUser } = getAuthUser || {};
   // console.log("authUser", authUser);
 
-  const { data: allProducts } = sellerAllProducts;
+  useEffect(() => {
+    if (authUser?.data.isSeller === true) {
+      setIsLoading(true);
+      axios
+        .get(`${url}/api/v2/products`, config)
+        .then(({ data }) => {
+          setSellerProducts(data);
+          // console.log("sellerProducts", sellerProducts);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
+
+  const { data: allProducts } = sellerProducts;
   console.log("allProducts", allProducts);
 
   const url = "https://grynd-staging.vercel.app";
@@ -154,32 +168,32 @@ const HomePage = ({ sellerAllProducts }, ...props) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const { authToken } = parseCookies(context.req);
+// export async function getServerSideProps(context) {
+//   const { authToken } = parseCookies(context.req);
 
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  const url = "https://grynd-staging.vercel.app";
+//   const url = "https://grynd-staging.vercel.app";
 
-  const response = await axios.get(`${url}/api/v2/products`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+//   const response = await axios.get(`${url}/api/v2/products`, {
+//     headers: {
+//       Authorization: `Bearer ${authToken}`,
+//     },
+//   });
 
-  const sellerAllProducts = response.data;
+//   const sellerAllProducts = response.data;
 
-  return {
-    props: { sellerAllProducts },
-  };
-}
+//   return {
+//     props: { sellerAllProducts },
+//   };
+// }
 
 // export const getStaticProps = async () => {
 //   const products = await api.getProducts();
