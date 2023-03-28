@@ -2,7 +2,7 @@ import { Box, styled, useTheme } from "@mui/material";
 import appIcons from "components/icons";
 import Scrollbar from "components/Scrollbar";
 import BazaarCard from "components/BazaarCard";
-import { H3, H5, Span } from "components/Typography";
+import { H5, Span } from "components/Typography";
 import Accordion from "components/accordion/Accordion";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import AccordionHeader from "components/accordion/AccordionHeader";
@@ -78,25 +78,23 @@ const SideNavbar = (props) => {
     sidebarStyle,
     sidebarHeight,
     handleSelect = () => {},
-    handleSelectSub = () => {},
   } = props;
 
   // const Icon = appIcons[item.icon];
   const { palette } = useTheme();
-
   const renderChild = (childList) => {
     return childList.map((item) => (
       <StyledList
-        key={item._id}
-        onClick={() => handleSelectSub(item._id)}
+        key={item.title}
+        onClick={() => handleSelect(item.title)}
         sx={{
-          color: "white",
+          color: "grey.700",
           cursor: "pointer",
         }}
       >
         <Circle className="listCircle" />
-        <Span py={0} flex="1 1 0">
-          {item.name}
+        <Span py={0.75} flex="1 1 0">
+          {item.title}
         </Span>
       </StyledList>
     ));
@@ -109,62 +107,136 @@ const SideNavbar = (props) => {
       }}
     >
       <NavbarRoot isfixed={isFixed} sidebarstyle={sidebarStyle}>
-        <Box>
+        <Box sx={{ color: "white" }}>
           <Box padding="16px 20px 5px 20px">
-            <H5 textTransform="uppercase">Select Product Based on Category</H5>
-
+            <H5>Tubers</H5>
             <BorderBox linestyle={lineStyle}>
               <ColorBorder />
               <ColorBorder grey={1} />
             </BorderBox>
           </Box>
-
-          {navList.map((item, ind) => {
-            // const Icon = appIcons[item.icon];
-            return (
-              <Box mb="2px" color="grey.700" key={ind}>
-                {item.subcategories?.length ? (
-                  <Accordion>
-                    <AccordionHeader
-                      px={0}
-                      py={0.75}
-                      className="linkList"
-                      sx={{
-                        color: "white",
-                        ":hover": {
-                          color: palette.primary.main,
-                        },
-                      }}
-                    >
-                      <FlexBox gap={1.5} alignItems="center">
-                        {/* <Icon fontSize="small" /> */}
-                        <Span fontWeight="600">{item.name}</Span>
-                      </FlexBox>
-                    </AccordionHeader>
-
-                    {item.subcategories.length
-                      ? renderChild(item.subcategories)
-                      : null}
-                  </Accordion>
-                ) : (
-                  <Box
-                    key={item.id}
-                    onClick={() => handleSelect(item.id)}
-                    sx={{
-                      color: "white",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <FlexBox gap={1.5} className="linkList" py={0.75}>
-                      {/* <Icon fontSize="small" /> */}
-                      <Span fontWeight="600">{item.name}</Span>
-                    </FlexBox>
-                  </Box>
-                )}
-              </Box>
-            );
-          })}
+          <Box mb="2px" color="grey.700">
+            <Accordion>
+              <AccordionHeader
+                px={0}
+                py={0.75}
+                className="linkList"
+                sx={{
+                  color: "white",
+                  ":hover": {
+                    color: palette.primary.main,
+                  },
+                }}
+              >
+                <FlexBox gap={1.5} alignItems="center">
+                  {/* <Icon fontSize="small" /> */}
+                  <Span fontWeight="600" color="white">
+                    Yam
+                  </Span>
+                </FlexBox>
+              </AccordionHeader>
+              <StyledList
+                // onClick={() => handleSelect(item.title)}
+                sx={{
+                  color: "red",
+                  cursor: "pointer",
+                }}
+              >
+                <Span py={0.2} flex="1 1 0">
+                  Abuja yam
+                </Span>
+              </StyledList>
+            </Accordion>
+            <Box
+              // key={item.title}
+              onClick={() => handleSelect}
+              sx={{
+                color: "grey.700",
+                cursor: "pointer",
+              }}
+            >
+              <FlexBox gap={1.5} className="linkList" py={0.75}>
+                {/* <Icon fontSize="small" /> */}
+                <Span fontWeight="600" color="white">
+                  Potato
+                </Span>
+              </FlexBox>
+            </Box>
+            <Box
+              // key={item.title}
+              onClick={() => handleSelect}
+              sx={{
+                color: "grey.700",
+                cursor: "pointer",
+              }}
+            >
+              <FlexBox gap={1.5} className="linkList" py={0.75}>
+                {/* <Icon fontSize="small" /> */}
+                <Span fontWeight="600" color="white">
+                  Potato
+                </Span>
+              </FlexBox>
+            </Box>
+          </Box>
         </Box>
+
+        {/* {navList.map((item, ind) => {
+          return (
+            <Box key={ind}>
+              <Box padding="16px 20px 5px 20px">
+                <H5>{item.category}</H5>
+
+                <BorderBox linestyle={lineStyle}>
+                  <ColorBorder />
+                  <ColorBorder grey={1} />
+                </BorderBox>
+              </Box>
+
+              {item.categoryItem.map((item, ind) => {
+                const Icon = appIcons[item.icon];
+                return (
+                  <Box mb="2px" color="grey.700" key={ind}>
+                    {item.child ? (
+                      <Accordion>
+                        <AccordionHeader
+                          px={0}
+                          py={0.75}
+                          className="linkList"
+                          sx={{
+                            ":hover": {
+                              color: palette.primary.main,
+                            },
+                          }}
+                        >
+                          <FlexBox gap={1.5} alignItems="center">
+                            <Icon fontSize="small" />
+                            <Span fontWeight="600">{item.title}</Span>
+                          </FlexBox>
+                        </AccordionHeader>
+
+                        {item.child ? renderChild(item.child) : null}
+                      </Accordion>
+                    ) : (
+                      <Box
+                        key={item.title}
+                        onClick={() => handleSelect(item.title)}
+                        sx={{
+                          color: "grey.700",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <FlexBox gap={1.5} className="linkList" py={0.75}>
+                          <Icon fontSize="small" />
+                          <Span fontWeight="600">{item.title}</Span>
+                        </FlexBox>
+                      </Box>
+                    )}
+                  </Box>
+                );
+              })}
+            </Box>
+          );
+        })} */}
       </NavbarRoot>
     </Scrollbar>
   );
@@ -175,78 +247,3 @@ SideNavbar.defaultProps = {
   sidebarStyle: "style1",
 };
 export default SideNavbar;
-
-{
-  /* <Box sx={{ color: "white" }}>
-  <Box padding="16px 20px 5px 20px">
-    <H3>Tubers</H3>
-    <BorderBox linestyle={lineStyle}>
-      <ColorBorder />
-      <ColorBorder grey={1} />
-    </BorderBox>
-  </Box> */
-}
-// <Box mb="2px" color="grey.700">
-//   <Accordion>
-//     <AccordionHeader
-//       px={0}
-//       py={0.75}
-//       className="linkList"
-//       sx={{
-//         color: "white",
-//         ":hover": {
-//           color: palette.primary.main,
-//         },
-//       }}
-//     >
-//       <FlexBox gap={1.5} alignItems="center">
-//         {/* <Icon fontSize="small" /> */}
-//         <Span fontWeight="600" color="white">
-//           Yam
-//         </Span>
-//       </FlexBox>
-//     </AccordionHeader>
-//     <StyledList
-//       // onClick={() => handleSelect(item.title)}
-//       sx={{
-//         color: "red",
-//         cursor: "pointer",
-//       }}
-//     >
-//       <Span py={0.2} flex="1 1 0">
-//       Abuja yam
-//     </Span>
-//   </StyledList>
-// </Accordion>
-// <Box
-//   // key={item.title}
-//   onClick={() => handleSelect}
-//   sx={{
-//     color: "grey.700",
-//     cursor: "pointer",
-//   }}
-// >
-//   <FlexBox gap={1.5} className="linkList" py={0.75}>
-//     {/* <Icon fontSize="small" /> */}
-//     <Span fontWeight="600" color="white">
-//       Potato
-//     </Span>
-//   </FlexBox>
-// </Box>
-// <Box
-// key={item.title}
-//   onClick={() => handleSelect}
-//   sx={{
-//     color: "grey.700",
-//     cursor: "pointer",
-//   }}
-// >
-//       <FlexBox gap={1.5} className="linkList" py={0.75}>
-//         {/* <Icon fontSize="small" /> */}
-//         <Span fontWeight="600" color="white">
-//           Potato
-//         </Span>
-//       </FlexBox>
-//     </Box>
-//   </Box>
-// </Box>;

@@ -112,7 +112,7 @@ const Section1 = () => {
           }}
         />
       </Box>
-      {authUser?.data.isSeller === false && authUser?.data.role !== "admin" ? (
+      {authUser?.data.isSeller === false ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
           <Link href={"/vendor/create-seller"}>
             <Button
@@ -129,27 +129,6 @@ const Section1 = () => {
             >
               Become a Seller
             </Button>
-          </Link>
-        </Box>
-      ) : authUser?.data.role === "admin" ? (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
-          <Link href={"/vendor/dashboard"}>
-            <a target="_blank">
-              <Button
-                sx={{
-                  borderRadius: "4px",
-                  background: "green",
-                  color: "white",
-                  padding: "0.5rem 1rem",
-                  ":hover": {
-                    backgroundColor: "grey",
-                    color: "black",
-                  },
-                }}
-              >
-                Admin Dashboard
-              </Button>
-            </a>
           </Link>
         </Box>
       ) : null}
