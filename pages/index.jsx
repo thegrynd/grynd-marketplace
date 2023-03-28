@@ -19,7 +19,6 @@ import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
 import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
 
 const HomePage = (props) => {
   console.log("categoryData", props.categoryData);
@@ -231,7 +230,6 @@ export async function getServerSideProps() {
   const url = "https://grynd-staging.vercel.app";
 
   const response = await axios.get(`${url}/api/v2/categories`);
-  console.log(response.data.status);
   const categoryData = response.data;
 
   return {

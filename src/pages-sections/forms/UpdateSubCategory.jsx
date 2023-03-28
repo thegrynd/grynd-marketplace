@@ -23,8 +23,6 @@ const UpdateSubCategory = ({ currentCategory }) => {
   const { id } = router.query;
   const { subcategories } = currentCategory;
 
-  const [errorMsg, setErrorMsg] = useState();
-
   useEffect(() => {
     uploadIconToCloudinary();
   }, [inputFile1]);

@@ -154,11 +154,9 @@ export async function getServerSideProps(context) {
   };
 
   const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
-  console.log(authResponse.data);
   const authUser = authResponse.data;
 
   const response = await axios.get(`${url}/api/v2/categories`, config);
-  console.log(response.data.status);
   const categoryData = response.data;
 
   if (authUser.success === false) {
