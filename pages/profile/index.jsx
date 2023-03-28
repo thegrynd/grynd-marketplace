@@ -1,15 +1,14 @@
 import Link from "next/link";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import TableRow from "components/TableRow";
-import { H3, H5, Small } from "components/Typography";
+import { H3 } from "../../src/components/Typography";
+import { Small } from "../../src/components/Typography";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
@@ -18,7 +17,6 @@ import { currency } from "lib";
 import api from "utils/__api__/users";
 import Image from "next/image";
 import { parseCookies } from "../../helpers/validation";
-import axios from "axios";
 
 // ============================================================
 
@@ -221,7 +219,6 @@ const TableRowItem = ({ title, value }) => {
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
   // const { origin } = absoluteUrl(context.req);
-  // const url = "https://grynd-staging.vercel.app";
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`,

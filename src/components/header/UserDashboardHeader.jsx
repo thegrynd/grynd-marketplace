@@ -1,5 +1,7 @@
 import Menu from "@mui/icons-material/Menu";
-import { Box, styled } from "@mui/material";
+// import { Box, styled } from "@mui/material";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/system";
 import Sidenav from "components/Sidenav";
 import { H2 } from "components/Typography";
 import { FlexBox } from "components/flex-box";
