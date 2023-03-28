@@ -220,15 +220,27 @@ const TableRowItem = ({ title, value }) => {
 
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
-
+  // const { origin } = absoluteUrl(context.req);
   const url = "https://grynd-staging.vercel.app";
 
-  const response = await axios.get(`${url}/api/v1/auth/me`, {
+  const response = await fetch(`${url}/api/v1/auth/me`, {
+    method: "GET",
+
     headers: {
-      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      Cookie: `token=${authToken}`,
     },
+    credentials: "include",
   });
-  const authUser = response.data;
+
+  const authUser = await response.json();
+
+  if (authUser.success === false) {
+    return {
+      notFound: true,
+    };
+  }
+
   if (!authToken) {
     return {
       redirect: {
@@ -236,11 +248,43 @@ export async function getServerSideProps(context) {
         permanent: false,
       },
     };
+  } else if (resData.data?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/vendor/login-user",
+        permanent: false,
+      },
+    };
   }
+
   return {
     props: { authUser },
   };
 }
+
+// export async function getServerSideProps(context) {
+//   const { authToken } = parseCookies(context.req);
+
+//   const url = "https://grynd-staging.vercel.app";
+
+//   const response = await axios.get(`${url}/api/v1/auth/me`, {
+//     headers: {
+//       Authorization: `Bearer ${authToken}`,
+//     },
+//   });
+//   const authUser = response.data;
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { authUser },
+//   };
+// }
 
 // export const getStaticProps = async () => {
 //   const user = await api.getUser();
