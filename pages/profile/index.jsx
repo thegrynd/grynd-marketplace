@@ -221,17 +221,20 @@ const TableRowItem = ({ title, value }) => {
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
   // const { origin } = absoluteUrl(context.req);
-  const url = "https://grynd-staging.vercel.app";
+  // const url = "https://grynd-staging.vercel.app";
 
-  const response = await fetch(`${url}/api/v1/auth/me`, {
-    method: "GET",
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`,
+    {
+      method: "GET",
 
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `token=${authToken}`,
-    },
-    credentials: "include",
-  });
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${authToken}`,
+      },
+      credentials: "include",
+    }
+  );
 
   const authUser = await response.json();
 
@@ -248,7 +251,7 @@ export async function getServerSideProps(context) {
         permanent: false,
       },
     };
-  } else if (resData.data?.role !== "admin") {
+  } else if (authUser.data?.role !== "admin") {
     return {
       redirect: {
         destination: "/vendor/login-user",
