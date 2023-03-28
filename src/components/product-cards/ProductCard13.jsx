@@ -19,7 +19,7 @@ const StyledBazaarCard = styled(BazaarCard)(({ theme }) => ({
   margin: "auto",
   display: "flex",
   overflow: "hidden",
-  borderRadius: "8px",
+  borderRadius: "1px",
   position: "relative",
   flexDirection: "column",
   justifyContent: "space-between",
@@ -103,13 +103,17 @@ const ProductCard13 = (props) => {
   const {
     off,
     id,
-    title,
+    // title,
     price,
     imgUrl,
     rating,
     hideRating,
     hoverEffect,
     slug,
+    name,
+    description,
+    isPublished,
+    subcategory,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch } = useAppContext();
@@ -125,7 +129,7 @@ const ProductCard13 = (props) => {
         price,
         imgUrl,
         id,
-        name: title,
+        name: name,
         qty: amount,
         slug,
       },
@@ -150,7 +154,7 @@ const ProductCard13 = (props) => {
         <Link href={`/product/seller/${id}`}>
           <a>
             <LazyImage
-              alt={title}
+              alt={name}
               width={190}
               src={imgUrl}
               height={190}
@@ -190,11 +194,14 @@ const ProductCard13 = (props) => {
         openDialog={openModal}
         handleCloseDialog={toggleDialog}
         product={{
-          title,
+          name,
           price,
           id,
           slug,
           imgGroup: [imgUrl, imgUrl],
+          description,
+          rating,
+          subcategory,
         }}
       />
 
@@ -204,14 +211,14 @@ const ProductCard13 = (props) => {
             <a>
               <H3
                 mb={1}
-                title={title}
+                title={name}
                 fontSize="14px"
                 textAlign="left"
                 fontWeight="600"
                 className="title"
                 color="text.secondary"
               >
-                {title}
+                {name}
               </H3>
             </a>
           </Link>

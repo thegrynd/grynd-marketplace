@@ -18,6 +18,7 @@ import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
 import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
+import { parseCookies } from "../helpers/validation";
 
 const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -29,6 +30,23 @@ const HomePage = (props) => {
   const { data: authUser } = getAuthUser || {};
   // console.log("authUser", authUser);
 
+  useEffect(() => {
+    if (authUser?.data.isSeller === true) {
+      setIsLoading(true);
+      axios
+        .get(`${url}/api/v2/products`, config)
+        .then(({ data }) => {
+          setSellerProducts(data);
+          // console.log("sellerProducts", sellerProducts);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
+
+  const { data: allProducts } = sellerProducts;
+  console.log("allProducts", allProducts);
+
   const url = "https://grynd-staging.vercel.app";
   const token = Cookies.get("authToken");
   const config = {
@@ -37,6 +55,7 @@ const HomePage = (props) => {
       "Content-Type": "application/json",
     },
   };
+
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
     axios
@@ -84,6 +103,7 @@ const HomePage = (props) => {
       <Store>
         <Header />
       </Store>
+
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
@@ -113,17 +133,14 @@ const HomePage = (props) => {
               ) : (
                 <Fragment>
                   {/* POPULAR PRODUCTS AREA */}
-                  <Store>
+                  <AllProducts products={allProducts} title="" />
+
+                  {/* <Store>
                     <ProductCarousel
                       title="All Products"
                       products={sellerProducts}
                     />
-                  </Store>
-                  {/* TRENDING PRODUCTS AREA */}
-                  {/* <ProductCarousel
-                    title="Vegetable Products"
-                    products={props.trendingProducts}
-                  /> */}
+                  </Store> */}
                 </Fragment>
               )}
 
@@ -154,24 +171,25 @@ const HomePage = (props) => {
 // export async function getServerSideProps(context) {
 //   const { authToken } = parseCookies(context.req);
 
-// const url = "https://grynd-staging.vercel.app";
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   const url = "https://grynd-staging.vercel.app";
 
 //   const response = await axios.get(`${url}/api/v2/products`, {
 //     headers: {
 //       Authorization: `Bearer ${authToken}`,
 //     },
 //   });
-//   console.log(response.data.status);
+
 //   const sellerAllProducts = response.data;
 
-//   if (!authToken) {
-//     return {
-//       redirect: {
-//         destination: "/vendor/login-user",
-//         permanent: false,
-//       },
-//     };
-//   }
 //   return {
 //     props: { sellerAllProducts },
 //   };
