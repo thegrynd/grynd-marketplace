@@ -215,6 +215,7 @@ const TableRowItem = ({ title, value }) => {
     </FlexBox>
   );
 };
+export default Profile;
 
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
@@ -238,22 +239,6 @@ export async function getServerSideProps(context) {
   if (authUser.success === false) {
     return {
       notFound: true,
-    };
-  }
-
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  } else if (authUser.data?.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/vendor/login-user",
-        permanent: false,
-      },
     };
   }
 
@@ -295,4 +280,3 @@ export async function getServerSideProps(context) {
 //     },
 //   };
 // };
-export default Profile;
