@@ -27,6 +27,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useAppContext } from "contexts/AppContext";
 import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
+import MiniCart from "components/MiniCart";
 
 const headerHeight = 72;
 const slideFromTop = keyframes`
@@ -73,6 +74,17 @@ const Header = () => {
   console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
   const downSM = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const toggleSidenav = () => setOpen((open) => !open);
   const scrollListener = debounce(() => {
@@ -93,11 +105,13 @@ const Header = () => {
           <a href={authUser?.data.isSeller === true ? "/profile" : "/profile"}>
             <span style={{ color: "red", fontWeight: 700, cursor: "pointer" }}>
               {" "}
-              {`${authUser.data.firstname} ${authUser.data.surname}`}
+              {authUser?.success == true
+                ? `${authUser?.data.firstname} ${authUser?.data.surname}`
+                : "Loading User"}
             </span>
           </a>
           <br />
-          <div> {authUser.data.username ?? "User"}</div>
+          <div> {authUser?.data.username ?? "User"}</div>
         </Small>
       </>
     );
@@ -242,29 +256,31 @@ const Header = () => {
                 ""
               )}
 
-              {authUser?.success === true && (
-                <Stack direction="row" spacing={1} ml="1rem">
-                  {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
-                  <Chip
-                    avatar={
-                      <Avatar
-                        alt={authUser.data.username ?? "Logged in user"}
-                        src={
-                          authUser.data.avatar.url
-                            ? authUser.data.avatar.url
-                            : ""
-                        }
-                      />
-                    }
-                    label={<AvatarText />}
-                    variant="outlined"
-                    sx={{ boxSizing: "border-box", padding: "1rem 0" }}
-                  />
-                </Stack>
-              )}
+              <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
+                {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
+                <Chip
+                  avatar={
+                    <Avatar
+                      alt={authUser?.data.username ?? "Logged in user"}
+                      src={
+                        authUser?.data.avatar.url
+                          ? authUser.data.avatar.url
+                          : ""
+                      }
+                    />
+                  }
+                  label={<AvatarText />}
+                  variant="outlined"
+                  sx={{ boxSizing: "border-box", padding: "1rem 0" }}
+                />
+              </Stack>
 
               <FlexBox gap={1.5} alignItems="center">
-                <Badge badgeContent={state.cart.length} color="primary">
+                <Badge
+                  badgeContent={state.cart.length}
+                  color="primary"
+                  onMouseOver={handleMouseOver}
+                >
                   <Box
                     p={1.25}
                     bgcolor="grey.200"
@@ -363,7 +379,9 @@ const Header = () => {
           </Container>
         </Box>
       </HeaderWrapper>
-
+      <FlexBox justifyContent="flex-end">
+        {isHovering && <MiniCart handleMouseOut={handleMouseOut} />}
+      </FlexBox>
       {isFixed && <Box height={headerHeight} />}
     </Fragment>
   );

@@ -8,6 +8,7 @@ const leftImg = "/assets/images/landing/yam.png";
 const midImg = "/assets/images/landing/habanero.png";
 const rightImg = "/assets/images/landing/greenchilli.png";
 import { Grid } from "@mui/material";
+import { ThreeCircles } from "react-loader-spinner";
 
 // styled component
 const Container = styled(Box)(({ theme }) => ({
@@ -112,7 +113,7 @@ const Section1 = () => {
           }}
         />
       </Box>
-      {authUser?.data.isSeller === false ? (
+      {authUser?.data.isSeller === false && authUser?.data.role !== "admin" ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
           <Link href={"/vendor/create-seller"}>
             <Button
@@ -130,6 +131,55 @@ const Section1 = () => {
               Become a Seller
             </Button>
           </Link>
+        </Box>
+      ) : authUser?.data.role === "admin" ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
+          <Link href={"/admin/categories"}>
+            <a target="_blank">
+              <Button
+                sx={{
+                  borderRadius: "4px",
+                  background: "green",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  ":hover": {
+                    backgroundColor: "grey",
+                    color: "black",
+                  },
+                }}
+              >
+                Admin Dashboard
+              </Button>
+            </a>
+          </Link>
+        </Box>
+      ) : authUser === undefined ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
+          <Button
+            sx={{
+              borderRadius: "4px",
+              background: "green",
+              color: "white",
+              padding: "0.5rem 1rem",
+              ":hover": {
+                backgroundColor: "grey",
+                color: "black",
+              },
+            }}
+          >
+            <ThreeCircles
+              height="30"
+              width="30"
+              color="#fff"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="three-circles-rotating"
+              outerCircleColor=""
+              innerCircleColor=""
+              middleCircleColor=""
+            />
+          </Button>
         </Box>
       ) : null}
     </Container>

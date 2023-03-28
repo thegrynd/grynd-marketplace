@@ -1,8 +1,4 @@
-import { useContext } from "react";
-import { LoginContext } from "../../src/contexts/LoginContext";
 import Link from "next/link";
-import { format } from "date-fns";
-import { Person } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -72,7 +68,15 @@ const Profile = ({ authUser }) => {
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
         // icon={Person}
-        title="User"
+        title={
+          user?.role === "admin" && user?.isSeller === false
+            ? "Admin"
+            : user?.isSeller === true
+            ? "Seller"
+            : user?.isSeller === false
+            ? "User"
+            : null
+        }
         button={HEADER_LINK}
         navigation={<CustomerDashboardNavigation />}
       />

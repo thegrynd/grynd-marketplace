@@ -21,14 +21,14 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 const AllProducts = ({ products, title = "All Products" }) => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  const { docs } = products?.data || {};
+  const { docs } = products || {};
   return (
     <CategorySectionCreator title={title}>
       <SubTitle>Browse through quality agro products for you</SubTitle>
 
       <Grid container spacing={3}>
         {docs?.map((item) => (
-          <Grid key={item.id} item md={4} sm={6} xs={12}>
+          <Grid key={item.id} item md={6} sm={6} xs={12}>
             <ProductCard13
               id={item.id}
               slug={item.slug}
@@ -37,6 +37,10 @@ const AllProducts = ({ products, title = "All Products" }) => {
               off={item.discount}
               rating={item.rating}
               imgUrl={item.images[0]?.url}
+              name={item.name}
+              description={item.description}
+              isPublished={item.isPublished}
+              subcategory={item.subcategory}
             />
           </Grid>
         ))}
