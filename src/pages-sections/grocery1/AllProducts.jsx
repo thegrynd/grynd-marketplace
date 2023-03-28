@@ -28,16 +28,15 @@ const AllProducts = ({ products, title = "All Products" }) => {
 
       <Grid container spacing={3}>
         {docs?.map((item) => (
-          <Grid key={item.id} item md={6} sm={6} xs={12}>
+          <Grid key={item.id} item md={4} sm={6} xs={12}>
             <ProductCard13
               id={item.id}
-              name={item.name}
               slug={item.slug}
               title={item.title}
               price={item.price}
               off={item.discount}
               rating={item.rating}
-              imgUrl={item.images?.[0]?.url}
+              imgUrl={item.images[0]?.url}
             />
           </Grid>
         ))}

@@ -9,44 +9,34 @@ import { H3 } from "components/Typography";
 import useMuiTable from "hooks/useMuiTable";
 import Scrollbar from "components/Scrollbar";
 import { CategoryRow } from "pages-sections/admin";
-import axios from "axios";
-import { parseCookies } from "../../../helpers/validation";
-
 import api from "utils/__api__/dashboard";
 
 // TABLE HEADING DATA LIST
-const tableHeading = [
-  {
-    id: "id",
-    label: "ID",
-    align: "left",
-  },
-  {
-    id: "name",
-    label: "Name",
-    align: "left",
-  },
-  {
-    id: "image",
-    label: "Image",
-    align: "left",
-  },
-  {
-    id: "level",
-    label: "Level",
-    align: "left",
-  },
-  {
-    id: "featured",
-    label: "Featured",
-    align: "left",
-  },
-  {
-    id: "action",
-    label: "Action",
-    align: "center",
-  },
-];
+const tableHeading = [{
+  id: "id",
+  label: "ID",
+  align: "left"
+}, {
+  id: "name",
+  label: "Name",
+  align: "left"
+}, {
+  id: "image",
+  label: "Image",
+  align: "left"
+}, {
+  id: "level",
+  label: "Level",
+  align: "left"
+}, {
+  id: "featured",
+  label: "Featured",
+  align: "left"
+}, {
+  id: "action",
+  label: "Action",
+  align: "center"
+}];
 
 // =============================================================================
 CategoryList.getLayout = function getLayout(page) {
@@ -56,18 +46,19 @@ CategoryList.getLayout = function getLayout(page) {
 
 // =============================================================================
 
-export default function CategoryList({ categoryData }) {
-  const { docs } = categoryData.data || {};
-  console.log("categoryData", docs);
+export default function CategoryList(props) {
+  const {
+    categories
+  } = props;
 
   // RESHAPE THE PRODUCT LIST BASED TABLE HEAD CELL ID
-  const filteredCategories = docs?.map((item) => ({
+  const filteredCategories = categories.map(item => ({
     id: item.id,
     name: item.name,
     slug: item.slug,
-    image: item.icon.url,
-    // featured: item.featured,
-    level: Math.ceil(Math.random() * 1),
+    image: item.image,
+    featured: item.featured,
+    level: Math.ceil(Math.random() * 1)
   }));
   const {
     order,
@@ -76,112 +67,41 @@ export default function CategoryList({ categoryData }) {
     rowsPerPage,
     filteredList,
     handleChangePage,
-    handleRequestSort,
+    handleRequestSort
   } = useMuiTable({
-    listData: filteredCategories,
+    listData: filteredCategories
   });
-  return (
-    <Box py={4}>
-      <H3 mb={2} color="#066344">
-        Product Categories
-      </H3>
+  return <Box py={4}>
+      <H3 mb={2}>Product Categories</H3>
 
-      <SearchArea
-        handleSearch={() => {}}
-        buttonText="Add Category"
-        searchPlaceholder="Search Category..."
-        handleBtnClick={() => Router.push("/admin/categories/create")}
-      />
+      <SearchArea handleSearch={() => {}} buttonText="Add Category" searchPlaceholder="Search Category..." handleBtnClick={() => Router.push("/admin/categories/create")} />
 
       <Card>
         <Scrollbar>
-          <TableContainer
-            sx={{
-              minWidth: 900,
-            }}
-          >
+          <TableContainer sx={{
+          minWidth: 900
+        }}>
             <Table>
-              <TableHeader
-                order={order}
-                hideSelectBtn
-                orderBy={orderBy}
-                heading={tableHeading}
-                rowCount={docs.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-              />
+              <TableHeader order={order} hideSelectBtn orderBy={orderBy} heading={tableHeading} rowCount={categories.length} numSelected={selected.length} onRequestSort={handleRequestSort} />
 
               <TableBody>
-                {filteredList.map((category) => (
-                  <CategoryRow
-                    item={category}
-                    key={category.id}
-                    selected={selected}
-                  />
-                ))}
+                {filteredList.map(category => <CategoryRow item={category} key={category.id} selected={selected} />)}
               </TableBody>
             </Table>
           </TableContainer>
         </Scrollbar>
 
         <Stack alignItems="center" my={4}>
-          <TablePagination
-            onChange={handleChangePage}
-            count={Math.ceil(docs.length / rowsPerPage)}
-          />
+          <TablePagination onChange={handleChangePage} count={Math.ceil(categories.length / rowsPerPage)} />
         </Stack>
       </Card>
-    </Box>
-  );
+    </Box>;
 }
-// export const getStaticProps = async () => {
-//   const categories = await api.category();
-//   return {
-//     props: {
-//       categories,
-//     },
-//   };
-// };
-
-export async function getServerSideProps(context) {
-  const { authToken } = parseCookies(context.req);
-  const url = "https://grynd-staging.vercel.app";
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  };
-
-  const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
-  const authUser = authResponse.data;
-
-  const response = await axios.get(`${url}/api/v2/categories`, config);
-  const categoryData = response.data;
-
-  if (authUser.success === false) {
-    return {
-      notFound: true,
-    };
-  }
-
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/vendor/login-user",
-        permanent: false,
-      },
-    };
-  } else if (authUser.data.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
+export const getStaticProps = async () => {
+  const categories = await api.category();
   return {
-    props: { categoryData, authUser },
+    props: {
+      categories
+    }
   };
-}
+};

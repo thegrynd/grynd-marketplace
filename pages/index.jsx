@@ -9,7 +9,6 @@ import SideNavbar from "components/page-sidenav/SideNavbar";
 import Section1 from "pages-sections/landing/Section1";
 import Section2 from "pages-sections/landing/Section2";
 import AllProducts from "pages-sections/grocery1/AllProducts";
-import FilteredProducts from "pages-sections/grocery1/FilteredProducts";
 import DiscountSection from "pages-sections/grocery1/DiscountSection";
 import ProductCarousel from "pages-sections/grocery1/ProductCarousel";
 import { MobileNavigationBar2 } from "components/mobile-navigation";
@@ -21,12 +20,8 @@ import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
 
 const HomePage = (props) => {
-  console.log("categoryData", props.categoryData);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [filterProducts, setFilterProducts] = useState([]);
-  const [filterSubProducts, setFilterSubProducts] = useState([]);
-  // const [categoryData, setCategoryData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sellerProducts, setSellerProducts] = useState([]);
 
@@ -42,36 +37,19 @@ const HomePage = (props) => {
       "Content-Type": "application/json",
     },
   };
-
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
-    setIsLoading(true);
     axios
-      .get(`${url}/api/v2/categories/${selectedCategory}`)
+      .get("/api/grocery-1/category-based-products", {
+        params: {
+          category: selectedCategory,
+        },
+      })
       .then(({ data }) => {
+        // console.log("data", data);
         setFilterProducts(data);
-        console.log("filterCategoryData", filterProducts);
-      })
-      .catch((err) => err)
-      .finally(() => setIsLoading(false));
+      });
   }, [selectedCategory]);
-
-  // FETCH PRODUCTS BASED ON THE SELECTED SUBCATEGORY
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`${url}/api/v2/subcategories/${selectedSubCategory}`)
-      .then(({ data }) => {
-        setFilterSubProducts(data);
-        console.log("filterSubCategoryData", filterSubProducts);
-      })
-      .catch((err) => err)
-      .finally(() => setIsLoading(false));
-  }, [selectedSubCategory]);
-
-  useEffect(() => {
-    console.log("updated", filterSubProducts);
-  }, [filterSubProducts]);
 
   // FETCH ALL PRODUCTS FOR A SELLER ACCOUNT
   useEffect(() => {
@@ -90,19 +68,16 @@ const HomePage = (props) => {
 
   // HANDLE CHANGE CATEGORY
   const handleSelectCategory = (category) => setSelectedCategory(category);
-  const handleSelectSubCategory = (subcategory) =>
-    setSelectedSubCategory(subcategory);
 
   // SIDE NAVBAR COMPONENT
   const SideNav = useCallback(
     () => (
       <SideNavbar
-        navList={props.categoryData.data.docs}
+        navList={props.grocery1NavList}
         handleSelect={handleSelectCategory}
-        handleSelectSub={handleSelectSubCategory}
       />
     ),
-    [props.categoryData]
+    [props.grocery1NavList]
   );
   return (
     <>
@@ -116,63 +91,15 @@ const HomePage = (props) => {
           <Section1 id="search" />
         </Store>
 
+        {/* SERVICE AREA */}
+        <Section2 id="services" />
+
         {/* SIDEBAR WITH OTHER CONTENTS */}
         <SidenavContainer
           navFixedComponentID="grocery1Services"
           SideNav={SideNav}
         >
-          {authUser?.data.isSeller === true &&
-          authUser?.data.role !== "admin" ? (
-            <Stack spacing={6} mt={2}>
-              {selectedCategory ? (
-                // FILTERED PRODUCT LIST
-
-                <Store>
-                  <FilteredProducts
-                    products={filterProducts}
-                    title={selectedCategory}
-                  />
-                </Store>
-              ) : selectedSubCategory ? (
-                <Store>
-                  <FilteredProducts
-                    products={filterSubProducts}
-                    title={selectedSubCategory}
-                  />
-                </Store>
-              ) : (
-                <Fragment>
-                  <Store>
-                    <AllProducts
-                      products={sellerProducts}
-                      title="All Products"
-                    />
-                  </Store>
-
-                  {/* POPULAR PRODUCTS AREA */}
-                  {/* <Store>
-                    <ProductCarousel
-                      title="All Products"
-                      products={sellerProducts}
-                    />
-                  </Store> */}
-                  {/* TRENDING PRODUCTS AREA */}
-                  {/* <ProductCarousel
-                    title="Vegetable Products"
-                    products={props.trendingProducts}
-                  /> */}
-                </Fragment>
-              )}
-
-              {/* DISCOUNT BANNER AREA */}
-              {/* <DiscountSection /> */}
-              {/* SERVICE AREA */}
-              <Section2 id="services" />
-
-              {/* FOOTER AREA */}
-              <Footer />
-            </Stack>
-          ) : authUser?.data.role === "admin" ? (
+          {authUser?.data.isSeller === true ? (
             <Stack spacing={6} mt={2}>
               {selectedCategory ? (
                 // FILTERED PRODUCT LIST
@@ -187,7 +114,7 @@ const HomePage = (props) => {
                 <Fragment>
                   {/* POPULAR PRODUCTS AREA */}
                   <Store>
-                    <AllProducts
+                    <ProductCarousel
                       title="All Products"
                       products={sellerProducts}
                     />
@@ -201,9 +128,7 @@ const HomePage = (props) => {
               )}
 
               {/* DISCOUNT BANNER AREA */}
-              {/* <DiscountSection /> */}
-              {/* SERVICE AREA */}
-              <Section2 id="services" />
+              <DiscountSection />
 
               {/* FOOTER AREA */}
               <Footer />
@@ -226,16 +151,31 @@ const HomePage = (props) => {
   );
 };
 
-export async function getServerSideProps() {
-  const url = "https://grynd-staging.vercel.app";
+// export async function getServerSideProps(context) {
+//   const { authToken } = parseCookies(context.req);
 
-  const response = await axios.get(`${url}/api/v2/categories`);
-  const categoryData = response.data;
+// const url = "https://grynd-staging.vercel.app";
 
-  return {
-    props: { categoryData },
-  };
-}
+//   const response = await axios.get(`${url}/api/v2/products`, {
+//     headers: {
+//       Authorization: `Bearer ${authToken}`,
+//     },
+//   });
+//   console.log(response.data.status);
+//   const sellerAllProducts = response.data;
+
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/vendor/login-user",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { sellerAllProducts },
+//   };
+// }
 
 // export const getStaticProps = async () => {
 //   const products = await api.getProducts();
