@@ -12,11 +12,9 @@ import PreviewImage from "pages-sections/forms/PreviewImage";
 const CategoryForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [resData1, setResData1] = useState();
-  const [resPublicId1, setResPublicId1] = useState();
-  const [inputFile1, setInputFile1] = useState();
-
-  const [errorMsg, setErrorMsg] = useState();
+  const [resData1, setResData1] = useState("");
+  const [resPublicId1, setResPublicId1] = useState("");
+  const [inputFile1, setInputFile1] = useState({});
 
   useEffect(() => {
     uploadIconToCloudinary();

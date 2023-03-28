@@ -40,25 +40,21 @@ const serviceData = [
     text: "Fast Delivery ",
     description: "Get any product you order within a matter of hours to days",
     icon: <CiDeliveryTruck />,
-    id: 1,
   },
   {
     text: "Trusted Vendors",
     description: "Our vendors are verified and vetted",
     icon: <VscWorkspaceTrusted />,
-    id: 2,
   },
   {
     text: "Quality Agro Produce",
     description: "We offer only top quality fresh produce",
     icon: <BsHandThumbsUp />,
-    id: 3,
   },
   {
     text: "Become A Seller",
     description: "Become a vendor, sell your agro products and earn money",
     icon: <BsCurrencyExchange />,
-    id: 4,
   },
 ];
 const orderData = [
@@ -67,26 +63,22 @@ const orderData = [
     description:
       "Go through the array of different agro products, select and add to cart",
     icon: <GiFruitBowl />,
-    id: 1,
   },
   {
     text: "Schedule Delivery/Pickup",
     description:
       "Choose how you want to receive your order, whether picking it up or delivered to you",
     icon: <AiFillSchedule />,
-    id: 2,
   },
   {
     text: "Make Payment",
     description: "Select payment method",
     icon: <MdOutlinePayments />,
-    id: 3,
   },
   {
     text: "Track Order",
     description: "Track any order you make from your profile",
     icon: <CgArrowsShrinkH />,
-    id: 4,
   },
 ];
 
@@ -104,7 +96,7 @@ const Section2 = () => {
     >
       <Grid container spacing={3}>
         {serviceData.map((service) => (
-          <Grid item lg={3} md={6} sm={6} xs={12} key={service.id}>
+          <Grid item lg={3} md={6} sm={6} xs={12}>
             <StyledFlexBox alignItems="center" gap={2}>
               <FlexBox alignItems="center" color="#066344" fontSize="50px">
                 {service.icon}
@@ -133,7 +125,7 @@ const Section2 = () => {
         <hr className="hr-1" />
         <Grid container spacing={3}>
           {orderData.map((order) => (
-            <Grid item lg={3} md={6} sm={6} xs={12} key={order.id}>
+            <Grid item lg={3} md={6} sm={6} xs={12}>
               <StyledFlexBox2
                 alignItems="center"
                 justifyContent="center"
