@@ -25,16 +25,26 @@ const HomePage = (props) => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sellerProducts, setSellerProducts] = useState([]);
+  const [clientProducts, setClientProducts] = useState([]);
 
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   // console.log("authUser", authUser);
 
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  // FETCH ALL PRODUCTS FOR SELLER
   useEffect(() => {
     if (authUser?.data.isSeller === true) {
       setIsLoading(true);
       axios
-        .get(`${url}/api/v2/products`, config)
+        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products`, config)
         .then(({ data }) => {
           setSellerProducts(data);
           // console.log("sellerProducts", sellerProducts);
@@ -44,17 +54,30 @@ const HomePage = (props) => {
     }
   }, [authUser]);
 
-  const { data: allProducts } = sellerProducts;
-  console.log("allProducts", allProducts);
+  // FETCH ALL PRODUCTS FOR CLIENT OR NOT LOGGED IN USER
+  useEffect(() => {
+    if (
+      authUser?.data.isSeller === false ||
+      (!authUser && authUser === undefined)
+    ) {
+      setIsLoading(true);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products`)
+        .then(({ data }) => {
+          setClientProducts(data);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
 
-  const url = "https://grynd-staging.vercel.app";
-  const token = Cookies.get("authToken");
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
+  // seller
+  const { data: allProductsSeller } = sellerProducts;
+  console.log("allProducts", allProductsSeller);
+
+  // client
+  const { data: allProductsClient } = clientProducts;
+  console.log("allProductsClient", allProductsClient);
 
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
@@ -69,21 +92,6 @@ const HomePage = (props) => {
         setFilterProducts(data);
       });
   }, [selectedCategory]);
-
-  // FETCH ALL PRODUCTS FOR A SELLER ACCOUNT
-  useEffect(() => {
-    if (authUser?.data.isSeller === true) {
-      setIsLoading(true);
-      axios
-        .get(`${url}/api/v2/products`, config)
-        .then(({ data }) => {
-          setSellerProducts(data);
-          // console.log("sellerProducts", sellerProducts);
-        })
-        .catch((err) => err)
-        .finally(() => setIsLoading(false));
-    }
-  }, [authUser]);
 
   // HANDLE CHANGE CATEGORY
   const handleSelectCategory = (category) => setSelectedCategory(category);
@@ -133,7 +141,7 @@ const HomePage = (props) => {
               ) : (
                 <Fragment>
                   {/* POPULAR PRODUCTS AREA */}
-                  <AllProducts products={allProducts} title="" />
+                  <AllProducts products={allProductsSeller} title="" />
 
                   {/* <Store>
                     <ProductCarousel
@@ -141,6 +149,68 @@ const HomePage = (props) => {
                       products={sellerProducts}
                     />
                   </Store> */}
+                </Fragment>
+              )}
+
+              {/* DISCOUNT BANNER AREA */}
+              <DiscountSection />
+
+              {/* FOOTER AREA */}
+              <Footer />
+            </Stack>
+          ) : authUser?.data.isSeller === false ? (
+            <Stack spacing={6} mt={2}>
+              {selectedCategory ? (
+                // FILTERED PRODUCT LIST
+
+                <Store>
+                  <AllProducts
+                    products={allProductsClient}
+                    title={selectedCategory}
+                  />
+                </Store>
+              ) : (
+                <Fragment>
+                  {/* POPULAR PRODUCTS AREA */}
+                  <AllProducts products={allProductsClient} title="" />
+
+                  {/* <Store>
+                  <ProductCarousel
+                    title="All Products"
+                    products={sellerProducts}
+                  />
+                </Store> */}
+                </Fragment>
+              )}
+
+              {/* DISCOUNT BANNER AREA */}
+              <DiscountSection />
+
+              {/* FOOTER AREA */}
+              <Footer />
+            </Stack>
+          ) : !authUser ? (
+            <Stack spacing={6} mt={2}>
+              {selectedCategory ? (
+                // FILTERED PRODUCT LIST
+
+                <Store>
+                  <AllProducts
+                    products={allProductsClient}
+                    title={selectedCategory}
+                  />
+                </Store>
+              ) : (
+                <Fragment>
+                  {/* POPULAR PRODUCTS AREA */}
+                  <AllProducts products={allProductsClient} title="" />
+
+                  {/* <Store>
+                  <ProductCarousel
+                    title="All Products"
+                    products={sellerProducts}
+                  />
+                </Store> */}
                 </Fragment>
               )}
 
