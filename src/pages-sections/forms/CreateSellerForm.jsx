@@ -72,19 +72,22 @@ const CreateSellerForm = () => {
   };
 
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
     const token = Cookies.get("authToken");
 
     console.log("values", values);
     setIsLoading(true);
 
     return axios
-      .post(`${url}/api/v2/auth/create-account`, values, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/auth/create-account`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         console.log("response", response);
         if (response.data.status === true) {

@@ -22,16 +22,18 @@ const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
-
     // console.log("values", values);
     setIsLoading(true);
     return axios
-      .post(`${url}/api/v1/auth/register`, values, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/register`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((response) => {
         // console.log("response", response);
         if (response.data.status === true) {
@@ -302,7 +304,7 @@ const SignUpForm = () => {
         </Grid>
         <Grid item xs={12}>
           <H5>
-            Already have a seller account?{" "}
+            Already have a Grynd account?{" "}
             <span style={{ color: "#066344" }}>
               <Link href="../vendor/login-user"> Log in</Link>
             </span>

@@ -5,11 +5,13 @@ import Cookies from "js-cookie";
 
 const Store = ({ children }) => {
   const [getAuthUser, setGetAuthUser] = useState([]);
+  const [loadUser, setLoadUser] = useState(false);
 
   const url = "https://grynd-staging.vercel.app";
   const token = Cookies.get("authToken");
 
   useEffect(() => {
+    setLoadUser(true);
     axios
       .get(`${url}/api/v1/auth/me`, {
         headers: {
@@ -24,11 +26,12 @@ const Store = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoadUser(false));
   }, [token]);
 
   return (
-    <LoginContext.Provider value={[getAuthUser, setGetAuthUser]}>
+    <LoginContext.Provider value={[getAuthUser, setGetAuthUser, loadUser]}>
       {children}
     </LoginContext.Provider>
   );

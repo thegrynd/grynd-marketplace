@@ -18,18 +18,19 @@ import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
 import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
+import { parseCookies } from "../helpers/validation";
 
 const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filterProducts, setFilterProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sellerProducts, setSellerProducts] = useState([]);
+  const [clientProducts, setClientProducts] = useState([]);
 
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   // console.log("authUser", authUser);
 
-  const url = "https://grynd-staging.vercel.app";
   const token = Cookies.get("authToken");
   const config = {
     headers: {
@@ -37,6 +38,47 @@ const HomePage = (props) => {
       "Content-Type": "application/json",
     },
   };
+
+  // FETCH ALL PRODUCTS FOR SELLER
+  useEffect(() => {
+    if (authUser?.data.isSeller === true) {
+      setIsLoading(true);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products`, config)
+        .then(({ data }) => {
+          setSellerProducts(data);
+          // console.log("sellerProducts", sellerProducts);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
+
+  // FETCH ALL PRODUCTS FOR CLIENT OR NOT LOGGED IN USER
+  useEffect(() => {
+    if (
+      authUser?.data.isSeller === false ||
+      (!authUser && authUser === undefined)
+    ) {
+      setIsLoading(true);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products`)
+        .then(({ data }) => {
+          setClientProducts(data);
+        })
+        .catch((err) => err)
+        .finally(() => setIsLoading(false));
+    }
+  }, [authUser]);
+
+  // seller
+  const { data: allProductsSeller } = sellerProducts;
+  console.log("allProducts", allProductsSeller);
+
+  // client
+  const { data: allProductsClient } = clientProducts;
+  console.log("allProductsClient", allProductsClient);
+
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
     axios
@@ -50,21 +92,6 @@ const HomePage = (props) => {
         setFilterProducts(data);
       });
   }, [selectedCategory]);
-
-  // FETCH ALL PRODUCTS FOR A SELLER ACCOUNT
-  useEffect(() => {
-    if (authUser?.data.isSeller === true) {
-      setIsLoading(true);
-      axios
-        .get(`${url}/api/v2/products`, config)
-        .then(({ data }) => {
-          setSellerProducts(data);
-          // console.log("sellerProducts", sellerProducts);
-        })
-        .catch((err) => err)
-        .finally(() => setIsLoading(false));
-    }
-  }, [authUser]);
 
   // HANDLE CHANGE CATEGORY
   const handleSelectCategory = (category) => setSelectedCategory(category);
@@ -84,6 +111,7 @@ const HomePage = (props) => {
       <Store>
         <Header />
       </Store>
+
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
@@ -113,17 +141,76 @@ const HomePage = (props) => {
               ) : (
                 <Fragment>
                   {/* POPULAR PRODUCTS AREA */}
-                  <Store>
+                  <AllProducts products={allProductsSeller} title="" />
+
+                  {/* <Store>
                     <ProductCarousel
                       title="All Products"
                       products={sellerProducts}
                     />
-                  </Store>
-                  {/* TRENDING PRODUCTS AREA */}
-                  {/* <ProductCarousel
-                    title="Vegetable Products"
-                    products={props.trendingProducts}
-                  /> */}
+                  </Store> */}
+                </Fragment>
+              )}
+
+              {/* DISCOUNT BANNER AREA */}
+              <DiscountSection />
+
+              {/* FOOTER AREA */}
+              <Footer />
+            </Stack>
+          ) : authUser?.data.isSeller === false ? (
+            <Stack spacing={6} mt={2}>
+              {selectedCategory ? (
+                // FILTERED PRODUCT LIST
+
+                <Store>
+                  <AllProducts
+                    products={allProductsClient}
+                    title={selectedCategory}
+                  />
+                </Store>
+              ) : (
+                <Fragment>
+                  {/* POPULAR PRODUCTS AREA */}
+                  <AllProducts products={allProductsClient} title="" />
+
+                  {/* <Store>
+                  <ProductCarousel
+                    title="All Products"
+                    products={sellerProducts}
+                  />
+                </Store> */}
+                </Fragment>
+              )}
+
+              {/* DISCOUNT BANNER AREA */}
+              <DiscountSection />
+
+              {/* FOOTER AREA */}
+              <Footer />
+            </Stack>
+          ) : !authUser ? (
+            <Stack spacing={6} mt={2}>
+              {selectedCategory ? (
+                // FILTERED PRODUCT LIST
+
+                <Store>
+                  <AllProducts
+                    products={allProductsClient}
+                    title={selectedCategory}
+                  />
+                </Store>
+              ) : (
+                <Fragment>
+                  {/* POPULAR PRODUCTS AREA */}
+                  <AllProducts products={allProductsClient} title="" />
+
+                  {/* <Store>
+                  <ProductCarousel
+                    title="All Products"
+                    products={sellerProducts}
+                  />
+                </Store> */}
                 </Fragment>
               )}
 
@@ -154,24 +241,25 @@ const HomePage = (props) => {
 // export async function getServerSideProps(context) {
 //   const { authToken } = parseCookies(context.req);
 
-// const url = "https://grynd-staging.vercel.app";
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   const url = "https://grynd-staging.vercel.app";
 
 //   const response = await axios.get(`${url}/api/v2/products`, {
 //     headers: {
 //       Authorization: `Bearer ${authToken}`,
 //     },
 //   });
-//   console.log(response.data.status);
+
 //   const sellerAllProducts = response.data;
 
-//   if (!authToken) {
-//     return {
-//       redirect: {
-//         destination: "/vendor/login-user",
-//         permanent: false,
-//       },
-//     };
-//   }
 //   return {
 //     props: { sellerAllProducts },
 //   };

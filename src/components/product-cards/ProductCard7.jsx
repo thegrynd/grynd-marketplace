@@ -8,9 +8,7 @@ import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
 
 // styled components
-const Wrapper = styled(Card)(({
-  theme
-}) => ({
+const Wrapper = styled(Card)(({ theme }) => ({
   display: "flex",
   overflow: "hidden",
   alignItems: "center",
@@ -23,28 +21,19 @@ const Wrapper = styled(Card)(({
     flexWrap: "wrap",
     img: {
       height: "auto",
-      minWidth: "100%"
-    }
-  }
+      minWidth: "100%",
+    },
+  },
 }));
 
 // =========================================================
 
 // =========================================================
 
-const ProductCard7 = ({
-  id,
-  name,
-  qty,
-  price,
-  imgUrl,
-  slug
-}) => {
-  const {
-    dispatch
-  } = useAppContext();
+const ProductCard7 = ({ id, name, qty, price, imgUrl, slug, description }) => {
+  const { dispatch } = useAppContext();
   // handle change cart
-  const handleCartAmountChange = amount => () => {
+  const handleCartAmountChange = (amount) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
@@ -53,18 +42,30 @@ const ProductCard7 = ({
         price,
         imgUrl,
         qty: amount,
-        slug
-      }
+        slug,
+        description,
+      },
     });
   };
-  return <Wrapper>
-      <Image alt={name} width={140} height={140} display="block" src={imgUrl || "/assets/images/products/iphone-xi.png"} />
+  return (
+    <Wrapper>
+      <Image
+        alt={name}
+        width={140}
+        height={140}
+        display="block"
+        src={imgUrl || "/assets/images/products/no-image.jpg"}
+      />
 
-      <IconButton size="small" onClick={handleCartAmountChange(0)} sx={{
-      position: "absolute",
-      right: 15,
-      top: 15
-    }}>
+      <IconButton
+        size="small"
+        onClick={handleCartAmountChange(0)}
+        sx={{
+          position: "absolute",
+          right: 15,
+          top: 15,
+        }}
+      >
         <Close fontSize="small" />
       </IconButton>
 
@@ -88,22 +89,35 @@ const ProductCard7 = ({
         </FlexBox>
 
         <FlexBox alignItems="center">
-          <Button color="primary" sx={{
-          p: "5px"
-        }} variant="outlined" disabled={qty === 1} onClick={handleCartAmountChange(qty - 1)}>
+          <Button
+            color="primary"
+            sx={{
+              p: "5px",
+            }}
+            variant="outlined"
+            disabled={qty === 1}
+            onClick={handleCartAmountChange(qty - 1)}
+          >
             <Remove fontSize="small" />
           </Button>
 
           <Span mx={1} fontWeight={600} fontSize={15}>
             {qty}
           </Span>
-          <Button color="primary" sx={{
-          p: "5px"
-        }} variant="outlined" onClick={handleCartAmountChange(qty + 1)}>
+          <Button
+            color="primary"
+            sx={{
+              p: "5px",
+            }}
+            variant="outlined"
+            onClick={handleCartAmountChange(qty + 1)}
+          >
             <Add fontSize="small" />
           </Button>
         </FlexBox>
+        <FlexBox>{description}</FlexBox>
       </FlexBox>
-    </Wrapper>;
+    </Wrapper>
+  );
 };
 export default ProductCard7;

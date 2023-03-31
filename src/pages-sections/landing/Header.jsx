@@ -27,6 +27,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useAppContext } from "contexts/AppContext";
 import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
+import MiniCart from "components/MiniCart";
 
 const headerHeight = 72;
 const slideFromTop = keyframes`
@@ -67,12 +68,24 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 }));
 const Header = () => {
   const { state } = useAppContext();
+  console.log("myState", state);
   const router = useRouter();
-  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
+  const toggleMiniCart = () => {
+    setIsHovering(!isHovering);
+  };
+
   const downSM = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const toggleSidenav = () => setOpen((open) => !open);
   const scrollListener = debounce(() => {
@@ -93,11 +106,15 @@ const Header = () => {
           <a href={authUser?.data.isSeller === true ? "/profile" : "/profile"}>
             <span style={{ color: "red", fontWeight: 700, cursor: "pointer" }}>
               {" "}
-              {`${authUser.data.firstname} ${authUser.data.surname}`}
+              {authUser?.success == true
+                ? `${authUser?.data.firstname} ${authUser?.data.surname}`
+                : authUser === undefined && loadUser === true
+                ? "Loading User"
+                : null}
             </span>
           </a>
           <br />
-          <div> {authUser.data.username ?? "User"}</div>
+          <div> {authUser?.data.username ?? "User"}</div>
         </Small>
       </>
     );
@@ -242,15 +259,17 @@ const Header = () => {
                 ""
               )}
 
-              {authUser?.success === true && (
-                <Stack direction="row" spacing={1} ml="1rem">
+              {!authUser ? (
+                ""
+              ) : (
+                <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
                   {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
                   <Chip
                     avatar={
                       <Avatar
-                        alt={authUser.data.username ?? "Logged in user"}
+                        alt={authUser?.data.username ?? "Logged in user"}
                         src={
-                          authUser.data.avatar.url
+                          authUser?.data.avatar.url
                             ? authUser.data.avatar.url
                             : ""
                         }
@@ -263,8 +282,16 @@ const Header = () => {
                 </Stack>
               )}
 
-              <FlexBox gap={1.5} alignItems="center">
-                <Badge badgeContent={state.cart.length} color="primary">
+              <FlexBox
+                gap={1.5}
+                alignItems="center"
+                ml={!authUser ? "1rem" : 0}
+              >
+                <Badge
+                  badgeContent={state.cart.length}
+                  color="primary"
+                  onClick={toggleMiniCart}
+                >
                   <Box
                     p={1.25}
                     bgcolor="grey.200"
@@ -347,11 +374,7 @@ const Header = () => {
                       </Typography>
                     </Scroll>
 
-                    <Link
-                      href="https://material-ui.com/store/items/bazaar-pro-react-ecommerce-template/"
-                      passHref
-                      legacyBehavior
-                    >
+                    <Link href="#" passHref legacyBehavior>
                       <Button variant="outlined" color="primary">
                         Sign Up
                       </Button>
@@ -363,7 +386,9 @@ const Header = () => {
           </Container>
         </Box>
       </HeaderWrapper>
-
+      <FlexBox justifyContent="flex-end">
+        {isHovering && <MiniCart handleMouseOut={handleMouseOut} />}
+      </FlexBox>
       {isFixed && <Box height={headerHeight} />}
     </Fragment>
   );

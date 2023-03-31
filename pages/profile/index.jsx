@@ -1,19 +1,14 @@
-import { useContext } from "react";
-import { LoginContext } from "../../src/contexts/LoginContext";
 import Link from "next/link";
-import { format } from "date-fns";
-import { Person } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import TableRow from "components/TableRow";
-import { H3, H5, Small } from "components/Typography";
+import { H3 } from "../../src/components/Typography";
+import { Small } from "../../src/components/Typography";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
@@ -22,7 +17,6 @@ import { currency } from "lib";
 import api from "utils/__api__/users";
 import Image from "next/image";
 import { parseCookies } from "../../helpers/validation";
-import axios from "axios";
 
 // ============================================================
 
@@ -72,7 +66,15 @@ const Profile = ({ authUser }) => {
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
         // icon={Person}
-        title="User"
+        title={
+          user?.role === "admin" && user?.isSeller === false
+            ? "Admin"
+            : user?.isSeller === true
+            ? "Seller"
+            : user?.isSeller === false
+            ? "User"
+            : null
+        }
         button={HEADER_LINK}
         navigation={<CustomerDashboardNavigation />}
       />
@@ -216,15 +218,23 @@ const TableRowItem = ({ title, value }) => {
 
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
+  // const { origin } = absoluteUrl(context.req);
 
-  const url = "https://grynd-staging.vercel.app";
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`,
+    {
+      method: "GET",
 
-  const response = await axios.get(`${url}/api/v1/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  const authUser = response.data;
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${authToken}`,
+      },
+      credentials: "include",
+    }
+  );
+
+  const authUser = await response.json();
+
   if (!authToken) {
     return {
       redirect: {
@@ -232,11 +242,49 @@ export async function getServerSideProps(context) {
         permanent: false,
       },
     };
+  } else if (authUser.data?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/vendor/login-user",
+        permanent: false,
+      },
+    };
   }
+
+  if (authUser?.success === false) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: { authUser },
   };
 }
+export default Profile;
+// export async function getServerSideProps(context) {
+//   const { authToken } = parseCookies(context.req);
+
+//   const url = "https://grynd-staging.vercel.app";
+
+//   const response = await axios.get(`${url}/api/v1/auth/me`, {
+//     headers: {
+//       Authorization: `Bearer ${authToken}`,
+//     },
+//   });
+//   const authUser = response.data;
+//   if (!authToken) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { authUser },
+//   };
+// }
 
 // export const getStaticProps = async () => {
 //   const user = await api.getUser();
@@ -247,4 +295,3 @@ export async function getServerSideProps(context) {
 //     },
 //   };
 // };
-export default Profile;
