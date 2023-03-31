@@ -68,8 +68,9 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 }));
 const Header = () => {
   const { state } = useAppContext();
+  console.log("myState", state);
   const router = useRouter();
-  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   console.log("AuthUser", authUser);
   const [open, setOpen] = useState(false);
@@ -77,12 +78,12 @@ const Header = () => {
 
   const [isHovering, setIsHovering] = useState(false);
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
-  };
-
   const handleMouseOut = () => {
     setIsHovering(false);
+  };
+
+  const toggleMiniCart = () => {
+    setIsHovering(!isHovering);
   };
 
   const downSM = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -107,7 +108,9 @@ const Header = () => {
               {" "}
               {authUser?.success == true
                 ? `${authUser?.data.firstname} ${authUser?.data.surname}`
-                : "Loading User"}
+                : authUser === undefined && loadUser === true
+                ? "Loading User"
+                : null}
             </span>
           </a>
           <br />
@@ -256,30 +259,38 @@ const Header = () => {
                 ""
               )}
 
-              <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
-                {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
-                <Chip
-                  avatar={
-                    <Avatar
-                      alt={authUser?.data.username ?? "Logged in user"}
-                      src={
-                        authUser?.data.avatar.url
-                          ? authUser.data.avatar.url
-                          : ""
-                      }
-                    />
-                  }
-                  label={<AvatarText />}
-                  variant="outlined"
-                  sx={{ boxSizing: "border-box", padding: "1rem 0" }}
-                />
-              </Stack>
+              {!authUser ? (
+                ""
+              ) : (
+                <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
+                  {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
+                  <Chip
+                    avatar={
+                      <Avatar
+                        alt={authUser?.data.username ?? "Logged in user"}
+                        src={
+                          authUser?.data.avatar.url
+                            ? authUser.data.avatar.url
+                            : ""
+                        }
+                      />
+                    }
+                    label={<AvatarText />}
+                    variant="outlined"
+                    sx={{ boxSizing: "border-box", padding: "1rem 0" }}
+                  />
+                </Stack>
+              )}
 
-              <FlexBox gap={1.5} alignItems="center">
+              <FlexBox
+                gap={1.5}
+                alignItems="center"
+                ml={!authUser ? "1rem" : 0}
+              >
                 <Badge
                   badgeContent={state.cart.length}
                   color="primary"
-                  onMouseOver={handleMouseOver}
+                  onClick={toggleMiniCart}
                 >
                   <Box
                     p={1.25}
@@ -363,11 +374,7 @@ const Header = () => {
                       </Typography>
                     </Scroll>
 
-                    <Link
-                      href="https://material-ui.com/store/items/bazaar-pro-react-ecommerce-template/"
-                      passHref
-                      legacyBehavior
-                    >
+                    <Link href="#" passHref legacyBehavior>
                       <Button variant="outlined" color="primary">
                         Sign Up
                       </Button>

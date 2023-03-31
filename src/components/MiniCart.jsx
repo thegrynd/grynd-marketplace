@@ -10,7 +10,7 @@ import {
 import { Add, Clear, Close, Remove } from "@mui/icons-material";
 import LazyImage from "components/LazyImage";
 import { FlexBetween, FlexBox } from "components/flex-box";
-import { H5, Paragraph, Tiny } from "components/Typography";
+import { H2, H5, Paragraph, Tiny } from "components/Typography";
 import CartBag from "components/icons/CartBag";
 import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
@@ -199,7 +199,7 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
 
       {cartList.length > 0 && (
         <Box p={2.5}>
-          <Link href="/checkout-alternative" passHref>
+          <Link href="/checkout" passHref>
             <Button
               fullWidth
               color="primary"
@@ -216,21 +216,21 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
           </Link>
 
           <Link href="/cart" passHref>
-            <a target="_blank">
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                sx={{
-                  height: 40,
-                  border: "#066344 1px solid",
-                  color: "#066344",
-                }}
-                onClick={toggleSidenav}
-              >
-                View Cart
-              </Button>
-            </a>
+            {/* <a target="_blank"> */}
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              sx={{
+                height: 40,
+                border: "#066344 1px solid",
+                color: "#066344",
+              }}
+              onClick={toggleSidenav}
+            >
+              View Cart
+            </Button>
+            {/* </a> */}
           </Link>
         </Box>
       )}

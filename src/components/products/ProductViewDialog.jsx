@@ -66,7 +66,7 @@ const ProductViewDialog = (props) => {
       payload: {
         ...product,
         qty: amount,
-        name: product.title,
+        name: product.name,
         imgUrl: product.imgGroup[0],
       },
     });

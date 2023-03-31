@@ -103,7 +103,6 @@ const ProductCard13 = (props) => {
   const {
     off,
     id,
-    // title,
     price,
     imgUrl,
     rating,
@@ -129,9 +128,11 @@ const ProductCard13 = (props) => {
         price,
         imgUrl,
         id,
-        name: name,
+        name,
         qty: amount,
         slug,
+        description,
+        off,
       },
     });
     if (type === "remove") {

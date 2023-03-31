@@ -61,9 +61,9 @@ const Container = styled(Box)(({ theme }) => ({
   },
 }));
 const Section1 = () => {
-  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  // console.log("checking", authUser);
+  // console.log("checking", getAuthUser);
   const SEARCH_BUTTON = (
     <Button
       color="primary"
@@ -153,7 +153,7 @@ const Section1 = () => {
             </a>
           </Link>
         </Box>
-      ) : authUser === undefined ? (
+      ) : authUser === undefined && loadUser === true ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
           <Button
             sx={{

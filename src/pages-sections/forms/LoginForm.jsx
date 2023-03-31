@@ -15,12 +15,10 @@ const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
-
     // console.log(values);
     setIsLoading(true);
     return axios
-      .post(`${url}/api/v1/auth/login`, values, {
+      .post(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/login`, values, {
         headers: {
           "Content-Type": "application/json",
         },
