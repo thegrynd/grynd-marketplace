@@ -4,9 +4,7 @@ import { Box, Button, Card, Grid, styled } from "@mui/material";
 import LazyImage from "components/LazyImage";
 import { H3, Paragraph } from "components/Typography";
 // styled components
-const StyledCard = styled(Card)(({
-  theme
-}) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
   boxShadow: "none",
   alignItems: "center",
@@ -16,43 +14,57 @@ const StyledCard = styled(Card)(({
   [theme.breakpoints.down("sm")]: {
     padding: "20px 30px",
     "& h3": {
-      fontSize: 20
-    }
-  }
+      fontSize: 20,
+    },
+  },
 }));
 
 // ============================================================
 
 // ============================================================
 
-const Section2 = ({
-  offers
-}) => {
+const Section2 = ({ offers }) => {
   const router = useRouter();
-  return <Grid container spacing={3}>
-      {offers.map((item, ind) => <Grid key={ind} item md={6} sm={12} xs={12}>
+  return (
+    <Grid container spacing={3}>
+      {offers.map((item, ind) => (
+        <Grid key={ind} item md={6} sm={12} xs={12}>
           <Link href="/sale-page-1">
-            <a>
-              <StyledCard>
-                <Box width="60%">
-                  <Paragraph fontWeight={600}>{item.title}</Paragraph>
-                  <H3 fontSize={25} lineHeight={1.35}>
-                    {item.discountOffer}
-                  </H3>
-                  <Button sx={{
-                mt: 2
-              }} color="primary" variant="outlined" onClick={() => router.push("/sale-page-1")}>
-                    {item.buttonText}
-                  </Button>
-                </Box>
+            {/* <a> */}
+            <StyledCard>
+              <Box width="60%">
+                <Paragraph fontWeight={600}>{item.title}</Paragraph>
+                <H3 fontSize={25} lineHeight={1.35}>
+                  {item.discountOffer}
+                </H3>
+                <Button
+                  sx={{
+                    mt: 2,
+                  }}
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => router.push("/sale-page-1")}
+                >
+                  {item.buttonText}
+                </Button>
+              </Box>
 
-                <Box width="40%">
-                  <LazyImage width={100} height={100} alt={item.title} src={item.imgUrl} layout="responsive" objectFit="contain" />
-                </Box>
-              </StyledCard>
-            </a>
+              <Box width="40%">
+                <LazyImage
+                  width={100}
+                  height={100}
+                  alt={item.title}
+                  src={item.imgUrl}
+                  layout="responsive"
+                  objectFit="contain"
+                />
+              </Box>
+            </StyledCard>
+            {/* </a> */}
           </Link>
-        </Grid>)}
-    </Grid>;
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
 export default Section2;

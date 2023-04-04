@@ -36,13 +36,13 @@ const Footer1 = () => {
             <Grid container spacing={3}>
               <Grid item lg={4} md={6} sm={6} xs={12}>
                 <Link href="/">
-                  <a>
-                    <Image
-                      mb={2.5}
-                      src="/assets/images/gryndlogo.svg"
-                      alt="logo"
-                    />
-                  </a>
+                  {/* <a> */}
+                  <Image
+                    mb={2.5}
+                    src="/assets/images/gryndlogo.svg"
+                    alt="logo"
+                  />
+                  {/* </a> */}
                 </Link>
 
                 <Paragraph mb={2.5} color="grey.500">

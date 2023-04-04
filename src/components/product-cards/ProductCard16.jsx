@@ -13,9 +13,7 @@ import ProductViewDialog from "components/products/ProductViewDialog";
 import { useAppContext } from "contexts/AppContext";
 import { calculateDiscount, currency } from "lib";
 // styled components
-const StyledCard = styled(Box)(({
-  theme
-}) => ({
+const StyledCard = styled(Box)(({ theme }) => ({
   height: "100%",
   margin: "auto",
   borderRadius: 0,
@@ -25,25 +23,21 @@ const StyledCard = styled(Box)(({
   "&:hover": {
     boxShadow: theme.shadows[2],
     "& .css-1i2n18j": {
-      display: "flex"
+      display: "flex",
     },
     "& .controlBox": {
       display: "flex",
-      bottom: 0
-    }
-  }
+      bottom: 0,
+    },
+  },
 }));
-const ImgBox = styled(Box)(({
-  theme
-}) => ({
+const ImgBox = styled(Box)(({ theme }) => ({
   overflow: "hidden",
   position: "relative",
   padding: "0 40px 20px 40px",
-  background: theme.palette.primary[100]
+  background: theme.palette.primary[100],
 }));
-const ItemController = styled(FlexBetween)(({
-  theme
-}) => ({
+const ItemController = styled(FlexBetween)(({ theme }) => ({
   width: 35,
   right: 15,
   height: 120,
@@ -64,26 +58,24 @@ const ItemController = styled(FlexBetween)(({
       cursor: "pointer",
       background: theme.palette.primary.main,
       "& svg": {
-        color: "#fff"
-      }
-    }
+        color: "#fff",
+      },
+    },
   },
   "& svg": {
     fontSize: 18,
-    color: theme.palette.grey[600]
-  }
+    color: theme.palette.grey[600],
+  },
 }));
 const ContentWrapper = styled(Box)({
   padding: "1rem",
   "& .title, & .categories": {
     overflow: "hidden",
     whiteSpace: "nowrap",
-    textOverflow: "ellipsis"
-  }
+    textOverflow: "ellipsis",
+  },
 });
-const StyledChip = styled(Chip)(({
-  theme
-}) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
   zIndex: 11,
   top: "16px",
   left: "0px",
@@ -93,14 +85,14 @@ const StyledChip = styled(Chip)(({
   fontWeight: 600,
   fontSize: "10px",
   position: "absolute",
-  background: theme.palette.primary.main
+  background: theme.palette.primary.main,
 }));
 
 // ============================================================
 
 // ============================================================
 
-const ProductCard16 = props => {
+const ProductCard16 = (props) => {
   const {
     sx,
     hideRating,
@@ -111,24 +103,17 @@ const ProductCard16 = props => {
     price,
     thumbnail,
     rating,
-    images
+    images,
   } = props;
-  const {
-    palette
-  } = useTheme();
-  const {
-    enqueueSnackbar
-  } = useSnackbar();
-  const {
-    state,
-    dispatch
-  } = useAppContext();
+  const { palette } = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+  const { state, dispatch } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const toggleIsFavorite = () => setIsFavorite(fav => !fav);
-  const toggleDialog = useCallback(() => setOpenModal(open => !open), []);
-  const cartItem = state.cart.find(item => item.slug === slug);
-  const handleCartAmountChange = qty => () => {
+  const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
+  const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
+  const cartItem = state.cart.find((item) => item.slug === slug);
+  const handleCartAmountChange = (qty) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
@@ -137,21 +122,31 @@ const ProductCard16 = props => {
         qty,
         slug,
         imgUrl: thumbnail,
-        name: title
-      }
+        name: title,
+      },
     });
     enqueueSnackbar("Added to Cart", {
-      variant: "success"
+      variant: "success",
     });
   };
-  return <StyledCard sx={sx}>
+  return (
+    <StyledCard sx={sx}>
       <ImgBox id="imgBox">
-        {discount !== 0 && <StyledChip color="primary" size="small" label={`${discount}% off`} />}
+        {discount !== 0 && (
+          <StyledChip color="primary" size="small" label={`${discount}% off`} />
+        )}
 
         <Link href={`/product/${slug}`}>
-          <a>
-            <LazyImage alt={title} width={100} height={100} src={thumbnail} layout="responsive" objectFit="contain" />
-          </a>
+          {/* <a> */}
+          <LazyImage
+            alt={title}
+            width={100}
+            height={100}
+            src={thumbnail}
+            layout="responsive"
+            objectFit="contain"
+          />
+          {/* </a> */}
         </Link>
 
         <ItemController className="controlBox">
@@ -162,24 +157,36 @@ const ProductCard16 = props => {
           <Divider orientation="horizontal" flexItem />
 
           <Span onClick={toggleIsFavorite}>
-            {isFavorite ? <Favorite color="primary" fontSize="small" /> : <FavoriteBorder fontSize="small" color="primary" />}
+            {isFavorite ? (
+              <Favorite color="primary" fontSize="small" />
+            ) : (
+              <FavoriteBorder fontSize="small" color="primary" />
+            )}
           </Span>
 
           <Divider orientation="horizontal" flexItem />
 
-          <Span onClick={handleCartAmountChange(cartItem?.qty ? cartItem.qty - 1 : 1)}>
+          <Span
+            onClick={handleCartAmountChange(
+              cartItem?.qty ? cartItem.qty - 1 : 1
+            )}
+          >
             <ShoppingCartIcon />
           </Span>
         </ItemController>
       </ImgBox>
 
-      <ProductViewDialog openDialog={openModal} handleCloseDialog={toggleDialog} product={{
-      title,
-      price,
-      id,
-      slug,
-      imgGroup: images
-    }} />
+      <ProductViewDialog
+        openDialog={openModal}
+        handleCloseDialog={toggleDialog}
+        product={{
+          title,
+          price,
+          id,
+          slug,
+          imgGroup: images,
+        }}
+      />
 
       <ContentWrapper>
         <FlexRowCenter>
@@ -187,26 +194,41 @@ const ProductCard16 = props => {
             {calculateDiscount(price, discount)}
           </Box>
 
-          {discount !== 0 && <Box color="grey.600" fontWeight="500">
+          {discount !== 0 && (
+            <Box color="grey.600" fontWeight="500">
               <del>{currency(price)}</del>
-            </Box>}
+            </Box>
+          )}
         </FlexRowCenter>
 
         <Link href={`/product/${slug}`}>
-          <a>
-            <H3 my="6px" title={title} fontSize="15px" fontWeight="600" className="title" textAlign="center" color="text.secondary">
-              {title}
-            </H3>
-          </a>
+          {/* <a> */}
+          <H3
+            my="6px"
+            title={title}
+            fontSize="15px"
+            fontWeight="600"
+            className="title"
+            textAlign="center"
+            color="text.secondary"
+          >
+            {title}
+          </H3>
+          {/* </a> */}
         </Link>
 
-        {!hideRating && <FlexRowCenter>
+        {!hideRating && (
+          <FlexRowCenter>
             <BazaarRating value={rating || 0} color="warn" readOnly />{" "}
-            <Span sx={{
-          color: palette.grey[600]
-        }}>{`(${rating}.0)`}</Span>
-          </FlexRowCenter>}
+            <Span
+              sx={{
+                color: palette.grey[600],
+              }}
+            >{`(${rating}.0)`}</Span>
+          </FlexRowCenter>
+        )}
       </ContentWrapper>
-    </StyledCard>;
+    </StyledCard>
+  );
 };
 export default ProductCard16;

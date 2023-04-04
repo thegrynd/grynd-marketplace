@@ -1,121 +1,102 @@
-import React, { useState, useEffect } from "react";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import styles from "./PaymentForm.module.css";
+import React from "react";
+import {
+  PaymentElement,
+  LinkAuthenticationElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 
-export default function CheckoutForm() {
-  const [succeeded, setSucceeded] = useState(false);
-  const [error, setError] = useState(null);
-  const [processing, setProcessing] = useState("");
-  const [disabled, setDisabled] = useState(true);
-  const [clientSecret, setClientSecret] = useState("");
+export default function PaymentForm() {
   const stripe = useStripe();
   const elements = useElements();
 
-  useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    window
-      .fetch("/create-payment-intent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
-      })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-      });
-  }, []);
+  const [email, setEmail] = React.useState("");
+  const [message, setMessage] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const cardStyle = {
-    style: {
-      base: {
-        color: "#32325d",
-        fontFamily: "Arial, sans-serif",
-        fontSmoothing: "antialiased",
-        fontSize: "16px",
-        "::placeholder": {
-          color: "#32325d",
-        },
-      },
-      invalid: {
-        fontFamily: "Arial, sans-serif",
-        color: "#fa755a",
-        iconColor: "#fa755a",
-      },
-    },
-  };
+  React.useEffect(() => {
+    if (!stripe) {
+      return;
+    }
 
-  const handleChange = async (event) => {
-    // Listen for changes in the CardElement
-    // and display any errors as the customer types their card details
-    setDisabled(event.empty);
-    setError(event.error ? event.error.message : "");
-  };
+    const clientSecret = new URLSearchParams(window.location.search).get(
+      "payment_intent_client_secret"
+    );
 
-  const handleSubmit = async (ev) => {
-    ev.preventDefault();
-    setProcessing(true);
+    if (!clientSecret) {
+      return;
+    }
 
-    const payload = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
+    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      switch (paymentIntent.status) {
+        case "succeeded":
+          setMessage("Payment succeeded!");
+          break;
+        case "processing":
+          setMessage("Your payment is processing.");
+          break;
+        case "requires_payment_method":
+          setMessage("Your payment was not successful, please try again.");
+          break;
+        default:
+          setMessage("Something went wrong.");
+          break;
+      }
+    });
+  }, [stripe]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    setIsLoading(true);
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        // Make sure to change this to your payment completion page
+        return_url: "http://localhost:3000",
       },
     });
 
-    if (payload.error) {
-      setError(`Payment failed ${payload.error.message}`);
-      setProcessing(false);
+    // This point will only be reached if there is an immediate error when
+    // confirming the payment. Otherwise, your customer will be redirected to
+    // your `return_url`. For some payment methods like iDEAL, your customer will
+    // be redirected to an intermediate site first to authorize the payment, then
+    // redirected to the `return_url`.
+    if (error.type === "card_error" || error.type === "validation_error") {
+      setMessage(error.message);
     } else {
-      setError(null);
-      setProcessing(false);
-      setSucceeded(true);
+      setMessage("An unexpected error occurred.");
     }
+
+    setIsLoading(false);
+  };
+
+  const paymentElementOptions = {
+    layout: "tabs",
   };
 
   return (
-    <div className={styles.paymentformbody}>
-      <form
-        id="paymentform"
-        className={styles.paymentform}
-        onSubmit={handleSubmit}
-      >
-        <CardElement
-          className={styles.cardelement}
-          options={cardStyle}
-          onChange={handleChange}
-        />
-        <button
-          disabled={processing || disabled || succeeded}
-          className={styles.submitBtn}
-        >
-          <span id="button-text">
-            {processing ? <div className={styles.spinner}></div> : "Pay now"}
-          </span>
-        </button>
-        {/* Show any error that happens when processing the payment */}
-        {error && (
-          <div className={styles.carderror} role="alert">
-            {error}
-          </div>
-        )}
-        {/* Show a success message upon completion */}
-        <p
-          className={
-            succeeded ? styles.resultmessage : styles.resultmessagehidden
-          }
-        >
-          Payment succeeded, see the result in your
-          <a href={`https://dashboard.stripe.com/test/payments`}>
-            {" "}
-            Stripe dashboard.
-          </a>{" "}
-          Refresh the page to pay again.
-        </p>
-      </form>
-    </div>
+    <form id="payment-form" onSubmit={handleSubmit}>
+      <LinkAuthenticationElement
+        id="link-authentication-element"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <button disabled={isLoading || !stripe || !elements} id="submit">
+        <span id="button-text">
+          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        </span>
+      </button>
+      {/* Show any error or success messages */}
+      {message && <div id="payment-message">{message}</div>}
+    </form>
   );
 }
 

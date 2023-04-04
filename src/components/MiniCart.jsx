@@ -141,17 +141,17 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
             </FlexBox>
 
             <Link href={`/product/${item.id}`}>
-              <a>
-                <Avatar
-                  alt={item.name}
-                  src={item.imgUrl}
-                  sx={{
-                    mx: 2,
-                    width: 76,
-                    height: 76,
-                  }}
-                />
-              </a>
+              {/* <a> */}
+              <Avatar
+                alt={item.name}
+                src={item.imgUrl}
+                sx={{
+                  mx: 2,
+                  width: 76,
+                  height: 76,
+                }}
+              />
+              {/* </a> */}
             </Link>
 
             <Box
@@ -163,11 +163,11 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
               }}
             >
               <Link href={`/product/${item.slug}`}>
-                <a>
-                  <H5 ellipsis fontSize="14px" className="title">
-                    {item.name}
-                  </H5>
-                </a>
+                {/* <a> */}
+                <H5 ellipsis fontSize="14px" className="title">
+                  {item.name}
+                </H5>
+                {/* </a> */}
               </Link>
 
               <Tiny color="grey.600">

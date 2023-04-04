@@ -11,9 +11,7 @@ import { useSnackbar } from "notistack";
 import { calculateDiscount, currency } from "lib";
 
 // styled components
-const StyledCard = styled(Box)(({
-  theme
-}) => ({
+const StyledCard = styled(Box)(({ theme }) => ({
   height: "100%",
   margin: "auto",
   borderRadius: 0,
@@ -24,32 +22,28 @@ const StyledCard = styled(Box)(({
   "&:hover": {
     boxShadow: theme.shadows[2],
     "& .css-1i2n18j": {
-      display: "flex"
+      display: "flex",
     },
     "& .controlBox": {
-      display: "block"
-    }
-  }
+      display: "block",
+    },
+  },
 }));
-const ImgBox = styled(Box)(({
-  theme
-}) => ({
+const ImgBox = styled(Box)(({ theme }) => ({
   height: 250,
   marginBottom: 100,
   padding: "60px 40px 20px 40px",
-  background: theme.palette.primary[50]
+  background: theme.palette.primary[50],
 }));
 const ContentWrapper = styled(Box)({
   padding: "1rem",
   "& .title, & .categories": {
     overflow: "hidden",
     whiteSpace: "nowrap",
-    textOverflow: "ellipsis"
-  }
+    textOverflow: "ellipsis",
+  },
 });
-const StyledChip = styled(Chip)(({
-  theme
-}) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
   zIndex: 11,
   left: "0px",
   top: "20px",
@@ -60,11 +54,9 @@ const StyledChip = styled(Chip)(({
   fontWeight: 600,
   fontSize: "10px",
   position: "absolute",
-  background: theme.palette.primary.main
+  background: theme.palette.primary.main,
 }));
-const StatusChipBox = styled(Box)(({
-  theme
-}) => ({
+const StatusChipBox = styled(Box)(({ theme }) => ({
   width: 40,
   height: 42,
   zIndex: 11,
@@ -78,26 +70,24 @@ const StatusChipBox = styled(Box)(({
     height: 0,
     borderTop: "0px solid transparent",
     borderBottom: "10px solid transparent",
-    borderLeft: `20px solid ${theme.palette.primary.main}`
+    borderLeft: `20px solid ${theme.palette.primary.main}`,
   },
   "& .triangle-right": {
     width: 0,
     height: 0,
     borderTop: "0px solid transparent",
     borderBottom: "10px solid transparent",
-    borderRight: `20px solid ${theme.palette.primary.main}`
-  }
+    borderRight: `20px solid ${theme.palette.primary.main}`,
+  },
 }));
 const StatusChip = styled(Span)({
   color: "#fff",
   height: "100%",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center"
+  justifyContent: "center",
 });
-const ColorBox = styled(FlexBox)(({
-  theme
-}) => ({
+const ColorBox = styled(FlexBox)(({ theme }) => ({
   gap: 8,
   padding: "10px 5px",
   "& span": {
@@ -106,13 +96,11 @@ const ColorBox = styled(FlexBox)(({
     borderRadius: 8,
     "&:hover": {
       cursor: "pointer",
-      outline: `2px solid ${theme.palette.grey[200]}`
-    }
-  }
+      outline: `2px solid ${theme.palette.grey[200]}`,
+    },
+  },
 }));
-const StyledButton = styled(Button)(({
-  theme
-}) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   padding: "4px",
   borderRadius: 0,
   transition: "all 0.3s",
@@ -120,15 +108,15 @@ const StyledButton = styled(Button)(({
   "&:hover": {
     color: "#fff",
     background: theme.palette.primary.main,
-    border: `1px solid ${theme.palette.primary.main}`
-  }
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
 }));
 
 // =======================================================
 
 // =======================================================
 
-const ProductCard17 = props => {
+const ProductCard17 = (props) => {
   const {
     sx,
     off,
@@ -140,19 +128,12 @@ const ProductCard17 = props => {
     rating,
     hideRating,
     productColors,
-    slug
+    slug,
   } = props;
-  const {
-    palette
-  } = useTheme();
-  const {
-    enqueueSnackbar
-  } = useSnackbar();
-  const {
-    state,
-    dispatch
-  } = useAppContext();
-  const cartItem = state.cart.find(item => item.slug === slug);
+  const { palette } = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+  const { state, dispatch } = useAppContext();
+  const cartItem = state.cart.find((item) => item.slug === slug);
   const handleCartAmountChange = (amount, type) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -162,62 +143,93 @@ const ProductCard17 = props => {
         id,
         name: title,
         qty: amount,
-        slug
-      }
+        slug,
+      },
     });
     if (type === "remove") {
       enqueueSnackbar("Remove from Cart", {
-        variant: "error"
+        variant: "error",
       });
     } else {
       enqueueSnackbar("Added to Cart", {
-        variant: "success"
+        variant: "success",
       });
     }
   };
-  return <StyledCard sx={sx}>
+  return (
+    <StyledCard sx={sx}>
       <Link href={`/product/${slug}`}>
-        <a>
-          <ImgBox id="imgBox">
-            {status && <StatusChipBox>
-                <StatusChip>{status}</StatusChip>
-                <Box width="100%" display="flex">
-                  <Box className="triangle-left" />
-                  <Box className="triangle-right" />
-                </Box>
-              </StatusChipBox>}
+        {/* <a> */}
+        <ImgBox id="imgBox">
+          {status && (
+            <StatusChipBox>
+              <StatusChip>{status}</StatusChip>
+              <Box width="100%" display="flex">
+                <Box className="triangle-left" />
+                <Box className="triangle-right" />
+              </Box>
+            </StatusChipBox>
+          )}
 
-            {off !== 0 && <StyledChip size="small" label={`${off}% off`} />}
+          {off !== 0 && <StyledChip size="small" label={`${off}% off`} />}
 
-            <LazyImage alt={title} width={100} height={100} src={imgUrl} id="productImg" layout="responsive" objectFit="contain" />
-          </ImgBox>
-        </a>
+          <LazyImage
+            alt={title}
+            width={100}
+            height={100}
+            src={imgUrl}
+            id="productImg"
+            layout="responsive"
+            objectFit="contain"
+          />
+        </ImgBox>
+        {/* </a> */}
       </Link>
 
       <ContentWrapper>
         <FlexBox>
           <Box flex="1 1 0" minWidth="0px" mr={1}>
             <Link href={`/product/${slug}`}>
-              <a>
-                <H3 mb={1} title={title} fontSize="24px"
-              // textAlign="left"
-              fontWeight="700" className="title" color="text.secondary">
-                  {title}
-                </H3>
-              </a>
+              {/* <a> */}
+              <H3
+                mb={1}
+                title={title}
+                fontSize="24px"
+                // textAlign="left"
+                fontWeight="700"
+                className="title"
+                color="text.secondary"
+              >
+                {title}
+              </H3>
+              {/* </a> */}
             </Link>
 
-            {!hideRating && <Box display="flex" alignItems="center">
-                <BazaarRating fontSize={18} value={rating || 0} color="warn" readOnly />{" "}
-                <Span sx={{
-              color: palette.grey[600]
-            }}>{`(${rating}.0)`}</Span>
-              </Box>}
+            {!hideRating && (
+              <Box display="flex" alignItems="center">
+                <BazaarRating
+                  fontSize={18}
+                  value={rating || 0}
+                  color="warn"
+                  readOnly
+                />{" "}
+                <Span
+                  sx={{
+                    color: palette.grey[600],
+                  }}
+                >{`(${rating}.0)`}</Span>
+              </Box>
+            )}
 
             <ColorBox>
-              {productColors.map((color, ind) => <Span key={ind} sx={{
-              background: color
-            }} />)}
+              {productColors.map((color, ind) => (
+                <Span
+                  key={ind}
+                  sx={{
+                    background: color,
+                  }}
+                />
+              ))}
             </ColorBox>
 
             <FlexBox gap={1} alignItems="center" mt={0.5}>
@@ -225,29 +237,46 @@ const ProductCard17 = props => {
                 {calculateDiscount(price, off)}
               </Box>
 
-              {off !== 0 && <Box color="grey.600" fontWeight="600">
+              {off !== 0 && (
+                <Box color="grey.600" fontWeight="600">
                   <del>{currency(price)}</del>
-                </Box>}
+                </Box>
+              )}
             </FlexBox>
           </Box>
 
-          <FlexBox width="30px" alignItems="center" className="add-cart" flexDirection="column-reverse" justifyContent={!!cartItem?.qty ? "space-between" : "flex-start"}>
-            <StyledButton variant="outlined" onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}>
+          <FlexBox
+            width="30px"
+            alignItems="center"
+            className="add-cart"
+            flexDirection="column-reverse"
+            justifyContent={!!cartItem?.qty ? "space-between" : "flex-start"}
+          >
+            <StyledButton
+              variant="outlined"
+              onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}
+            >
               <Add fontSize="small" />
             </StyledButton>
 
-            {!!cartItem?.qty && <Fragment>
+            {!!cartItem?.qty && (
+              <Fragment>
                 <Box color="text.primary" fontWeight="600">
                   {cartItem?.qty}
                 </Box>
 
-                <StyledButton variant="outlined" onClick={handleCartAmountChange(cartItem?.qty - 1, "remove")}>
+                <StyledButton
+                  variant="outlined"
+                  onClick={handleCartAmountChange(cartItem?.qty - 1, "remove")}
+                >
                   <Remove fontSize="small" />
                 </StyledButton>
-              </Fragment>}
+              </Fragment>
+            )}
           </FlexBox>
         </FlexBox>
       </ContentWrapper>
-    </StyledCard>;
+    </StyledCard>
+  );
 };
 export default ProductCard17;

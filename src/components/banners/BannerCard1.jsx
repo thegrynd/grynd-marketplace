@@ -82,9 +82,9 @@ const BannerCard1 = ({
       }} />
 
         <Link href={url}>
-          <a>
+          {/* <a> */}
             <CardLink>Shop Now</CardLink>
-          </a>
+          {/* </a> */}
         </Link>
       </CardContent>
     </CardWrapper>;

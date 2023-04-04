@@ -21,15 +21,22 @@ const ProductCard12 = ({
   rating,
   off = 20,
   hideReview,
-  hideFavoriteIcon
+  hideFavoriteIcon,
 }) => {
-  return <Box>
+  return (
+    <Box>
       <Link href={`/product/${slug}`}>
-        <a>
-          <HoverBox>
-            <BazaarImage src={imgUrl} width="100%" height="auto" alt={title} mx="auto" />
-          </HoverBox>
-        </a>
+        {/* <a> */}
+        <HoverBox>
+          <BazaarImage
+            src={imgUrl}
+            width="100%"
+            height="auto"
+            alt={title}
+            mx="auto"
+          />
+        </HoverBox>
+        {/* </a> */}
       </Link>
 
       <FlexBetween>
@@ -44,17 +51,26 @@ const ProductCard12 = ({
               {calculateDiscount(price, off)}
             </Box>
 
-            {!!off && <Box color="grey.600" fontWeight="600">
+            {!!off && (
+              <Box color="grey.600" fontWeight="600">
                 <del>{currency(price)}</del>
-              </Box>}
+              </Box>
+            )}
           </FlexBox>
         </Box>
 
-        {!hideFavoriteIcon && <FavoriteBorder fontSize="small" color="secondary" sx={{
-        opacity: 0.5,
-        m: "1rem"
-      }} />}
+        {!hideFavoriteIcon && (
+          <FavoriteBorder
+            fontSize="small"
+            color="secondary"
+            sx={{
+              opacity: 0.5,
+              m: "1rem",
+            }}
+          />
+        )}
       </FlexBetween>
-    </Box>;
+    </Box>
+  );
 };
 export default ProductCard12;

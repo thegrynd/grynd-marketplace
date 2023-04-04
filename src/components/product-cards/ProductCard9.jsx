@@ -75,11 +75,11 @@ const ProductCard9 = props => {
         <Grid item sm={9} xs={12}>
           <FlexBox flexDirection="column" justifyContent="center" height="100%" p={2}>
             <Link href={`/product/${slug}`}>
-              <a>
+              {/* <a> */}
                 <H5 fontWeight="600" my="0.5rem">
                   {title}
                 </H5>
-              </a>
+              {/* </a> */}
             </Link>
 
             <Rating value={rating || 0} color="warn" readOnly />

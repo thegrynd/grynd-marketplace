@@ -58,9 +58,9 @@ const BlogCard2 = ({
 
       <Box px={2} pt={1} pb={3}>
         <Link href="#">
-          <a>
+          {/* <a> */}
             <H4 fontWeight={700}>{title}</H4>
-          </a>
+          {/* </a> */}
         </Link>
 
         <Paragraph mt={0.5} mb={3}>
