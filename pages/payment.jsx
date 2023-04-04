@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import PaymentForm from "pages-sections/payment/PaymentForm";
 import PaymentSummary from "pages-sections/payment/PaymentSummary";
@@ -12,9 +12,9 @@ import { Elements } from "@stripe/react-stripe-js";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const Checkout = () => {
-  const [clientSecret, setClientSecret] = React.useState("");
+  const [clientSecret, setClientSecret] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Create PaymentIntent as soon as the page loads
     fetch("/api/create-payment-intent", {
       method: "POST",

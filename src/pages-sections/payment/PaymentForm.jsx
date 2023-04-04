@@ -20,7 +20,7 @@ export default function PaymentForm() {
     }
 
     const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
+      process.env.STRIPE_SECRET_KEY
     );
 
     if (!clientSecret) {
