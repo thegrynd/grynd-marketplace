@@ -153,16 +153,16 @@ const ProductCard13 = (props) => {
         )} */}
 
         <Link href={`/product/seller/${id}`}>
-          <a>
-            <LazyImage
-              alt={name}
-              width={190}
-              src={imgUrl}
-              height={190}
-              layout="responsive"
-              objectFit="contain"
-            />
-          </a>
+          {/* <a> */}
+          <LazyImage
+            alt={name}
+            width={190}
+            src={imgUrl}
+            height={190}
+            layout="responsive"
+            objectFit="contain"
+          />
+          {/* </a> */}
         </Link>
 
         <HoverWrapper className="controller">
@@ -209,19 +209,19 @@ const ProductCard13 = (props) => {
       <ContentWrapper>
         <Box flex="1 1 0" minWidth="0px" mr={1}>
           <Link href={`/product/${slug}`}>
-            <a>
-              <H3
-                mb={1}
-                title={name}
-                fontSize="14px"
-                textAlign="left"
-                fontWeight="600"
-                className="title"
-                color="text.secondary"
-              >
-                {name}
-              </H3>
-            </a>
+            {/* <a> */}
+            <H3
+              mb={1}
+              title={name}
+              fontSize="14px"
+              textAlign="left"
+              fontWeight="600"
+              className="title"
+              color="text.secondary"
+            >
+              {name}
+            </H3>
+            {/* </a> */}
           </Link>
 
           {!hideRating && (

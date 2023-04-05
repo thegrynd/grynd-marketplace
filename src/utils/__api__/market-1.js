@@ -89,5 +89,5 @@ export default {
   getTopRatedBrand,
   getNewArrivalList,
   getBigDiscountList,
-  getTopRatedProduct
+  getTopRatedProduct,
 };

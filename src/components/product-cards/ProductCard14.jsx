@@ -16,9 +16,7 @@ import { useAppContext } from "contexts/AppContext";
 import { calculateDiscount, currency } from "lib";
 
 // styled components
-const StyledBazaarCard = styled(BazaarCard)(({
-  theme
-}) => ({
+const StyledBazaarCard = styled(BazaarCard)(({ theme }) => ({
   margin: "auto",
   height: "100%",
   display: "flex",
@@ -31,29 +29,23 @@ const StyledBazaarCard = styled(BazaarCard)(({
   "&:hover": {
     boxShadow: theme.shadows[2],
     "& .controller": {
-      right: 1
-    }
-  }
+      right: 1,
+    },
+  },
 }));
-const ImageWrapper = styled(Box)(({
-  theme
-}) => ({
+const ImageWrapper = styled(Box)(({ theme }) => ({
   textAlign: "center",
   position: "relative",
   display: "inline-block",
   [theme.breakpoints.down("sm")]: {
-    display: "block"
-  }
+    display: "block",
+  },
 }));
-const ImageBox = styled(Box)(({
-  theme
-}) => ({
+const ImageBox = styled(Box)(({ theme }) => ({
   padding: "44px 40px",
-  borderBottom: `1px solid ${theme.palette.grey[300]}`
+  borderBottom: `1px solid ${theme.palette.grey[300]}`,
 }));
-const HoverWrapper = styled(FlexBetween)(({
-  theme
-}) => ({
+const HoverWrapper = styled(FlexBetween)(({ theme }) => ({
   top: 0,
   bottom: 0,
   width: 25,
@@ -76,8 +68,8 @@ const HoverWrapper = styled(FlexBetween)(({
     justifyContent: "center",
     "&:hover": {
       cursor: "pointer",
-      background: "#f3f5f9"
-    }
+      background: "#f3f5f9",
+    },
   },
   "& a": {
     width: "100%",
@@ -87,17 +79,15 @@ const HoverWrapper = styled(FlexBetween)(({
     justifyContent: "center",
     "&:hover": {
       cursor: "pointer",
-      background: "#f3f5f9"
-    }
+      background: "#f3f5f9",
+    },
   },
   "& svg": {
     fontSize: 18,
-    color: theme.palette.grey[600]
-  }
+    color: theme.palette.grey[600],
+  },
 }));
-const StyledChip = styled(Chip)(({
-  theme
-}) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
   zIndex: 11,
   top: "16px",
   left: "0px",
@@ -107,19 +97,17 @@ const StyledChip = styled(Chip)(({
   fontSize: "10px",
   position: "absolute",
   borderRadius: "0px 50px 50px 0px",
-  background: theme.palette.primary.main
+  background: theme.palette.primary.main,
 }));
 const ContentWrapper = styled(Box)({
   padding: "1rem",
   "& .title, & .categories": {
     overflow: "hidden",
     whiteSpace: "nowrap",
-    textOverflow: "ellipsis"
-  }
+    textOverflow: "ellipsis",
+  },
 });
-const ButtonBox = styled(FlexBox)(({
-  theme
-}) => ({
+const ButtonBox = styled(FlexBox)(({ theme }) => ({
   gap: 10,
   marginTop: "15px",
   justifyContent: "space-between",
@@ -127,16 +115,16 @@ const ButtonBox = styled(FlexBox)(({
     color: "#fff",
     background: theme.palette.primary.main,
     "&:hover": {
-      background: theme.palette.primary[400]
-    }
-  }
+      background: theme.palette.primary[400],
+    },
+  },
 }));
 
 // =============================================================
 
 // =============================================================
 
-const ProductCard14 = props => {
+const ProductCard14 = (props) => {
   const {
     off,
     id,
@@ -146,23 +134,16 @@ const ProductCard14 = props => {
     rating,
     hideRating,
     hoverEffect,
-    slug
+    slug,
   } = props;
-  const {
-    palette
-  } = useTheme();
-  const {
-    enqueueSnackbar
-  } = useSnackbar();
-  const {
-    state,
-    dispatch
-  } = useAppContext();
+  const { palette } = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+  const { state, dispatch } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const toggleIsFavorite = () => setIsFavorite(fav => !fav);
-  const toggleDialog = useCallback(() => setOpenModal(open => !open), []);
-  const cartItem = state.cart.find(item => item.slug === slug);
+  const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
+  const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
+  const cartItem = state.cart.find((item) => item.slug === slug);
   const handleCartAmountChange = (amount, type) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -172,30 +153,40 @@ const ProductCard14 = props => {
         id,
         name: title,
         qty: amount,
-        slug
-      }
+        slug,
+      },
     });
 
     // SHOW ALERT PRODUCT ADDED OR REMOVE
     if (type === "remove") {
       enqueueSnackbar("Remove from Cart", {
-        variant: "error"
+        variant: "error",
       });
     } else {
       enqueueSnackbar("Added to Cart", {
-        variant: "success"
+        variant: "success",
       });
     }
   };
-  return <StyledBazaarCard hoverEffect={hoverEffect}>
+  return (
+    <StyledBazaarCard hoverEffect={hoverEffect}>
       <ImageWrapper>
-        {off !== 0 && <StyledChip color="primary" size="small" label={`${off}% off`} />}
+        {off !== 0 && (
+          <StyledChip color="primary" size="small" label={`${off}% off`} />
+        )}
 
         <ImageBox>
           <Link href={`/product/${slug}`}>
-            <a>
-              <LazyImage alt={title} src={imgUrl} width={190} height={190} layout="responsive" objectFit="contain" />
-            </a>
+            {/* <a> */}
+            <LazyImage
+              alt={title}
+              src={imgUrl}
+              width={190}
+              height={190}
+              layout="responsive"
+              objectFit="contain"
+            />
+            {/* </a> */}
           </Link>
 
           <HoverWrapper className="controller">
@@ -206,7 +197,11 @@ const ProductCard14 = props => {
             <Divider orientation="horizontal" flexItem />
 
             <Span onClick={toggleIsFavorite}>
-              {isFavorite ? <Favorite color="primary" fontSize="small" /> : <FavoriteBorder fontSize="small" color="primary" />}
+              {isFavorite ? (
+                <Favorite color="primary" fontSize="small" />
+              ) : (
+                <FavoriteBorder fontSize="small" color="primary" />
+              )}
             </Span>
 
             <Divider orientation="horizontal" flexItem />
@@ -218,68 +213,102 @@ const ProductCard14 = props => {
         </ImageBox>
       </ImageWrapper>
 
-      <ProductViewDialog openDialog={openModal} handleCloseDialog={toggleDialog} product={{
-      title,
-      price,
-      id,
-      slug,
-      imgGroup: [imgUrl, imgUrl]
-    }} />
+      <ProductViewDialog
+        openDialog={openModal}
+        handleCloseDialog={toggleDialog}
+        product={{
+          title,
+          price,
+          id,
+          slug,
+          imgGroup: [imgUrl, imgUrl],
+        }}
+      />
 
       <ContentWrapper>
         <Box flex="1 1 0" minWidth="0px" mr={1}>
           <Link href={`/product/${slug}`}>
-            <a>
-              <H3 mb={1} title={title} fontSize="14px"
-            // textAlign="left"
-            fontWeight="600" className="title" color="text.secondary">
-                {title}
-              </H3>
-            </a>
+            {/* <a> */}
+            <H3
+              mb={1}
+              title={title}
+              fontSize="14px"
+              // textAlign="left"
+              fontWeight="600"
+              className="title"
+              color="text.secondary"
+            >
+              {title}
+            </H3>
+            {/* </a> */}
           </Link>
 
-          {!hideRating && <Box display="flex" alignItems="center">
+          {!hideRating && (
+            <Box display="flex" alignItems="center">
               <BazaarRating value={rating || 0} color="warn" readOnly />{" "}
-              <Span sx={{
-            color: palette.grey[600]
-          }}>{`(${rating}.0)`}</Span>
-            </Box>}
+              <Span
+                sx={{
+                  color: palette.grey[600],
+                }}
+              >{`(${rating}.0)`}</Span>
+            </Box>
+          )}
 
           <FlexBox gap={1} alignItems="center" mt={0.5}>
             <Box fontWeight="600" color="primary.main">
               {calculateDiscount(price, off)}
             </Box>
 
-            {off !== 0 && <Box color="grey.600" fontWeight="600">
+            {off !== 0 && (
+              <Box color="grey.600" fontWeight="600">
                 <del>{currency(price)}</del>
-              </Box>}
+              </Box>
+            )}
           </FlexBox>
         </Box>
 
         <ButtonBox>
-          {cartItem?.qty ? <Button variant="contained" sx={{
-          py: "3px",
-          width: "100%",
-          fontSize: "13px"
-        }} onClick={handleCartAmountChange(cartItem.qty - 1, "remove")}>
+          {cartItem?.qty ? (
+            <Button
+              variant="contained"
+              sx={{
+                py: "3px",
+                width: "100%",
+                fontSize: "13px",
+              }}
+              onClick={handleCartAmountChange(cartItem.qty - 1, "remove")}
+            >
               <Remove /> Remove from Cart
-            </Button> : <Button variant="contained" sx={{
-          py: "3px",
-          width: "100%",
-          fontSize: "13px"
-        }} onClick={handleCartAmountChange(1)}>
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{
+                py: "3px",
+                width: "100%",
+                fontSize: "13px",
+              }}
+              onClick={handleCartAmountChange(1)}
+            >
               <Add /> Add to Cart
-            </Button>}
+            </Button>
+          )}
 
-          <Button variant="contained" sx={{
-          p: "3px 8px"
-        }}>
-            <FavoriteIcon sx={{
-            fontSize: "16px"
-          }} />
+          <Button
+            variant="contained"
+            sx={{
+              p: "3px 8px",
+            }}
+          >
+            <FavoriteIcon
+              sx={{
+                fontSize: "16px",
+              }}
+            />
           </Button>
         </ButtonBox>
       </ContentWrapper>
-    </StyledBazaarCard>;
+    </StyledBazaarCard>
+  );
 };
 export default ProductCard14;

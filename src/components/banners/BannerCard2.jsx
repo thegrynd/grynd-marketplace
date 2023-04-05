@@ -55,11 +55,11 @@ const BannerCard2 = ({
         </Box>
 
         <Link href={url}>
-          <a>
+          {/* <a> */}
             <Button variant="outlined" size="large" color="info">
               Shop Now
             </Button>
-          </a>
+          {/* </a> */}
         </Link>
       </CardContent>
     </CardWrapper>;
