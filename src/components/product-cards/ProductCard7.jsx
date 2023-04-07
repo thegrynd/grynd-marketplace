@@ -71,11 +71,11 @@ const ProductCard7 = ({ id, name, qty, price, imgUrl, slug, description }) => {
 
       <FlexBox p={2} rowGap={2} width="100%" flexDirection="column">
         <Link href={`/product/${slug}`}>
-          <a>
-            <Span ellipsis fontWeight="600" fontSize={18}>
-              {name}
-            </Span>
-          </a>
+          {/* <a> */}
+          <Span ellipsis fontWeight="600" fontSize={18}>
+            {name}
+          </Span>
+          {/* </a> */}
         </Link>
 
         <FlexBox gap={1} flexWrap="wrap" alignItems="center">

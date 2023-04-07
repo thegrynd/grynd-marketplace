@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Button, Stack } from "@mui/material";
+import SearchProduct from "../src/components/product-search/SearchProduct";
 import SEO from "components/SEO";
 import Setting from "components/Setting";
 import HomeLayout from "components/layouts/HomeLayout";
@@ -22,10 +23,21 @@ import { parseCookies } from "../helpers/validation";
 
 const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [filterProducts, setFilterProducts] = useState([]);
+  const [categoryProducts, setCategoryProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sellerProducts, setSellerProducts] = useState([]);
   const [clientProducts, setClientProducts] = useState([]);
+
+  // state for sorting products
+  const [sortProduct, setSortProduct] = useState("");
+
+  // console.log("sortProduct", sortProduct);
+
+  // state to contain searched products
+  const [searchedProduct, setSearchedProduct] = useState([]);
+
+  // state to receive search terms
+  const [searchValue, setSearchValue] = useState("");
 
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
@@ -39,12 +51,16 @@ const HomePage = (props) => {
     },
   };
 
+  let url = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?`;
+
+  // isLoading ? "Loading.." : null;
+
   // FETCH ALL PRODUCTS FOR SELLER
   useEffect(() => {
     if (authUser?.data.isSeller === true) {
       setIsLoading(true);
       axios
-        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products`, config)
+        .get(url, config)
         .then(({ data }) => {
           setSellerProducts(data);
           // console.log("sellerProducts", sellerProducts);
@@ -62,22 +78,99 @@ const HomePage = (props) => {
     ) {
       setIsLoading(true);
       axios
-        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products`)
+        .get(url)
         .then(({ data }) => {
           setClientProducts(data);
         })
         .catch((err) => err)
         .finally(() => setIsLoading(false));
     }
-  }, [authUser]);
+
+    switch (sortProduct) {
+      case "priceLowToHigh":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=priceLowToHigh`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "priceHighToLow":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=priceHighToLow`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "createdAt":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=createdAt`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "rating":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=rating`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      default:
+        setIsLoading(true);
+        axios
+          .get(url)
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+    }
+  }, [authUser, sortProduct]);
 
   // seller
   const { data: allProductsSeller } = sellerProducts;
   console.log("allProducts", allProductsSeller);
 
   // client
-  const { data: allProductsClient } = clientProducts;
+  // const { data: allProductsClient } = clientProducts;
+
+  const { docs: allProductsClient } = clientProducts?.data || {};
+  // const { docs } = allProductsClient || {};
   console.log("allProductsClient", allProductsClient);
+
+  console.log("searchedProduct", searchedProduct);
+
+  // FILTER PRODUCTS BY SEARCH
+  useEffect(() => {
+    setSearchedProduct(allProductsClient);
+
+    const filteredProducts = allProductsClient?.filter((item) =>
+      item.name.toLowerCase().includes(searchValue)
+    );
+
+    setSearchedProduct(filteredProducts);
+  }, [allProductsClient, searchValue]);
 
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
@@ -89,7 +182,7 @@ const HomePage = (props) => {
       })
       .then(({ data }) => {
         // console.log("data", data);
-        setFilterProducts(data);
+        setCategoryProducts(data);
       });
   }, [selectedCategory]);
 
@@ -159,67 +252,85 @@ const HomePage = (props) => {
               <Footer />
             </Stack>
           ) : authUser?.data.isSeller === false ? (
-            <Stack spacing={6} mt={2}>
-              {selectedCategory ? (
-                // FILTERED PRODUCT LIST
+            <>
+              <SearchProduct
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                setSortProduct={setSortProduct}
+                sortProduct={sortProduct}
+              />
+              <Stack spacing={6} mt={2}>
+                {selectedCategory ? (
+                  // FILTERED PRODUCT LIST
 
-                <Store>
                   <AllProducts
-                    products={allProductsClient}
+                    // products={allProductsClient}
                     title={selectedCategory}
                   />
-                </Store>
-              ) : (
-                <Fragment>
-                  {/* POPULAR PRODUCTS AREA */}
-                  <AllProducts products={allProductsClient} title="" />
+                ) : (
+                  <Fragment>
+                    {/* POPULAR PRODUCTS AREA */}
+                    <AllProducts
+                      products={searchedProduct}
+                      setSearchedProduct={setSearchedProduct}
+                      title=""
+                    />
 
-                  {/* <Store>
+                    {/* <Store>
                   <ProductCarousel
                     title="All Products"
                     products={sellerProducts}
                   />
                 </Store> */}
-                </Fragment>
-              )}
+                  </Fragment>
+                )}
 
-              {/* DISCOUNT BANNER AREA */}
-              <DiscountSection />
+                {/* DISCOUNT BANNER AREA */}
+                <DiscountSection />
 
-              {/* FOOTER AREA */}
-              <Footer />
-            </Stack>
+                {/* FOOTER AREA */}
+                <Footer />
+              </Stack>
+            </>
           ) : !authUser ? (
-            <Stack spacing={6} mt={2}>
-              {selectedCategory ? (
-                // FILTERED PRODUCT LIST
+            <>
+              <SearchProduct
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                setSortProduct={setSortProduct}
+                sortProduct={sortProduct}
+              />
+              <Stack spacing={6} mt={2}>
+                {selectedCategory ? (
+                  // FILTERED PRODUCT LIST
 
-                <Store>
-                  <AllProducts
-                    products={allProductsClient}
-                    title={selectedCategory}
-                  />
-                </Store>
-              ) : (
-                <Fragment>
-                  {/* POPULAR PRODUCTS AREA */}
-                  <AllProducts products={allProductsClient} title="" />
+                  <Store>
+                    <AllProducts
+                      // products={allProductsClient}
+                      title={selectedCategory}
+                    />
+                  </Store>
+                ) : (
+                  <Fragment>
+                    {/* POPULAR PRODUCTS AREA */}
+                    <AllProducts products={searchedProduct} title="" />
 
-                  {/* <Store>
+                    {/* <Store>
                   <ProductCarousel
                     title="All Products"
                     products={sellerProducts}
                   />
                 </Store> */}
-                </Fragment>
-              )}
+                  </Fragment>
+                )}
 
-              {/* DISCOUNT BANNER AREA */}
-              <DiscountSection />
+                {/* DISCOUNT BANNER AREA */}
+                <DiscountSection />
 
-              {/* FOOTER AREA */}
-              <Footer />
-            </Stack>
+                {/* FOOTER AREA */}
+                <Footer />
+              </Stack>
+            </>
           ) : null}
         </SidenavContainer>
 

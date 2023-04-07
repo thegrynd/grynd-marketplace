@@ -1,8 +1,13 @@
 import { Box } from "@mui/material";
 import * as yup from "yup";
 import { H3 } from "components/Typography";
-import { CategoryForm } from "pages-sections/admin";
+// import { CategoryForm } from "pages-sections/admin";
+import SubCategoryForm from "../../../src/pages-sections/forms/SubCategoryForm";
+import CategoryForm from "../../../src/pages-sections/forms/CategoryForm";
 import VendorDashboardLayout from "components/layouts/vendor-dashboard";
+import axios from "axios";
+import { parseCookies } from "../../../helpers/validation";
+
 // import api from "utils/__api__/products";
 
 // =============================================================================
@@ -12,20 +17,65 @@ CreateCategory.getLayout = function getLayout(page) {
 // =============================================================================
 
 export default function CreateCategory() {
-  const INITIAL_VALUES = {
-    name: "",
-    parent: [],
-    featured: false
+  return (
+    <>
+      <Box py={4}>
+        <H3 mb={2} color="#066344">
+          Create A New Category
+        </H3>
+
+        <CategoryForm />
+      </Box>
+      <Box py={4}>
+        <H3 mb={2} color="#066344">
+          Create A New Sub-Category
+        </H3>
+
+        <SubCategoryForm />
+      </Box>
+    </>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { authToken } = parseCookies(context.req);
+  const url = "https://grynd-staging.vercel.app";
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
   };
 
-  // form field validation schema
-  const validationSchema = yup.object().shape({
-    name: yup.string().required("required")
-  });
-  const handleFormSubmit = () => {};
-  return <Box py={4}>
-      <H3 mb={2}>Create Category</H3>
+  const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
+  console.log(authResponse.data);
+  const authUser = authResponse.data;
 
-      <CategoryForm initialValues={INITIAL_VALUES} validationSchema={validationSchema} handleFormSubmit={handleFormSubmit} />
-    </Box>;
+  if (authUser.success === false) {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/vendor/login-user",
+        permanent: false,
+      },
+    };
+  }
+
+  if (authUser.data.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { authUser },
+  };
 }

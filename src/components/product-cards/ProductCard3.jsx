@@ -21,19 +21,29 @@ const ProductCard3 = ({
   rating,
   off = 20,
   hideReview,
-  hideFavoriteIcon
+  hideFavoriteIcon,
 }) => {
   const [favorite, setFavorite] = useState(false);
-  return <Box>
+  return (
+    <Box>
       <Link href={`/product/${slug}`}>
-        <a>
-          <HoverBox sx={{
-          borderRadius: "8px",
-          overflow: "hidden"
-        }}>
-            <LazyImage width={0} mx="auto" height={0} alt={title} src={imgUrl} layout="responsive" />
-          </HoverBox>
-        </a>
+        {/* <a> */}
+        <HoverBox
+          sx={{
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
+        >
+          <LazyImage
+            width={0}
+            mx="auto"
+            height={0}
+            alt={title}
+            src={imgUrl}
+            layout="responsive"
+          />
+        </HoverBox>
+        {/* </a> */}
       </Link>
 
       <FlexBetween mt={2}>
@@ -49,24 +59,41 @@ const ProductCard3 = ({
               {calculateDiscount(price, off)}
             </Box>
 
-            {!!off && <Box color="grey.600" fontWeight="600">
+            {!!off && (
+              <Box color="grey.600" fontWeight="600">
                 <del>{currency(price)}</del>
-              </Box>}
+              </Box>
+            )}
           </FlexBox>
         </Box>
 
-        {!hideFavoriteIcon && <Button disableRipple disableElevation onClick={() => setFavorite(state => !state)} sx={{
-        height: "0",
-        alignItems: "flex-start",
-        "&:hover": {
-          backgroundColor: "transparent"
-        }
-      }}>
-            {favorite ? <Favorite fontSize="small" color="primary" /> : <FavoriteBorder fontSize="small" sx={{
-          opacity: 0.5
-        }} />}
-          </Button>}
+        {!hideFavoriteIcon && (
+          <Button
+            disableRipple
+            disableElevation
+            onClick={() => setFavorite((state) => !state)}
+            sx={{
+              height: "0",
+              alignItems: "flex-start",
+              "&:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            {favorite ? (
+              <Favorite fontSize="small" color="primary" />
+            ) : (
+              <FavoriteBorder
+                fontSize="small"
+                sx={{
+                  opacity: 0.5,
+                }}
+              />
+            )}
+          </Button>
+        )}
       </FlexBetween>
-    </Box>;
+    </Box>
+  );
 };
 export default ProductCard3;
