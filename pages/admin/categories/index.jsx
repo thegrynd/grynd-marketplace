@@ -9,6 +9,9 @@ import { H3 } from "components/Typography";
 import useMuiTable from "hooks/useMuiTable";
 import Scrollbar from "components/Scrollbar";
 import { CategoryRow } from "pages-sections/admin";
+import axios from "axios";
+import { parseCookies } from "../../../helpers/validation";
+
 import api from "utils/__api__/dashboard";
 
 // TABLE HEADING DATA LIST
@@ -53,16 +56,17 @@ CategoryList.getLayout = function getLayout(page) {
 
 // =============================================================================
 
-export default function CategoryList(props) {
-  const { categories } = props;
+export default function CategoryList({ categoryData }) {
+  const { docs } = categoryData.data || {};
+  console.log("categoryData", docs);
 
   // RESHAPE THE PRODUCT LIST BASED TABLE HEAD CELL ID
-  const filteredCategories = categories.map((item) => ({
+  const filteredCategories = docs?.map((item) => ({
     id: item.id,
     name: item.name,
     slug: item.slug,
-    image: item.image,
-    featured: item.featured,
+    image: item.icon.url,
+    // featured: item.featured,
     level: Math.ceil(Math.random() * 1),
   }));
   const {
@@ -78,7 +82,9 @@ export default function CategoryList(props) {
   });
   return (
     <Box py={4}>
-      <H3 mb={2}>Product Categories</H3>
+      <H3 mb={2} color="#066344">
+        Product Categories
+      </H3>
 
       <SearchArea
         handleSearch={() => {}}
@@ -100,7 +106,7 @@ export default function CategoryList(props) {
                 hideSelectBtn
                 orderBy={orderBy}
                 heading={tableHeading}
-                rowCount={categories.length}
+                rowCount={docs.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
               />
@@ -121,18 +127,63 @@ export default function CategoryList(props) {
         <Stack alignItems="center" my={4}>
           <TablePagination
             onChange={handleChangePage}
-            count={Math.ceil(categories.length / rowsPerPage)}
+            count={Math.ceil(docs.length / rowsPerPage)}
           />
         </Stack>
       </Card>
     </Box>
   );
 }
-export const getStaticProps = async () => {
-  const categories = await api.category();
-  return {
-    props: {
-      categories,
+// export const getStaticProps = async () => {
+//   const categories = await api.category();
+//   return {
+//     props: {
+//       categories,
+//     },
+//   };
+// };
+
+export async function getServerSideProps(context) {
+  const { authToken } = parseCookies(context.req);
+  const url = "https://grynd-staging.vercel.app";
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
     },
   };
-};
+
+  const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
+  console.log(authResponse.data);
+  const authUser = authResponse.data;
+
+  const response = await axios.get(`${url}/api/v2/categories`, config);
+  console.log(response.data.status);
+  const categoryData = response.data;
+
+  if (authUser.success === false) {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/vendor/login-user",
+        permanent: false,
+      },
+    };
+  } else if (authUser.data.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { categoryData, authUser },
+  };
+}

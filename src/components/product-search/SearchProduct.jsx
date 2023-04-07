@@ -3,9 +3,14 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { SearchOutlinedIcon } from "components/search-box/styled";
+import SelectDropdownFilter from "./SelectDropdownFilter";
 
-const SearchProduct = ({ setSearchValue, searchValue }) => {
-  //   console.log("searchvalue", searchValue);
+const SearchProduct = ({
+  setSearchValue,
+  searchValue,
+  setSortProduct,
+  sortProduct,
+}) => {
   const SEARCH_BUTTON = (
     <Button
       color="primary"
@@ -21,6 +26,7 @@ const SearchProduct = ({ setSearchValue, searchValue }) => {
       Search
     </Button>
   );
+
   return (
     <>
       <Box className="searchBox">
@@ -37,7 +43,12 @@ const SearchProduct = ({ setSearchValue, searchValue }) => {
                 border: "none",
               },
             },
-            endAdornment: SEARCH_BUTTON,
+            endAdornment: (
+              <SelectDropdownFilter
+                sortProduct={sortProduct}
+                setSortProduct={setSortProduct}
+              />
+            ),
             startAdornment: <SearchOutlinedIcon fontSize="small" />,
           }}
           value={searchValue}

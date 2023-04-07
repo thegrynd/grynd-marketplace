@@ -8,12 +8,8 @@ import { H3, H5 } from "components/Typography";
 import { useRouter } from "next/router";
 import { ThreeCircles } from "react-loader-spinner";
 import PreviewImage from "pages-sections/forms/PreviewImage";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
-const UpdateSubCategory = ({ currentCategory }) => {
+const UpdateCategory = ({ currentCategory }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [resData1, setResData1] = useState();
@@ -21,7 +17,8 @@ const UpdateSubCategory = ({ currentCategory }) => {
   const [inputFile1, setInputFile1] = useState();
 
   const { id } = router.query;
-  const { subcategories } = currentCategory;
+
+  const [errorMsg, setErrorMsg] = useState();
 
   useEffect(() => {
     uploadIconToCloudinary();
@@ -40,7 +37,7 @@ const UpdateSubCategory = ({ currentCategory }) => {
     setIsLoading(true);
 
     return axios
-      .put(`${url}/api/v2/subcategories/${id}`, values, {
+      .put(`${url}/api/v2/categories/${id}`, values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -84,8 +81,7 @@ const UpdateSubCategory = ({ currentCategory }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      category: "",
+      name: currentCategory.name || "",
       icon: {
         public_id: "",
         url: resData1,
@@ -97,7 +93,6 @@ const UpdateSubCategory = ({ currentCategory }) => {
         .max(50, "Category name must be 15 characters or less")
         .required("The category name is required")
         .matches(/^[aA-zZ\s]+$/, "Category Name must contain only alphabets"),
-      category: Yup.string(),
 
       icon: Yup.object().shape({
         public_id: Yup.string(),
@@ -112,123 +107,100 @@ const UpdateSubCategory = ({ currentCategory }) => {
     },
   });
   return (
-    <>
-      <form
-        onSubmit={formik.handleSubmit}
-        encType="multipart/form-data"
-        style={{
-          marginTop: "1rem",
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+    <form
+      onSubmit={formik.handleSubmit}
+      encType="multipart/form-data"
+      style={{
+        marginTop: "1rem",
+        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Grid
+        container
+        spacing={1}
+        md={8}
+        p={8}
+        sx={{ backgroundColor: "white" }}
       >
-        <Grid
-          container
-          spacing={1}
-          md={8}
-          p={8}
-          sx={{ backgroundColor: "white" }}
-        >
-          <Grid item md={6} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Name of Sub Category
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="name"
-                name="name"
-                value={formik.values.name}
-                label="Name of Sub Category"
-                onChange={formik.handleChange}
-              >
-                {subcategories.map((sub) => (
-                  <MenuItem value={sub?.name} key={sub.id}>
-                    {sub?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {formik.touched.name && formik.errors.name ? (
-              <H5 color="red">{formik.errors.name}</H5>
-            ) : null}
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="category"
-                name="category"
-                value={formik.values.category}
-                label="Category"
-                onChange={formik.handleChange}
-              >
-                <MenuItem value={currentCategory?.id} key={currentCategory.id}>
-                  {currentCategory?.name}
-                </MenuItem>
-              </Select>
-            </FormControl>
-            {formik.touched.category && formik.errors.category ? (
-              <H5 color="red">{formik.errors.category}</H5>
-            ) : null}
-          </Grid>
-          <Grid item md={12} xs={12}>
-            {formik.values.icon && <PreviewImage file={inputFile1} />}
-            <TextField
-              fullWidth
-              color="info"
-              type="file"
-              size="medium"
-              id="icon.url"
-              name="icon.url"
-              label="Category Icon"
-              onBlur={formik.handleBlur}
-              onChange={(e) => handleCoverInput(e)}
-              value={undefined}
-            />
-            {formik.touched.icon && formik.errors.icon ? (
-              <H5 color="red">{formik.errors.icon.url}</H5>
-            ) : null}
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              color="info"
-              variant="contained"
-              sx={{
-                mt: 4,
-                backgroundColor: "#066344",
-                // width: "100px",
-                ":hover": {
-                  backgroundColor: "grey",
-                },
-              }}
-            >
-              {isLoading ? (
-                <ThreeCircles
-                  height="30"
-                  width="30"
-                  color="#fff"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                  ariaLabel="three-circles-rotating"
-                  outerCircleColor=""
-                  innerCircleColor=""
-                  middleCircleColor=""
-                />
-              ) : (
-                "Update SubCategory"
-              )}
-            </Button>
-          </Grid>
+        {/* <Grid item md={12} xs={12}>
+          {" "}
+          <H3 textAlign="center" color="#066344">
+            Create A New Category
+          </H3>
+        </Grid> */}
+        <Grid item md={12} xs={12}>
+          <TextField
+            fullWidth
+            type="text"
+            color="info"
+            size="medium"
+            id="name"
+            name="name"
+            label="Name of Category"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            value={formik.values.name}
+          />
+          {formik.touched.name && formik.errors.name ? (
+            <H5 color="red">{formik.errors.name}</H5>
+          ) : null}
         </Grid>
-      </form>
-    </>
+        <Grid item md={12} xs={12}>
+          {formik.values.icon && <PreviewImage file={inputFile1} />}
+          <TextField
+            fullWidth
+            color="info"
+            type="file"
+            size="medium"
+            id="icon.url"
+            name="icon.url"
+            label="Category Icon"
+            onBlur={formik.handleBlur}
+            onChange={(e) => handleCoverInput(e)}
+            value={undefined}
+          />
+          {formik.touched.icon && formik.errors.icon ? (
+            <H5 color="red">{formik.errors.icon.url}</H5>
+          ) : null}
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            type="submit"
+            color="info"
+            variant="contained"
+            sx={{
+              mt: 4,
+              backgroundColor: "#066344",
+              // width: "100px",
+              ":hover": {
+                backgroundColor: "grey",
+              },
+            }}
+          >
+            {isLoading ? (
+              <ThreeCircles
+                height="30"
+                width="30"
+                color="#fff"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="three-circles-rotating"
+                outerCircleColor=""
+                innerCircleColor=""
+                middleCircleColor=""
+              />
+            ) : (
+              "Save Category"
+            )}
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 
-export default UpdateSubCategory;
+export default UpdateCategory;

@@ -23,12 +23,17 @@ import { parseCookies } from "../helpers/validation";
 
 const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [filterProducts, setFilterProducts] = useState([]);
+  const [categoryProducts, setCategoryProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sellerProducts, setSellerProducts] = useState([]);
   const [clientProducts, setClientProducts] = useState([]);
 
-  // state to contain filtered repos
+  // state for sorting products
+  const [sortProduct, setSortProduct] = useState("");
+
+  // console.log("sortProduct", sortProduct);
+
+  // state to contain searched products
   const [searchedProduct, setSearchedProduct] = useState([]);
 
   // state to receive search terms
@@ -46,12 +51,16 @@ const HomePage = (props) => {
     },
   };
 
+  let url = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?`;
+
+  // isLoading ? "Loading.." : null;
+
   // FETCH ALL PRODUCTS FOR SELLER
   useEffect(() => {
     if (authUser?.data.isSeller === true) {
       setIsLoading(true);
       axios
-        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products`, config)
+        .get(url, config)
         .then(({ data }) => {
           setSellerProducts(data);
           // console.log("sellerProducts", sellerProducts);
@@ -69,14 +78,75 @@ const HomePage = (props) => {
     ) {
       setIsLoading(true);
       axios
-        .get(`${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products`)
+        .get(url)
         .then(({ data }) => {
           setClientProducts(data);
         })
         .catch((err) => err)
         .finally(() => setIsLoading(false));
     }
-  }, [authUser]);
+
+    switch (sortProduct) {
+      case "priceLowToHigh":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=priceLowToHigh`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "priceHighToLow":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=priceHighToLow`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "createdAt":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=createdAt`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      case "rating":
+        setIsLoading(true);
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?sort=rating`
+          )
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+      default:
+        setIsLoading(true);
+        axios
+          .get(url)
+          .then(({ data }) => {
+            setClientProducts(data);
+          })
+          .catch((err) => err)
+          .finally(() => setIsLoading(false));
+        break;
+    }
+  }, [authUser, sortProduct]);
 
   // seller
   const { data: allProductsSeller } = sellerProducts;
@@ -112,7 +182,7 @@ const HomePage = (props) => {
       })
       .then(({ data }) => {
         // console.log("data", data);
-        setFilterProducts(data);
+        setCategoryProducts(data);
       });
   }, [selectedCategory]);
 
@@ -186,6 +256,8 @@ const HomePage = (props) => {
               <SearchProduct
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
+                setSortProduct={setSortProduct}
+                sortProduct={sortProduct}
               />
               <Stack spacing={6} mt={2}>
                 {selectedCategory ? (
@@ -221,36 +293,44 @@ const HomePage = (props) => {
               </Stack>
             </>
           ) : !authUser ? (
-            <Stack spacing={6} mt={2}>
-              {selectedCategory ? (
-                // FILTERED PRODUCT LIST
+            <>
+              <SearchProduct
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                setSortProduct={setSortProduct}
+                sortProduct={sortProduct}
+              />
+              <Stack spacing={6} mt={2}>
+                {selectedCategory ? (
+                  // FILTERED PRODUCT LIST
 
-                <Store>
-                  <AllProducts
-                    // products={allProductsClient}
-                    title={selectedCategory}
-                  />
-                </Store>
-              ) : (
-                <Fragment>
-                  {/* POPULAR PRODUCTS AREA */}
-                  <AllProducts products={searchedProduct} title="" />
+                  <Store>
+                    <AllProducts
+                      // products={allProductsClient}
+                      title={selectedCategory}
+                    />
+                  </Store>
+                ) : (
+                  <Fragment>
+                    {/* POPULAR PRODUCTS AREA */}
+                    <AllProducts products={searchedProduct} title="" />
 
-                  {/* <Store>
+                    {/* <Store>
                   <ProductCarousel
                     title="All Products"
                     products={sellerProducts}
                   />
                 </Store> */}
-                </Fragment>
-              )}
+                  </Fragment>
+                )}
 
-              {/* DISCOUNT BANNER AREA */}
-              <DiscountSection />
+                {/* DISCOUNT BANNER AREA */}
+                <DiscountSection />
 
-              {/* FOOTER AREA */}
-              <Footer />
-            </Stack>
+                {/* FOOTER AREA */}
+                <Footer />
+              </Stack>
+            </>
           ) : null}
         </SidenavContainer>
 
