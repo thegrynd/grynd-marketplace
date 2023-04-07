@@ -145,7 +145,7 @@ const CategoryForm = () => {
           ) : null}
         </Grid>
         <Grid item md={12} xs={12}>
-          {formik.values.icon && <PreviewImage file={inputFile1} />}
+          {/* {formik.values.icon && <PreviewImage file={inputFile1} />} */}
           <TextField
             fullWidth
             color="info"
