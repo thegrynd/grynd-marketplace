@@ -12,7 +12,7 @@ import PreviewImage from "pages-sections/forms/PreviewImage";
 const UpdateCategory = ({ currentCategory }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [resData1, setResData1] = useState();
+  const [resUrl1, setResUrl1] = useState();
   const [resPublicId1, setResPublicId1] = useState();
   const [inputFile1, setInputFile1] = useState();
 
@@ -25,16 +25,15 @@ const UpdateCategory = ({ currentCategory }) => {
   }, [inputFile1]);
 
   useEffect(() => {
-    formik.setFieldValue("icon.url", resData1);
+    formik.setFieldValue("icon.url", resUrl1);
     formik.setFieldValue("icon.public_id", resPublicId1);
-  }, [resData1, resPublicId1]);
+  }, [resUrl1, resPublicId1]);
 
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
+    const url = process.env.NEXT_PUBLIC_GRYND_URL;
     const token = Cookies.get("authToken");
 
     console.log("values", values);
-    setIsLoading(true);
 
     return axios
       .put(`${url}/api/v2/categories/${id}`, values, {
@@ -63,11 +62,11 @@ const UpdateCategory = ({ currentCategory }) => {
       formData.append("file", iconUrl);
       formData.append("upload_preset", "kqyvyqbp");
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/grynd/image/upload",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
         formData
       );
       console.log("res1", res);
-      setResData1(() => res.data.secure_url);
+      setResUrl1(() => res.data.secure_url);
       setResPublicId1(() => res.data.public_id);
     } catch (error) {
       console.log(error);
@@ -84,7 +83,7 @@ const UpdateCategory = ({ currentCategory }) => {
       name: currentCategory.name || "",
       icon: {
         public_id: "",
-        url: resData1,
+        url: resUrl1,
       },
     },
     validationSchema: Yup.object({
@@ -96,10 +95,11 @@ const UpdateCategory = ({ currentCategory }) => {
 
       icon: Yup.object().shape({
         public_id: Yup.string(),
-        url: Yup.string(),
+        url: Yup.string().required("An image is required"),
       }),
     }),
     onSubmit: (values) => {
+      setIsLoading(true);
       setTimeout(() => {
         submitData(values);
       }, 10000);
@@ -125,12 +125,6 @@ const UpdateCategory = ({ currentCategory }) => {
         p={8}
         sx={{ backgroundColor: "white" }}
       >
-        {/* <Grid item md={12} xs={12}>
-          {" "}
-          <H3 textAlign="center" color="#066344">
-            Create A New Category
-          </H3>
-        </Grid> */}
         <Grid item md={12} xs={12}>
           <TextField
             fullWidth
