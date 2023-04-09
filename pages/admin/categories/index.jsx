@@ -154,8 +154,10 @@ export async function getServerSideProps(context) {
   };
 
   const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
-  console.log(authResponse.data);
+  const response = await axios.get(`${url}/api/v2/categories`, config);
+
   const authUser = authResponse.data;
+  const categoryData = response.data;
 
   if (!authToken) {
     return {
@@ -176,10 +178,6 @@ export async function getServerSideProps(context) {
       notFound: true,
     };
   }
-
-  const response = await axios.get(`${url}/api/v2/categories`, config);
-  console.log(response.data.status);
-  const categoryData = response.data;
 
   return {
     props: { categoryData, authUser },
