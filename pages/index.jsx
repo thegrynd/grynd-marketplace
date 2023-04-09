@@ -68,7 +68,7 @@ const HomePage = (props) => {
         .catch((err) => err)
         .finally(() => setIsLoading(false));
     }
-  }, [authUser]);
+  }, [authUser, url]);
 
   // FETCH ALL PRODUCTS FOR CLIENT OR NOT LOGGED IN USER
   useEffect(() => {

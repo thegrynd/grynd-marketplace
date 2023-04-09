@@ -75,7 +75,7 @@ export default function EditCategory({ singleCategory }) {
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
   const { id } = context.params;
-  const url = "https://grynd-staging.vercel.app";
+  const url = process.env.NEXT_PUBLIC_GRYND_URL;
 
   const config = {
     headers: {

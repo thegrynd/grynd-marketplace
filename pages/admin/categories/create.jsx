@@ -31,7 +31,7 @@ export default function CreateCategory() {
           Create A New Sub-Category
         </H3>
 
-        <SubCategoryForm />
+        {/* <SubCategoryForm /> */}
       </Box>
     </>
   );
@@ -39,7 +39,7 @@ export default function CreateCategory() {
 
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
-  const url = "https://grynd-staging.vercel.app";
+  const url = process.env.NEXT_PUBLIC_GRYND_URL;
 
   const config = {
     headers: {
