@@ -18,7 +18,7 @@ const SearchArea = (props) => {
         color="info"
         fullWidth={downSM}
         variant="contained"
-        startIcon={<Add />}
+        // startIcon={<Add />}
         onClick={handleBtnClick}
         sx={{
           minHeight: 44,
