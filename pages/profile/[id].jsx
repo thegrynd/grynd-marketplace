@@ -60,7 +60,7 @@ const ProfileEditor = ({ authUser }) => {
   };
 
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
+    const url = process.env.NEXT_PUBLIC_GRYND_URL;
     const token = Cookies.get("authToken");
 
     console.log("values", values);

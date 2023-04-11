@@ -10,7 +10,9 @@ export function descendingComparator(a, b, orderBy) {
   return 0;
 }
 export function getComparator(order, orderBy) {
-  return order === "desc" ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
 }
 export function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -19,19 +21,15 @@ export function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 }
 
 // ================================================================
 
 // ================================================================
 
-const useMuiTable = props => {
-  const {
-    listData = [],
-    defaultSort = "name",
-    defaultOrder = "asc"
-  } = props;
+const useMuiTable = (props) => {
+  const { listData = [], defaultSort = "name", defaultOrder = "asc" } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(20);
   const [orderBy, setOrderBy] = useState(defaultSort);
@@ -39,7 +37,7 @@ const useMuiTable = props => {
   const [order, setOrder] = useState(defaultOrder);
 
   // Handle list sorting
-  const handleRequestSort = property => {
+  const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -48,7 +46,7 @@ const useMuiTable = props => {
   // Handle select whole list
   const handleSelectAllClick = (checked, defaultSelect) => {
     if (checked) {
-      const newSelecteds = listData.map(n => n[defaultSelect]);
+      const newSelecteds = listData.map((n) => n[defaultSelect]);
       setSelected(newSelecteds);
       return;
     }
@@ -56,7 +54,7 @@ const useMuiTable = props => {
   };
 
   // Handle individual row click
-  const handleRowClick = name => {
+  const handleRowClick = (name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
@@ -66,12 +64,18 @@ const useMuiTable = props => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
     }
     setSelected(newSelected);
   };
   const handleChangePage = (_, newPage) => setPage(newPage - 1);
-  const filteredList = stableSort(listData, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const filteredList = stableSort(
+    listData,
+    getComparator(order, orderBy)
+  ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   return {
     page,
     order,
@@ -82,7 +86,7 @@ const useMuiTable = props => {
     handleRowClick,
     handleChangePage,
     handleRequestSort,
-    handleSelectAllClick
+    handleSelectAllClick,
   };
 };
 export default useMuiTable;

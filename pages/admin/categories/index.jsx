@@ -58,7 +58,7 @@ CategoryList.getLayout = function getLayout(page) {
 
 export default function CategoryList({ categoryData }) {
   const { docs } = categoryData.data || {};
-  console.log("categoryData", docs);
+  console.log("docs", docs);
 
   // RESHAPE THE PRODUCT LIST BASED TABLE HEAD CELL ID
   const filteredCategories = docs?.map((item) => ({
@@ -145,7 +145,7 @@ export default function CategoryList({ categoryData }) {
 
 export async function getServerSideProps(context) {
   const { authToken } = parseCookies(context.req);
-  const url = "https://grynd-staging.vercel.app";
+  const url = process.env.NEXT_PUBLIC_GRYND_URL;
 
   const config = {
     headers: {
@@ -154,18 +154,10 @@ export async function getServerSideProps(context) {
   };
 
   const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
-  console.log(authResponse.data);
-  const authUser = authResponse.data;
-
   const response = await axios.get(`${url}/api/v2/categories`, config);
-  console.log(response.data.status);
-  const categoryData = response.data;
 
-  if (authUser.success === false) {
-    return {
-      notFound: true,
-    };
-  }
+  const authUser = authResponse.data;
+  const categoryData = response.data;
 
   if (!authToken) {
     return {
@@ -180,6 +172,10 @@ export async function getServerSideProps(context) {
         destination: "/",
         permanent: false,
       },
+    };
+  } else if (authUser.success === false) {
+    return {
+      notFound: true,
     };
   }
 

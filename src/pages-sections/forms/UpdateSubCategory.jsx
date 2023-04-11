@@ -8,6 +8,10 @@ import { H3, H5 } from "components/Typography";
 import { useRouter } from "next/router";
 import { ThreeCircles } from "react-loader-spinner";
 import PreviewImage from "pages-sections/forms/PreviewImage";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const UpdateCategory = ({ currentCategory }) => {
   const router = useRouter();
@@ -15,6 +19,7 @@ const UpdateCategory = ({ currentCategory }) => {
   const [resData1, setResData1] = useState();
   const [resPublicId1, setResPublicId1] = useState();
   const [inputFile1, setInputFile1] = useState();
+  const [subId, setSubId] = useState();
 
   const { id } = router.query;
 
@@ -30,14 +35,13 @@ const UpdateCategory = ({ currentCategory }) => {
   }, [resData1, resPublicId1]);
 
   const submitData = async (values) => {
-    const url = "https://grynd-staging.vercel.app";
+    const url = process.env.NEXT_PUBLIC_GRYND_URL;
     const token = Cookies.get("authToken");
 
     console.log("values", values);
-    setIsLoading(true);
 
     return axios
-      .put(`${url}/api/v2/categories/${id}`, values, {
+      .put(`${url}/api/v2/subcategories/${subId}`, values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -63,7 +67,7 @@ const UpdateCategory = ({ currentCategory }) => {
       formData.append("file", iconUrl);
       formData.append("upload_preset", "kqyvyqbp");
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/grynd/image/upload",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
         formData
       );
       console.log("res1", res);
@@ -81,7 +85,8 @@ const UpdateCategory = ({ currentCategory }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: currentCategory.name || "",
+      name: "",
+      category: currentCategory.id,
       icon: {
         public_id: "",
         url: resData1,
@@ -96,16 +101,20 @@ const UpdateCategory = ({ currentCategory }) => {
 
       icon: Yup.object().shape({
         public_id: Yup.string(),
-        url: Yup.string(),
+        url: Yup.string().required("An image is required"),
       }),
     }),
     onSubmit: (values) => {
+      setIsLoading(true);
       setTimeout(() => {
         submitData(values);
       }, 10000);
       console.log("form-values", values);
     },
   });
+
+  // console.log("formik value", formik.values);
+  console.log("subId", subId);
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -125,12 +134,33 @@ const UpdateCategory = ({ currentCategory }) => {
         p={8}
         sx={{ backgroundColor: "white" }}
       >
-        {/* <Grid item md={12} xs={12}>
-          {" "}
-          <H3 textAlign="center" color="#066344">
-            Create A New Category
-          </H3>
-        </Grid> */}
+        <Grid item md={12} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              Choose A Sub Category
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="name"
+              name="name"
+              value={formik.values.name}
+              label="Category"
+              onChange={formik.handleChange}
+            >
+              {currentCategory?.subcategories.length > 0
+                ? currentCategory?.subcategories.map((sub) => (
+                    <MenuItem
+                      value={sub.name}
+                      key={sub.id}
+                      onClick={() => setSubId(sub.id)}
+                    >
+                      {sub.name}
+                    </MenuItem>
+                  ))
+                : "No Sub Categories Present"}
+            </Select>
+          </FormControl>
+        </Grid>
         <Grid item md={12} xs={12}>
           <TextField
             fullWidth
@@ -139,7 +169,7 @@ const UpdateCategory = ({ currentCategory }) => {
             size="medium"
             id="name"
             name="name"
-            label="Name of Category"
+            label="Name of Sub Category"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             value={formik.values.name}
@@ -157,7 +187,7 @@ const UpdateCategory = ({ currentCategory }) => {
             size="medium"
             id="icon.url"
             name="icon.url"
-            label="Category Icon"
+            label="Sub-Category Icon"
             onBlur={formik.handleBlur}
             onChange={(e) => handleCoverInput(e)}
             value={undefined}
@@ -194,7 +224,7 @@ const UpdateCategory = ({ currentCategory }) => {
                 middleCircleColor=""
               />
             ) : (
-              "Save Category"
+              "Save Sub-Category"
             )}
           </Button>
         </Grid>

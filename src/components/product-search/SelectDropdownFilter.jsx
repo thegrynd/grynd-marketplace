@@ -21,7 +21,10 @@ export default function SelectDropdownFilter({ sortProduct, setSortProduct }) {
           background: "green",
         }}
       >
-        <InputLabel id="demo-simple-select-autowidth-label">
+        <InputLabel
+          id="demo-simple-select-autowidth-label"
+          sx={{ color: "#fff", fontWeight: "700" }}
+        >
           Sort Products
         </InputLabel>
         <Select

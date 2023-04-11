@@ -19,6 +19,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import countryList from "data/countryList";
+import { checkout } from "lib";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -54,9 +55,10 @@ const LoginForm = () => {
 
   const cartList = state.cart;
 
-  // useEffect(() => {
-  //   formik.setFieldValue();
-  // }, []);
+  const handleCheckout = (event) => {
+    event.preventDefault();
+    checkout(cartList);
+  };
 
   const submitData = async (values) => {
     const token = Cookies.get("authToken");
@@ -122,7 +124,11 @@ const LoginForm = () => {
     onSubmit: async (values) => {
       // await new Promise((r) => setTimeout(r, 500));
       // alert(JSON.stringify(values, null, 2));
-      submitData(values);
+      setTimeout(() => {
+        submitData(values);
+      }, 5000);
+
+      handleCheckout();
       console.log("myValues", values);
     },
   });
