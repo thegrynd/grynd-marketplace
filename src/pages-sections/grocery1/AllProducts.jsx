@@ -6,6 +6,7 @@ import ProductCard13 from "components/product-cards/ProductCard13";
 import CategorySectionCreator from "components/CategorySectionCreator";
 import Link from "next/link";
 import { LoginContext } from "contexts/LoginContext";
+import PaginationRounded from "components/pagination/PaginationRounded";
 
 const SubTitle = styled(Paragraph)(({ theme }) => ({
   fontSize: 12,
@@ -67,6 +68,7 @@ const AllProducts = ({ products, title = "All Products" }) => {
           </Link>
         </FlexRowCenter>
       )}
+      <PaginationRounded />
     </CategorySectionCreator>
   );
 };

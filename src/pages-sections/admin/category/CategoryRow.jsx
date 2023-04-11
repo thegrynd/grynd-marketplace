@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Avatar } from "@mui/material";
-// import { Delete, Edit, RemoveRedEye } from "@mui/icons-material";
-// import BazaarSwitch from "components/BazaarSwitch";
+import { Delete, Edit, RemoveRedEye } from "@mui/icons-material";
+import BazaarSwitch from "components/BazaarSwitch";
 import {
   StyledTableRow,
   CategoryWrapper,
-  // StyledIconButton,
+  StyledIconButton,
   StyledTableCell,
 } from "../StyledComponents";
 import { useRouter } from "next/router";
@@ -40,7 +40,7 @@ const CategoryRow = ({ item, selected }) => {
 
       <StyledTableCell align="left">{level}</StyledTableCell>
 
-      {/* <StyledTableCell align="left">
+      <StyledTableCell align="left">
         <BazaarSwitch
           color="info"
           checked={featuredCategory}
@@ -60,7 +60,7 @@ const CategoryRow = ({ item, selected }) => {
         <StyledIconButton>
           <Delete />
         </StyledIconButton>
-      </StyledTableCell> */}
+      </StyledTableCell>
     </StyledTableRow>
   );
 };

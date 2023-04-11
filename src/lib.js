@@ -2,6 +2,9 @@ import getConfig from "next/config";
 import ceil from "lodash/ceil";
 import { differenceInMinutes } from "date-fns";
 
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+
 /**
  * GET THE DIFFERENCE DATE FORMAT
  * @param  date - which is created comment data
@@ -58,15 +61,45 @@ function calculateDiscount(price, discount) {
  */
 
 function currency(price, fraction = 2) {
-  const {
-    publicRuntimeConfig
-  } = getConfig();
+  const { publicRuntimeConfig } = getConfig();
   const formatCurrency = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: publicRuntimeConfig.currency,
     maximumFractionDigits: fraction,
-    minimumFractionDigits: fraction
+    minimumFractionDigits: fraction,
   });
   return formatCurrency.format(price);
 }
-export { renderProductCount, calculateDiscount, currency, getDateDifference };
+
+const checkout = async (items) => {
+  try {
+    const lineItems = items.map((p) => ({ price: p.id, quantity: p.qty }));
+    const { session } = await fetch("/api/stripe/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ lineItems }),
+    }).then((res) => res.json());
+
+    const stripe = await stripePromise;
+    const { error } = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    } else {
+      throw error;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export {
+  renderProductCount,
+  calculateDiscount,
+  currency,
+  getDateDifference,
+  checkout,
+};
