@@ -6,8 +6,9 @@ import Cookies from "js-cookie";
 const Store = ({ children }) => {
   const [getAuthUser, setGetAuthUser] = useState([]);
   const [loadUser, setLoadUser] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
 
-  const url = "https://grynd-staging.vercel.app";
+  const url = process.env.NEXT_PUBLIC_GRYND_URL;
   const token = Cookies.get("authToken");
 
   useEffect(() => {
@@ -31,7 +32,15 @@ const Store = ({ children }) => {
   }, [token]);
 
   return (
-    <LoginContext.Provider value={[getAuthUser, setGetAuthUser, loadUser]}>
+    <LoginContext.Provider
+      value={[
+        getAuthUser,
+        setGetAuthUser,
+        loadUser,
+        clientSecret,
+        setClientSecret,
+      ]}
+    >
       {children}
     </LoginContext.Provider>
   );

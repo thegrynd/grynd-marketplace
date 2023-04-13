@@ -201,9 +201,9 @@ const HomePage = (props) => {
   );
   return (
     <>
-      <Store>
-        <Header />
-      </Store>
+      {/* <Store> */}
+      <Header />
+      {/* </Store> */}
 
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
