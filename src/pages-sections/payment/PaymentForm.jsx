@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   PaymentElement,
   LinkAuthenticationElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { LoginContext } from "contexts/LoginContext";
 
 export default function PaymentForm() {
   const stripe = useStripe();
@@ -13,15 +14,16 @@ export default function PaymentForm() {
   const [email, setEmail] = React.useState("");
   const [message, setMessage] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [clientSecret] = useContext(LoginContext);
 
   React.useEffect(() => {
     if (!stripe) {
       return;
     }
 
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
+    // const clientSecret = new URLSearchParams(window.location.search).get(
+    //   "payment_intent_client_secret"
+    // );
 
     if (!clientSecret) {
       return;

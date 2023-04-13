@@ -29,7 +29,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // const [clientSecret, setClientSecret] = useState("");
-  const [setClientSecret] = useContext(LoginContext);
+  const [clientSecret, setClientSecret] = useContext(LoginContext);
 
   const [sameAsShipping, setSameAsShipping] = useState(false);
 
@@ -84,7 +84,10 @@ const LoginForm = () => {
         console.log("response", response);
         if (response) {
           setClientSecret(response.data.data.clientSecret);
-          router.push("/payment");
+
+          setTimeout(() => {
+            router.push("/payment");
+          }, 5000);
         }
       })
       .catch((error) => {
