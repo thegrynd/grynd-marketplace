@@ -10,7 +10,6 @@ import useSWR from "swr";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { parseCookies } from "../helpers/validation";
 
 // custom styled components
 const Wrapper = styled(BazaarCard)({
@@ -115,24 +114,11 @@ const OrderConfirmation = () => {
 };
 
 export const getServerSideProps = async (context) => {
-  const { authToken } = parseCookies(context.req);
-
   const url = process.env.NEXT_PUBLIC_GRYND_URL;
 
-  const response = await axios.get(`${url}/api/v1/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+  const response = await axios.get(`${url}/api/v1/auth/me`);
   const authUser = response.data;
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+
   return {
     props: { authUser },
   };
