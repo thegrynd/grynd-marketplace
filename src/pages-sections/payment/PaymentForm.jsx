@@ -62,7 +62,8 @@ export default function PaymentForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3001",
+        return_url:
+          "https://grynd-marketplace-staging-ten.vercel.app/order-confirmation",
       },
     });
 
