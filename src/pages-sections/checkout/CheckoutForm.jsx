@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Card1 from "components/Card1";
 import * as Yup from "yup";
 import { Button, Grid, TextField } from "@mui/material";
+import { LoginContext } from "contexts/LoginContext";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -19,12 +20,16 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import countryList from "data/countryList";
-import { checkout } from "lib";
+
+// import { checkout } from "lib";
 
 const LoginForm = () => {
   const router = useRouter();
   const { state } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+
+  // const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useContext(LoginContext);
 
   const [sameAsShipping, setSameAsShipping] = useState(false);
 
@@ -55,14 +60,14 @@ const LoginForm = () => {
 
   const cartList = state.cart;
 
-  const handleCheckout = (event) => {
-    event.preventDefault();
-    checkout(cartList);
-  };
+  // const handleCheckout = (event) => {
+  //   event.preventDefault();
+  //   checkout(cartList);
+  // };
 
   const submitData = async (values) => {
     const token = Cookies.get("authToken");
-    // console.log(values);
+    console.log(values);
     setIsLoading(true);
     return axios
       .post(
@@ -76,9 +81,13 @@ const LoginForm = () => {
         }
       )
       .then((response) => {
-        // console.log("response", response);
+        console.log("response", response);
         if (response) {
-          router.push("/payment");
+          setClientSecret(response.data.data.clientSecret);
+
+          setTimeout(() => {
+            router.push("/payment");
+          }, 5000);
         }
       })
       .catch((error) => {
@@ -144,24 +153,6 @@ const LoginForm = () => {
         }}
       >
         <Grid container spacing={3} p={8} sx={{ backgroundColor: "white" }}>
-          {/* {cartList.map((item, ind) => (
-            <Grid item md={12} xs={12} key={item?.id}>
-              <TextField
-                fullWidth
-                color="info"
-                size="medium"
-                id="orderItems"
-                name="orderItems"
-                label={item?.name}
-                InputProps={{
-                  readOnly: true,
-                }}
-                onBlur={formik.handleBlur}
-                // onChange={formik.handleChange}
-                // value={formik.values.orderItems[ind]?.product.name}
-              />
-            </Grid>
-          ))} */}
           <TextField
             fullWidth
             sx={{
@@ -233,7 +224,7 @@ const LoginForm = () => {
             }}
             options={countryList}
             value={formik.values.shippingAddress.country}
-            getOptionLabel={(option) => option.label || ""}
+            getOptionLabel={(option) => option || ""}
             onChange={(_, value) =>
               formik.setFieldValue("shippingAddress.country", value)
             }
@@ -343,7 +334,7 @@ const LoginForm = () => {
               }}
               options={countryList}
               value={formik.values.billingAddress.country}
-              getOptionLabel={(option) => option.label || ""}
+              getOptionLabel={(option) => option || ""}
               onChange={(_, value) =>
                 formik.setFieldValue("billingAddress.country", value)
               }
