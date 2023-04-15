@@ -113,14 +113,4 @@ const OrderConfirmation = () => {
   );
 };
 
-export const getServerSideProps = async (context) => {
-  const url = process.env.NEXT_PUBLIC_GRYND_URL;
-
-  const response = await axios.get(`${url}/api/v1/auth/me`);
-  const authUser = response.data;
-
-  return {
-    props: { authUser },
-  };
-};
 export default OrderConfirmation;
