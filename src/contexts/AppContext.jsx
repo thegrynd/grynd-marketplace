@@ -9,19 +9,6 @@ import {
 
 const INITIAL_CART = [];
 
-// const getSavedCart = () => {
-//   let savedCartData =
-//     typeof window !== "undefined"
-//       ? localStorage.getItem("GRYND_SHOPPING_CART")
-//       : false;
-
-//   if (savedCartData === []) {
-//     return INITIAL_CART;
-//   } else {
-//     return JSON.parse(savedCartData);
-//   }
-// };
-
 const INITIAL_STATE = {
   cart: INITIAL_CART,
 };
@@ -32,6 +19,8 @@ const AppContext = createContext({
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case "GET_SAVED_ITEMS":
+      return action.payload;
     case "CHANGE_CART_AMOUNT":
       let cartList = state.cart;
       let cartItem = action.payload;
@@ -65,9 +54,6 @@ const reducer = (state, action) => {
         ...state,
         cart: [...cartList, cartItem],
       };
-    case "SET_ITEMS": {
-      return action.payload;
-    }
 
     default: {
       return state;
@@ -81,34 +67,25 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  // const [ savedCartData, setSavedCardData] = useState(false)
-
-  // useEffect(() => setSavedCardData(localStorage.getItem("GRYND_SHOPPING_CART")), [])
-
-  // useEffect(() => {
-  //   localStorage.setItem("GRYND_SHOPPING_CART", JSON.stringify(state.cart));
-  // }, [state.cart]);
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("GRYND_SHOPPING_CART"))) {
+    if (!!localStorage["GRYND_SHOPPING_CART"]) {
       //checking if there already is a state in localstorage
       //if yes, update the current state with the stored one
       dispatch({
-        type: "SET_ITEMS",
+        type: "GET_SAVED_ITEMS",
         payload: JSON.parse(localStorage.getItem("GRYND_SHOPPING_CART")),
       });
-
-      // return state.cart;
     }
   }, []);
 
   useEffect(() => {
-    // if (state !== INITIAL_STATE) {
-    localStorage.setItem("GRYND_SHOPPING_CART", JSON.stringify(state.cart));
+    if (state !== INITIAL_STATE) {
+      localStorage.setItem("GRYND_SHOPPING_CART", JSON.stringify(state));
 
-    //create and/or set a new localstorage variable called "state"
-    // }
-  }, [state.cart]);
+      //create and/or set a new localstorage variable called "state"
+    }
+  }, [state]);
 
   const contextValue = useMemo(
     () => ({
