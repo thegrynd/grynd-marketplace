@@ -59,7 +59,7 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
 const ProductViewDialog = (props) => {
   const { product, openDialog, handleCloseDialog } = props;
   const { state, dispatch } = useAppContext();
-  const cartItem = state.cart.find((item) => item.id === product.id);
+  const cartItem = state.cart?.find((item) => item.id === product.id);
   const handleCartAmountChange = (amount) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
