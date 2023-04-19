@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useContext } from "react";
+import { Fragment, useEffect, useState, useContext, useRef } from "react";
 import { Link as Scroll } from "react-scroll";
 import {
   Box,
@@ -72,11 +72,24 @@ const Header = () => {
   const router = useRouter();
   const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  console.log("AuthUser", authUser);
+  // console.log("AuthUser", authUser);
+
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
-
   const [isHovering, setIsHovering] = useState(false);
+
+  // const firstRender = useRef(true)
+
+  // useEffect(() => {
+  //   if (firstRender.current) {
+  //     firstRender.current = false
+  //     const localItems = loadJSON(key)
+  //     localItems && setItems(localItems)
+  //     return
+  //   }
+
+  //  localStorage.setItem('YOUR_SAVED_CART', JSON.stringify(state))
+  // }, [state])
 
   const handleMouseOut = () => {
     setIsHovering(false);
@@ -288,7 +301,7 @@ const Header = () => {
                 ml={!authUser ? "1rem" : 0}
               >
                 <Badge
-                  badgeContent={state.cart.length}
+                  badgeContent={state.cart?.length}
                   color="primary"
                   onClick={toggleMiniCart}
                 >

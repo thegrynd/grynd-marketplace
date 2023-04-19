@@ -1,37 +1,27 @@
-import { createContext, useContext, useMemo, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useReducer,
+  useEffect,
+  useState,
+} from "react";
 
-// =================================================================================
+const INITIAL_CART = [];
 
-// =================================================================================
+// const getSavedCart = () => {
+//   let savedCartData =
+//     typeof window !== "undefined"
+//       ? localStorage.getItem("GRYND_SHOPPING_CART")
+//       : false;
 
-const INITIAL_CART = [
-  // {
-  //   qty: 1,
-  //   price: 210,
-  //   slug: "silver-high-neck-sweater",
-  //   name: "Silver High Neck Sweater",
-  //   id: "6e8f151b-277b-4465-97b6-547f6a72e5c9",
-  //   imgUrl:
-  //     "/assets/images/products/Fashion/Clothes/1.SilverHighNeckSweater.png",
-  // },
-  // {
-  //   qty: 10,
-  //   price: 110,
-  //   slug: "yellow-casual-sweater",
-  //   name: "Yellow Casual Sweater",
-  //   id: "76d14d65-21d0-4b41-8ee1-eef4c2232793",
-  //   imgUrl:
-  //     "/assets/images/products/Fashion/Clothes/21.YellowCasualSweater.png",
-  // },
-  // {
-  //   qty: 1,
-  //   price: 140,
-  //   slug: "denim-blue-jeans",
-  //   name: "Denim Blue Jeans",
-  //   id: "0fffb188-98d8-47f7-8189-254f06cad488",
-  //   imgUrl: "/assets/images/products/Fashion/Clothes/4.DenimBlueJeans.png",
-  // },
-];
+//   if (savedCartData === []) {
+//     return INITIAL_CART;
+//   } else {
+//     return JSON.parse(savedCartData);
+//   }
+// };
+
 const INITIAL_STATE = {
   cart: INITIAL_CART,
 };
@@ -39,6 +29,7 @@ const AppContext = createContext({
   state: INITIAL_STATE,
   dispatch: () => {},
 });
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "CHANGE_CART_AMOUNT":
@@ -74,6 +65,9 @@ const reducer = (state, action) => {
         ...state,
         cart: [...cartList, cartItem],
       };
+    case "SET_ITEMS": {
+      return action.payload;
+    }
 
     default: {
       return state;
@@ -87,6 +81,35 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  // const [ savedCartData, setSavedCardData] = useState(false)
+
+  // useEffect(() => setSavedCardData(localStorage.getItem("GRYND_SHOPPING_CART")), [])
+
+  // useEffect(() => {
+  //   localStorage.setItem("GRYND_SHOPPING_CART", JSON.stringify(state.cart));
+  // }, [state.cart]);
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("GRYND_SHOPPING_CART"))) {
+      //checking if there already is a state in localstorage
+      //if yes, update the current state with the stored one
+      dispatch({
+        type: "SET_ITEMS",
+        payload: JSON.parse(localStorage.getItem("GRYND_SHOPPING_CART")),
+      });
+
+      // return state.cart;
+    }
+  }, []);
+
+  useEffect(() => {
+    // if (state !== INITIAL_STATE) {
+    localStorage.setItem("GRYND_SHOPPING_CART", JSON.stringify(state.cart));
+
+    //create and/or set a new localstorage variable called "state"
+    // }
+  }, [state.cart]);
+
   const contextValue = useMemo(
     () => ({
       state,
