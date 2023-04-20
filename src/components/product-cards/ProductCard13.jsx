@@ -237,7 +237,7 @@ const ProductCard13 = (props) => {
             </Box>
 
             {off !== 0 && (
-              <Box color="#066344" fontWeight={600}>
+              <Box color="#066344" fontWeight={300}>
                 <del>
                   <em> {currency(price)}</em>
                 </del>
