@@ -23,11 +23,12 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { LoginContext } from "contexts/LoginContext";
 import { Small } from "components/Typography";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import { useAppContext } from "contexts/AppContext";
 import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
 import MiniCart from "components/MiniCart";
+
+import { ThreeCircles } from "react-loader-spinner";
+import AuthUserList from "components/categories/AuthUserList";
 
 const headerHeight = 72;
 const slideFromTop = keyframes`
@@ -69,27 +70,25 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 const Header = () => {
   const { state } = useAppContext();
   console.log("myState", state);
-  const router = useRouter();
+
   const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   // console.log("AuthUser", authUser);
 
+  // user options
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openList = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  //
+
   const [open, setOpen] = useState(false);
   const [isFixed, setFixed] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-
-  // const firstRender = useRef(true)
-
-  // useEffect(() => {
-  //   if (firstRender.current) {
-  //     firstRender.current = false
-  //     const localItems = loadJSON(key)
-  //     localItems && setItems(localItems)
-  //     return
-  //   }
-
-  //  localStorage.setItem('YOUR_SAVED_CART', JSON.stringify(state))
-  // }, [state])
 
   const handleMouseOut = () => {
     setIsHovering(false);
@@ -105,6 +104,7 @@ const Header = () => {
     if (window?.pageYOffset >= headerHeight) setFixed(true);
     else setFixed(false);
   }, 50);
+
   useEffect(() => {
     if (!window) return null;
     window.addEventListener("scroll", scrollListener);
@@ -117,7 +117,14 @@ const Header = () => {
       <>
         <Small fontSize="10px">
           <a href={authUser?.data.isSeller === true ? "/profile" : "/profile"}>
-            <span style={{ color: "red", fontWeight: 700, cursor: "pointer" }}>
+            <span
+              style={{
+                color: "#B28A3D",
+                fontWeight: 700,
+                cursor: "pointer",
+                marginLeft: "0.5rem",
+              }}
+            >
               {" "}
               {authUser?.success == true
                 ? `${authUser?.data.firstname} ${authUser?.data.surname}`
@@ -127,15 +134,13 @@ const Header = () => {
             </span>
           </a>
           <br />
-          <div> {authUser?.data.username ?? "User"}</div>
+          <div style={{ marginLeft: "0.5rem" }}>
+            {" "}
+            {authUser?.data.username ?? "User"}
+          </div>
         </Small>
       </>
     );
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("authToken");
-    router.reload();
   };
 
   return (
@@ -200,7 +205,6 @@ const Header = () => {
                   </Typography>
                 </Scroll>
 
-                {/* <a href="https://bazaar-doc.netlify.app/" target="__blank"> */}
                 <Scroll
                   to="testimonials"
                   duration={400}
@@ -215,7 +219,6 @@ const Header = () => {
                     Testimonials
                   </Typography>
                 </Scroll>
-                {/* </a> */}
               </FlexBox>
 
               {!downSM && authUser?.success === false ? (
@@ -252,22 +255,6 @@ const Header = () => {
                     Log In
                   </Button>
                 </a>
-              ) : !downSM && authUser?.success === true ? (
-                // <a target="__blank" href="./vendor/login-user">
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "green",
-                    color: "white",
-                    "&:hover": {
-                      color: "black",
-                      backgroundColor: "grey",
-                    },
-                  }}
-                  onClick={handleLogout}
-                >
-                  Log Out
-                </Button>
               ) : (
                 ""
               )}
@@ -275,24 +262,40 @@ const Header = () => {
               {!authUser ? (
                 ""
               ) : (
-                <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
-                  {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
-                  <Chip
-                    avatar={
-                      <Avatar
-                        alt={authUser?.data.username ?? "Logged in user"}
-                        src={
-                          authUser?.data.avatar.url
-                            ? authUser.data.avatar.url
-                            : ""
-                        }
-                      />
-                    }
-                    label={<AvatarText />}
-                    variant="outlined"
-                    sx={{ boxSizing: "border-box", padding: "1rem 0" }}
+                <>
+                  <Stack direction="row" spacing={1} ml="1rem" mr="1rem">
+                    {/* <Chip avatar={<Avatar>M</Avatar>} label="Avatar" /> */}
+                    <Chip
+                      avatar={
+                        <Button
+                          id="basic-button"
+                          aria-controls={openList ? "basic-menu" : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={openList ? "true" : undefined}
+                          onClick={handleClickMenu}
+                        >
+                          <Avatar
+                            alt={authUser?.data.username ?? "Logged in user"}
+                            src={
+                              authUser?.data.avatar.url
+                                ? authUser.data.avatar.url
+                                : ""
+                            }
+                          />
+                        </Button>
+                      }
+                      label={<AvatarText />}
+                      variant="outlined"
+                      sx={{ boxSizing: "border-box", padding: "1rem 0" }}
+                    />
+                  </Stack>
+
+                  <AuthUserList
+                    anchorEl={anchorEl}
+                    openList={openList}
+                    handleCloseMenu={handleCloseMenu}
                   />
-                </Stack>
+                </>
               )}
 
               <FlexBox
