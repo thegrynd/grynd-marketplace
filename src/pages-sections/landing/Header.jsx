@@ -117,7 +117,9 @@ const Header = () => {
       <>
         <Small fontSize="10px">
           <a href={authUser?.data.isSeller === true ? "/profile" : "/profile"}>
-            <span style={{ color: "red", fontWeight: 700, cursor: "pointer" }}>
+            <span
+              style={{ color: "#B28A3D", fontWeight: 700, cursor: "pointer" }}
+            >
               {" "}
               {authUser?.success == true
                 ? `${authUser?.data.firstname} ${authUser?.data.surname}`

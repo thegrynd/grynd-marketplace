@@ -24,7 +24,7 @@ const StyledBazaarCard = styled(BazaarCard)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "space-between",
   transition: "all 250ms ease-in-out",
-  background: "#98FB98",
+  background: "#B28A3D",
   "&:hover": {
     boxShadow: theme.shadows[2],
     "& .controller": {
@@ -217,7 +217,7 @@ const ProductCard13 = (props) => {
               textAlign="left"
               fontWeight="600"
               className="title"
-              color="text.secondary"
+              color="#fff"
             >
               {name}
             </H3>
@@ -227,18 +227,20 @@ const ProductCard13 = (props) => {
           {!hideRating && (
             <FlexBox gap={1} alignItems="center">
               <BazaarRating value={rating || 0} color="warn" readOnly />
-              <Span color="grey.600">{`(${rating})`}</Span>
+              <Span color="#000">{`(${rating})`}</Span>
             </FlexBox>
           )}
 
           <FlexBox gap={1} alignItems="center" mt={0.5}>
-            <Box fontWeight={600} color="primary.main">
+            <Box fontWeight={600} color="#066344">
               {calculateDiscount(price, off)}
             </Box>
 
             {off !== 0 && (
-              <Box color="grey.600" fontWeight={600}>
-                <del>{currency(price)}</del>
+              <Box color="#066344" fontWeight={600}>
+                <del>
+                  <em> {currency(price)}</em>
+                </del>
               </Box>
             )}
           </FlexBox>
@@ -256,6 +258,9 @@ const ProductCard13 = (props) => {
             variant="outlined"
             sx={{
               padding: "3px",
+              color: "#066344",
+              borderColor: "#066344",
+              borderWidth: "2px",
             }}
             onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}
           >
@@ -273,6 +278,7 @@ const ProductCard13 = (props) => {
                 variant="outlined"
                 sx={{
                   padding: "3px",
+                  borderWidth: "2px",
                 }}
                 onClick={handleCartAmountChange(cartItem?.qty - 1, "remove")}
               >

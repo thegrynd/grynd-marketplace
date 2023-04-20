@@ -86,33 +86,13 @@ const Section1 = () => {
           <H1 maxWidth={600} mx="auto" color="#066344">
             The Best Online Agro Store
           </H1>
-        </Grid>
-        <Grid item lg={12} md={12} sm={12} xs={12}>
           <H5 color="grey" textAlign="center">
             Buy products and deliver to your doorstep. Sell products to online
             buyers
           </H5>
         </Grid>
       </Grid>
-      <Box className="searchBox">
-        <TextField
-          placeholder="Searching products"
-          fullWidth
-          InputProps={{
-            sx: {
-              height: 50,
-              paddingRight: 0,
-              color: "grey.700",
-              background: "#fff",
-              "& fieldset": {
-                border: "none",
-              },
-            },
-            endAdornment: SEARCH_BUTTON,
-            startAdornment: <SearchOutlinedIcon fontSize="small" />,
-          }}
-        />
-      </Box>
+
       {authUser?.data.isSeller === false && authUser?.data.role !== "admin" ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
           <Link href={"/vendor/create-seller"}>
@@ -139,7 +119,7 @@ const Section1 = () => {
               <Button
                 sx={{
                   borderRadius: "4px",
-                  background: "green",
+                  background: "#B28A3D",
                   color: "white",
                   padding: "0.5rem 1rem",
                   ":hover": {
