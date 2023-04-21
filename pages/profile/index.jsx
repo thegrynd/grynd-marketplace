@@ -262,29 +262,6 @@ export async function getServerSideProps(context) {
   };
 }
 export default Profile;
-// export async function getServerSideProps(context) {
-//   const { authToken } = parseCookies(context.req);
-
-//   const url = "https://grynd-staging.vercel.app";
-
-//   const response = await axios.get(`${url}/api/v1/auth/me`, {
-//     headers: {
-//       Authorization: `Bearer ${authToken}`,
-//     },
-//   });
-//   const authUser = response.data;
-//   if (!authToken) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-//   return {
-//     props: { authUser },
-//   };
-// }
 
 // export const getStaticProps = async () => {
 //   const user = await api.getUser();
