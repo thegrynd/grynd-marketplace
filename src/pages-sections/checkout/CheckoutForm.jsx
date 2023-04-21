@@ -20,6 +20,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import countryList from "data/countryList";
+import { Paragraph } from "components/Typography";
 
 // import { checkout } from "lib";
 
@@ -27,8 +28,8 @@ const LoginForm = () => {
   const router = useRouter();
   const { state } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setError] = useState("");
 
-  // const [clientSecret, setClientSecret] = useState("");
   const [clientSecret, setClientSecret] = useContext(LoginContext);
 
   const [sameAsShipping, setSameAsShipping] = useState(false);
@@ -91,7 +92,14 @@ const LoginForm = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response) {
+          console.log("server responded", error.response.data.message);
+          setError(error.response.data.message);
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
       })
       .finally(() => setIsLoading(false));
   };
@@ -371,6 +379,14 @@ const LoginForm = () => {
           </Select>
         </FormControl>
       </Card1>
+      <Paragraph
+        color="red"
+        textAlign="center"
+        marginBottom="1rem"
+        fontSize="16px"
+      >
+        {isError}
+      </Paragraph>
       <Grid container spacing={6}>
         <Grid item sm={6} xs={12}>
           <Link href="/cart" passHref>

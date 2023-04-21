@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Fragment } from "react";
 import Head from "next/head";
 import Router from "next/router";
@@ -46,7 +47,10 @@ const App = ({ Component, pageProps }) => {
           <MuiTheme>
             <SnackbarProvider>
               <Store>
-                <RTL>{getLayout(<AnyComponent {...pageProps} />)}</RTL>
+                <RTL>
+                  {getLayout(<AnyComponent {...pageProps} />)}
+                  <Analytics />
+                </RTL>
               </Store>
             </SnackbarProvider>
           </MuiTheme>
