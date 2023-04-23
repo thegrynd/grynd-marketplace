@@ -6,6 +6,8 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { LoginContext } from "contexts/LoginContext";
+import { Paragraph } from "components/Typography";
+import { Button } from "@mui/material";
 
 export default function PaymentForm() {
   const stripe = useStripe();
@@ -38,7 +40,7 @@ export default function PaymentForm() {
           setMessage("Your payment is processing.");
           break;
         case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
+          setMessage("Please input your card details and make payment");
           break;
         default:
           setMessage("Something went wrong.");
@@ -62,8 +64,8 @@ export default function PaymentForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url:
-          "https://grynd-marketplace-staging-ten.vercel.app/order-confirmation",
+        return_url: "http://localhost:3001/order-confirmation",
+        // "https://grynd-marketplace-staging-ten.vercel.app/order-confirmation"
       },
     });
 
@@ -92,13 +94,33 @@ export default function PaymentForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
+      <Button
+        variant="outline"
+        sx={{
+          mt: "1rem",
+          backgroundColor: "#066344",
+          color: "#fff",
+          ":hover": {
+            backgroundColor: "grey",
+          },
+        }}
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+      >
+        <span>
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
-      </button>
+      </Button>
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {/* {message && <div id="payment-message">{message}</div>} */}
+      <Paragraph
+        color="red"
+        textAlign="center"
+        marginBottom="1rem"
+        fontSize="16px"
+      >
+        {message}
+      </Paragraph>
     </form>
   );
 }

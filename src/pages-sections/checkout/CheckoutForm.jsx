@@ -69,7 +69,7 @@ const LoginForm = () => {
   const submitData = async (values) => {
     const token = Cookies.get("authToken");
     console.log(values);
-    setIsLoading(true);
+
     return axios
       .post(
         `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/orders`,
@@ -96,9 +96,9 @@ const LoginForm = () => {
           console.log("server responded", error.response.data.message);
           setError(error.response.data.message);
         } else if (error.request) {
-          console.log("network error");
+          setError("network error");
         } else {
-          console.log(error);
+          setError(error.toJSON(error));
         }
       })
       .finally(() => setIsLoading(false));
@@ -141,6 +141,7 @@ const LoginForm = () => {
     onSubmit: async (values) => {
       // await new Promise((r) => setTimeout(r, 500));
       // alert(JSON.stringify(values, null, 2));
+      setIsLoading(true);
       setTimeout(() => {
         submitData(values);
       }, 5000);

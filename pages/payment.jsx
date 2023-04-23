@@ -18,8 +18,20 @@ const Checkout = () => {
   const [clientSecret] = useContext(LoginContext);
 
   const appearance = {
-    theme: "stripe",
+    theme: "flat",
+
+    variables: {
+      colorPrimary: "#066344",
+      colorBackground: "#ffffff",
+      colorText: "#30313d",
+      colorDanger: "red",
+      // fontFamily: "Ideal Sans, system-ui, sans-serif",
+      spacingUnit: "7px",
+      borderRadius: "5px",
+      // See all possible variables below
+    },
   };
+
   const options = {
     clientSecret,
     appearance,
