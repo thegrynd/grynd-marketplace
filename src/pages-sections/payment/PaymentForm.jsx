@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   PaymentElement,
   LinkAuthenticationElement,
@@ -7,18 +7,19 @@ import {
 } from "@stripe/react-stripe-js";
 import { LoginContext } from "contexts/LoginContext";
 import { Paragraph } from "components/Typography";
-import { Button } from "@mui/material";
+import { ThreeCircles } from "react-loader-spinner";
 
 export default function PaymentForm() {
   const stripe = useStripe();
+
   const elements = useElements();
 
-  const [email, setEmail] = React.useState("");
-  const [message, setMessage] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [clientSecret] = useContext(LoginContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!stripe) {
       return;
     }
@@ -94,23 +95,28 @@ export default function PaymentForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <Button
-        variant="outline"
-        sx={{
-          mt: "1rem",
-          backgroundColor: "#066344",
-          color: "#fff",
-          ":hover": {
-            backgroundColor: "grey",
-          },
-        }}
-        disabled={isLoading || !stripe || !elements}
-        id="submit"
-      >
+      <button disabled={isLoading || !stripe || !elements} id="submit">
         <span>
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? (
+            <ThreeCircles
+              height="20"
+              width="20"
+              color="red"
+              wrapperStyle={{
+                display: "inline",
+              }}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="three-circles-rotating"
+              outerCircleColor=""
+              innerCircleColor=""
+              middleCircleColor=""
+            />
+          ) : (
+            "Make Payment"
+          )}
         </span>
-      </Button>
+      </button>
       {/* Show any error or success messages */}
       {/* {message && <div id="payment-message">{message}</div>} */}
       <Paragraph

@@ -10,6 +10,7 @@ import useSWR from "swr";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { ThreeCircles } from "react-loader-spinner";
 
 // custom styled components
 const Wrapper = styled(BazaarCard)({
@@ -32,7 +33,7 @@ const OrderConfirmation = () => {
 
   const router = useRouter();
   const paymentIntentId = router.query.payment_intent;
-  // console.log({ query: router.query.payment_intent });
+  console.log(router.query.payment_intent);
 
   const token = Cookies.get("authToken");
   const config = {
@@ -53,6 +54,7 @@ const OrderConfirmation = () => {
 
   const { data: paymentData } = data?.data || {};
   console.log("paymentData", paymentData);
+  console.log("main error", error);
 
   return (
     <ShopLayout1>
@@ -82,7 +84,24 @@ const OrderConfirmation = () => {
                 href={`/orders/${paymentData?._id}`}
                 style={{ cursor: "pointer", color: "red" }}
               >
-                Order Details
+                {data === undefined ? (
+                  <ThreeCircles
+                    height="20"
+                    width="20"
+                    color="#B28A3D"
+                    wrapperStyle={{
+                      display: "inline",
+                    }}
+                    wrapperClass=""
+                    visible={true}
+                    ariaLabel="three-circles-rotating"
+                    outerCircleColor=""
+                    innerCircleColor=""
+                    middleCircleColor=""
+                  />
+                ) : (
+                  "Order Details"
+                )}
               </Link>
             </Span>
           </H3>
