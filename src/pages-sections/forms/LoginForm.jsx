@@ -45,6 +45,7 @@ const LoginForm = () => {
       // await new Promise((r) => setTimeout(r, 500));
       // alert(JSON.stringify(values, null, 2));
       // console.log(values);
+      window.localStorage.removeItem("GRYND_SHOPPING_CART");
       submitData(values);
     },
   });

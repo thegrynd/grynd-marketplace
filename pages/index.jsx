@@ -31,8 +31,6 @@ const HomePage = (props) => {
   // state for sorting products
   const [sortProduct, setSortProduct] = useState("");
 
-  // console.log("sortProduct", sortProduct);
-
   // state to contain searched products
   const [searchedProduct, setSearchedProduct] = useState([]);
 

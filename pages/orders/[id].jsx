@@ -2,7 +2,21 @@ import { Fragment } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 import { Done, ShoppingBag } from "@mui/icons-material";
-import { Avatar, Box, Button, Card, Divider, Grid, Typography, styled } from "@mui/material";
+import { GiShoppingBag } from "react-icons/gi";
+import { IoCube } from "react-icons/io5";
+import { FaShuttleVan } from "react-icons/fa";
+import { AiFillCarryOut } from "react-icons/ai";
+import { BsFillPatchCheckFill } from "react-icons/bs";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Divider,
+  Grid,
+  Typography,
+  styled,
+} from "@mui/material";
 import TableRow from "components/TableRow";
 import Delivery from "components/icons/Delivery";
 import PackageBox from "components/icons/PackageBox";
@@ -14,17 +28,19 @@ import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import useWindowSize from "hooks/useWindowSize";
 import { currency } from "lib";
+import useSWR from "swr";
+import axios from "axios";
+import Cookies from "js-cookie";
 import api from "utils/__api__/orders";
+import { H3, H4, Span } from "../../src/components/Typography";
 
 // styled components
-const StyledFlexbox = styled(FlexBetween)(({
-  theme
-}) => ({
+const StyledFlexbox = styled(FlexBetween)(({ theme }) => ({
   flexWrap: "wrap",
   marginTop: "2rem",
   marginBottom: "2rem",
   [theme.breakpoints.down("sm")]: {
-    flexDirection: "column"
+    flexDirection: "column",
   },
   "& .line": {
     height: 4,
@@ -33,142 +49,248 @@ const StyledFlexbox = styled(FlexBetween)(({
     [theme.breakpoints.down("sm")]: {
       flex: "unset",
       height: 50,
-      minWidth: 4
-    }
-  }
+      minWidth: 4,
+    },
+  },
 }));
 // =============================================================
 
-const OrderDetails = ({
-  order
-}) => {
+const OrderDetails = ({ order }) => {
   const router = useRouter();
   const width = useWindowSize();
   const orderStatus = "Shipping";
   const orderStatusList = ["Packaging", "Shipping", "Delivering", "Complete"];
-  const stepIconList = [PackageBox, TruckFilled, Delivery];
+  const stepIconList = [
+    { IconPackage: IoCube, IconDesc: "Order Made", red: true },
+    { IconPackage: FaShuttleVan, IconDesc: "Order Processing", yellow: true },
+    { IconPackage: AiFillCarryOut, IconDesc: "Order Delivered", green: true },
+  ];
   const breakpoint = 350;
   const statusIndex = orderStatusList.indexOf(orderStatus);
 
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/orders/${router.query.id}`;
+
+  const fetcher = async (url) => await axios.get(url, config);
+  const { data, error } = useSWR(address, fetcher);
+
+  const { data: singleOrderData } = data?.data || {};
+  console.log("singleOrderData", singleOrderData);
+
   // SECTION TITLE HEADER
-  const HEADER_BUTTON = <Button color="primary" sx={{
-    bgcolor: "primary.light",
-    px: 4
-  }}>
+  const HEADER_BUTTON = (
+    <Button
+      color="primary"
+      sx={{
+        bgcolor: "#066344",
+        color: "#FFFFFF",
+        px: 4,
+        ":hover": {
+          color: "#000000",
+          bgcolor: "gray",
+        },
+      }}
+    >
       Order Again
-    </Button>;
+    </Button>
+  );
 
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
     return <h1>Loading...</h1>;
   }
-  return <CustomerDashboardLayout>
+  return (
+    <CustomerDashboardLayout>
       {/* TITLE HEADER AREA */}
-      <UserDashboardHeader icon={ShoppingBag} title="Order Details" navigation={<CustomerDashboardNavigation />} button={HEADER_BUTTON} />
+      <UserDashboardHeader
+        icon={GiShoppingBag}
+        title="Your Order Details"
+        navigation={<CustomerDashboardNavigation />}
+        button={HEADER_BUTTON}
+      />
 
       {/* ORDER PROGRESS AREA */}
-      <Card sx={{
-      p: "2rem 1.5rem",
-      mb: "30px"
-    }}>
+      <Card
+        sx={{
+          p: "2rem 1.5rem",
+          mb: "30px",
+        }}
+      >
         <StyledFlexbox>
-          {stepIconList.map((Icon, ind) => <Fragment key={ind}>
+          {stepIconList.map((Icon, ind) => (
+            <Fragment key={ind}>
               <Box position="relative">
-                <Avatar sx={{
-              width: 64,
-              height: 64,
-              bgcolor: ind <= statusIndex ? "primary.main" : "grey.300",
-              color: ind <= statusIndex ? "grey.white" : "primary.main"
-            }}>
-                  <Icon color="inherit" sx={{
-                fontSize: "32px"
-              }} />
+                <Avatar
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    bgcolor: ind <= statusIndex ? "#B28A3D" : "grey.300",
+                    color: ind <= statusIndex ? "grey.white" : "primary.main",
+                  }}
+                >
+                  <Icon.IconPackage
+                    color={
+                      Icon.red
+                        ? "#850101"
+                        : Icon.yellow
+                        ? "#ffff80"
+                        : Icon.green
+                        ? "green"
+                        : "red"
+                    }
+                    fontSize="2rem"
+                  />
                 </Avatar>
+                <H6 my="0px" color="#066344" textAlign="center">
+                  {Icon.IconDesc}
+                </H6>
 
-                {ind < statusIndex && <Box position="absolute" right="0" top="0">
-                    <Avatar sx={{
-                width: 22,
-                height: 22,
-                bgcolor: "grey.200",
-                color: "success.main"
-              }}>
-                      <Done color="inherit" sx={{
-                  fontSize: "1rem"
-                }} />
+                {ind < statusIndex && (
+                  <Box position="absolute" right="0" top="0">
+                    <Avatar
+                      sx={{
+                        width: 22,
+                        height: 22,
+                        bgcolor: "grey.200",
+                        color: "success.main",
+                      }}
+                    >
+                      <BsFillPatchCheckFill
+                      // color="inherit"
+                      // sx={{
+                      //   fontSize: "1rem",
+                      // }}
+                      />
                     </Avatar>
-                  </Box>}
+                  </Box>
+                )}
               </Box>
 
-              {ind < stepIconList.length - 1 && <Box className="line" bgcolor={ind < statusIndex ? "primary.main" : "grey.300"} />}
-            </Fragment>)}
+              {ind < stepIconList.length - 1 && (
+                <Box
+                  className="line"
+                  bgcolor={ind < statusIndex ? "#066344" : "grey.300"}
+                />
+              )}
+            </Fragment>
+          ))}
         </StyledFlexbox>
 
         <FlexBox justifyContent={width < breakpoint ? "center" : "flex-end"}>
-          <Typography p="0.5rem 1rem" textAlign="center" borderRadius="300px" color="primary.main" bgcolor="primary.light">
-            Estimated Delivery Date <b>4th October</b>
+          <Typography
+            p="0.5rem 1rem"
+            textAlign="center"
+            borderRadius="300px"
+            color="#066344"
+            bgcolor="primary.light"
+          >
+            Estimated Delivery Date{" "}
+            <b>
+              {format(
+                new Date(singleOrderData?.estimatedDeliveryDate ?? null),
+                "dd MMM, yyyy"
+              )}
+            </b>
           </Typography>
         </FlexBox>
       </Card>
 
       {/* ORDERED PRODUCT LIST */}
-      <Card sx={{
-      p: 0,
-      mb: "30px"
-    }}>
-        <TableRow sx={{
-        p: "12px",
-        borderRadius: 0,
-        boxShadow: "none",
-        bgcolor: "grey.200"
-      }}>
+      <Card
+        sx={{
+          p: 0,
+          mb: "30px",
+        }}
+      >
+        <TableRow
+          sx={{
+            p: "12px",
+            borderRadius: 0,
+            boxShadow: "none",
+            bgcolor: "grey.200",
+          }}
+        >
           <FlexBox className="pre" m={0.75} alignItems="center">
             <Typography fontSize={14} color="grey.600" mr={0.5}>
               Order ID:
             </Typography>
 
-            <Typography fontSize={14}>{order.id}</Typography>
+            <Typography fontSize={14}>{singleOrderData?.id}</Typography>
           </FlexBox>
 
           <FlexBox className="pre" m={0.75} alignItems="center">
             <Typography fontSize={14} color="grey.600" mr={0.5}>
-              Placed on:
+              Ordered on:
             </Typography>
 
             <Typography fontSize={14}>
-              {format(new Date(order.createdAt), "dd MMM, yyyy")}
+              {format(
+                new Date(singleOrderData?.createdAt ?? null),
+                "dd MMM, yyyy"
+              )}
             </Typography>
           </FlexBox>
 
           <FlexBox className="pre" m={0.75} alignItems="center">
             <Typography fontSize={14} color="grey.600" mr={0.5}>
-              Delivered on:
+              Order Status:
             </Typography>
 
-            <Typography fontSize={14}>
-              {format(new Date(), "dd MMM, yyyy")}
+            <Typography
+              fontSize={14}
+              p="0.2rem 0.5rem"
+              borderRadius="10px"
+              color={
+                singleOrderData?.orderStatus === "processing"
+                  ? "#000000"
+                  : "#ffffff"
+              }
+              bgcolor={
+                singleOrderData?.orderStatus === "processing"
+                  ? "yellow"
+                  : "green"
+              }
+            >
+              {singleOrderData?.orderStatus}
             </Typography>
           </FlexBox>
         </TableRow>
 
         <Box py={1}>
-          {order.items.map((item, ind) => <FlexBox px={2} py={1} flexWrap="wrap" alignItems="center" key={ind}>
+          {singleOrderData?.orderItems.map((item, ind) => (
+            <FlexBox
+              px={2}
+              py={1}
+              flexWrap="wrap"
+              alignItems="center"
+              key={item.id}
+            >
               <FlexBox flex="2 2 260px" m={0.75} alignItems="center">
-                <Avatar src={item.product_img} sx={{
-              height: 64,
-              width: 64
-            }} />
+                <Avatar
+                  src={item.product.images[0]?.url}
+                  sx={{
+                    height: 64,
+                    width: 64,
+                  }}
+                />
                 <Box ml={2.5}>
-                  <H6 my="0px">{item.product_name}</H6>
+                  <H6 my="0px" color="#066344">
+                    {item.product.name}
+                  </H6>
 
                   <Typography fontSize="14px" color="grey.600">
-                    {currency(item.product_price)} x {item.product_quantity}
+                    {currency(item.price)} x {item.quantity}
                   </Typography>
                 </Box>
               </FlexBox>
 
               <FlexBox flex="1 1 260px" m={0.75} alignItems="center">
                 <Typography fontSize="14px" color="grey.600">
-                  Product properties: Black, L
+                  Description
                 </Typography>
               </FlexBox>
 
@@ -177,40 +299,81 @@ const OrderDetails = ({
                   <Typography fontSize="14px">Write a Review</Typography>
                 </Button>
               </FlexBox>
-            </FlexBox>)}
+            </FlexBox>
+          ))}
         </Box>
       </Card>
 
       {/* SHIPPING AND ORDER SUMMERY */}
       <Grid container spacing={3}>
         <Grid item lg={6} md={6} xs={12}>
-          <Card sx={{
-          p: "20px 30px"
-        }}>
-            <H5 mt={0} mb={2}>
+          <Card
+            sx={{
+              p: "20px 30px",
+            }}
+          >
+            <H4 mt={0} mb={2} color="#066344">
               Shipping Address
-            </H5>
+            </H4>
 
-            <Paragraph fontSize={14} my={0}>
-              {order.shippingAddress}
-            </Paragraph>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Address: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.shippingAddress.address}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                City: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.shippingAddress.city}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Country: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.shippingAddress.country}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Zip Code: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.shippingAddress.zipCode}
+              </H6>
+            </FlexBetween>
           </Card>
         </Grid>
 
         <Grid item lg={6} md={6} xs={12}>
-          <Card sx={{
-          p: "20px 30px"
-        }}>
-            <H5 mt={0} mb={2}>
+          <Card
+            sx={{
+              p: "20px 30px",
+            }}
+          >
+            <H4 mt={0} mb={2} color="#066344">
               Total Summary
-            </H5>
+            </H4>
 
             <FlexBetween mb={1}>
               <Typography fontSize={14} color="grey.600">
                 Subtotal:
               </Typography>
 
-              <H6 my="0px">{currency(order.totalPrice)}</H6>
+              <H6 my="0px">
+                {/* {currency(order.totalPrice)} */}
+                {singleOrderData?.totalPrice}
+              </H6>
             </FlexBetween>
 
             <FlexBetween mb={1}>
@@ -218,7 +381,9 @@ const OrderDetails = ({
                 Shipping fee:
               </Typography>
 
-              <H6 my="0px">{currency(0)}</H6>
+              <H6 my="0px">
+                <em>{currency(singleOrderData?.shippingPrice)}</em>
+              </H6>
             </FlexBetween>
 
             <FlexBetween mb={1}>
@@ -226,41 +391,51 @@ const OrderDetails = ({
                 Discount:
               </Typography>
 
-              <H6 my="0px">{currency(order.discount)}</H6>
+              <H6 my="0px">
+                <em> {currency(singleOrderData?.discount)}</em>
+              </H6>
             </FlexBetween>
 
-            <Divider sx={{
-            mb: 1
-          }} />
+            <Divider
+              sx={{
+                mb: 1,
+              }}
+            />
 
             <FlexBetween mb={2}>
-              <H6 my="0px">Total</H6>
-              <H6 my="0px">{currency(order.totalPrice)}</H6>
+              <H3 my="0px" color="red">
+                Total:
+              </H3>
+              <H3 my="0px" color="red">
+                {" "}
+                <em> {currency(singleOrderData?.totalPrice)}</em>
+              </H3>
             </FlexBetween>
 
             <Typography fontSize={14}>Paid by Credit/Debit Card</Typography>
           </Card>
         </Grid>
       </Grid>
-    </CustomerDashboardLayout>;
+    </CustomerDashboardLayout>
+  );
 };
-export const getStaticPaths = async () => {
-  const paths = await api.getIds();
-  return {
-    paths: paths,
-    //indicates that no page needs be created at build time
-    fallback: "blocking" //indicates the type of fallback
-  };
-};
+// export const getStaticPaths = async () => {
+//   const paths = await api.getIds();
+//   return {
+//     paths: paths,
+//     //indicates that no page needs be created at build time
+//     fallback: "blocking" //indicates the type of fallback
+//   };
+// };
 
-export const getStaticProps = async ({
-  params
-}) => {
-  const order = await api.getOrder(String(params.id));
-  return {
-    props: {
-      order
-    }
-  };
-};
+// export const getStaticProps = async ({
+//   params
+// }) => {
+//   const order = await api.getOrder(String(params.id));
+//   return {
+//     props: {
+//       order
+//     }
+//   };
+// };
 export default OrderDetails;

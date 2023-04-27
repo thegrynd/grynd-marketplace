@@ -19,6 +19,7 @@ export default function AuthUserList({ anchorEl, openList, handleCloseMenu }) {
 
   const handleLogout = () => {
     Cookies.remove("authToken");
+    window.localStorage.removeItem("GRYND_SHOPPING_CART");
     router.reload();
   };
 

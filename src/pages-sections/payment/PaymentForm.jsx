@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   PaymentElement,
   LinkAuthenticationElement,
@@ -6,17 +6,20 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { LoginContext } from "contexts/LoginContext";
+import { Paragraph } from "components/Typography";
+import { ThreeCircles } from "react-loader-spinner";
 
 export default function PaymentForm() {
   const stripe = useStripe();
+
   const elements = useElements();
 
-  const [email, setEmail] = React.useState("");
-  const [message, setMessage] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [clientSecret] = useContext(LoginContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!stripe) {
       return;
     }
@@ -38,7 +41,7 @@ export default function PaymentForm() {
           setMessage("Your payment is processing.");
           break;
         case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
+          setMessage("Please input your card details and make payment");
           break;
         default:
           setMessage("Something went wrong.");
@@ -62,8 +65,8 @@ export default function PaymentForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url:
-          "https://grynd-marketplace-staging-ten.vercel.app/order-confirmation",
+        return_url: "http://localhost:3001/order-confirmation",
+        // "https://grynd-marketplace-staging-ten.vercel.app/order-confirmation"
       },
     });
 
@@ -93,12 +96,37 @@ export default function PaymentForm() {
       />
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        <span>
+          {isLoading ? (
+            <ThreeCircles
+              height="20"
+              width="20"
+              color="red"
+              wrapperStyle={{
+                display: "inline",
+              }}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="three-circles-rotating"
+              outerCircleColor=""
+              innerCircleColor=""
+              middleCircleColor=""
+            />
+          ) : (
+            "Make Payment"
+          )}
         </span>
       </button>
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {/* {message && <div id="payment-message">{message}</div>} */}
+      <Paragraph
+        color="red"
+        textAlign="center"
+        marginBottom="1rem"
+        fontSize="16px"
+      >
+        {message}
+      </Paragraph>
     </form>
   );
 }
