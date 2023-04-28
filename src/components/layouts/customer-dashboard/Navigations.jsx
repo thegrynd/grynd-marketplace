@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { useRouter } from "next/router";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
@@ -11,6 +11,8 @@ import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
 import { FlexBox } from "components/flex-box";
 import CustomerService from "components/icons/CustomerService";
 import NavLink from "components/nav-link/NavLink";
+import { AuthUserOrderContext } from "contexts/AuthUserOrderContext";
+import { Span } from "components/Typography";
 
 // custom styled components
 const MainContainer = styled(Card)(({ theme }) => ({
@@ -31,19 +33,69 @@ const StyledNavLink = styled(({ children, isCurrentPath, ...rest }) => (
   paddingRight: "1.5rem",
   marginBottom: "1.25rem",
   justifyContent: "space-between",
-  borderColor: isCurrentPath ? theme.palette.primary.main : "transparent",
+  borderColor: isCurrentPath ? "#066344" : "transparent",
   "& .nav-icon": {
-    color: isCurrentPath ? theme.palette.primary.main : theme.palette.grey[600],
+    color: isCurrentPath ? "#066344" : theme.palette.grey[600],
   },
   "&:hover": {
-    borderColor: theme.palette.primary.main,
+    borderColor: "#B28A3D",
     "& .nav-icon": {
-      color: theme.palette.primary.main,
+      color: "#B28A3D",
     },
   },
 }));
 const Navigations = () => {
   const { pathname } = useRouter();
+  const [authUserOrderData] = useContext(AuthUserOrderContext);
+  console.log("authUserOrderData", authUserOrderData);
+
+  const linkList = [
+    {
+      title: "DASHBOARD",
+      list: [
+        {
+          href: "/orders",
+          title: "Your Orders",
+          icon: ShoppingBagOutlined,
+          count: authUserOrderData?.totalDocs,
+        },
+        {
+          href: "/wish-list",
+          title: "Your Wishlist",
+          icon: FavoriteBorderIcon,
+          count: 0,
+        },
+        {
+          href: "/support-tickets",
+          title: "Support Tickets",
+          icon: CustomerService,
+          count: 0,
+        },
+      ],
+    },
+    {
+      title: "ACCOUNT SETTINGS",
+      list: [
+        {
+          href: "/profile",
+          title: "Profile Info",
+          icon: PersonIcon,
+        },
+        // {
+        //   href: "/address",
+        //   title: "Pickup Addresses",
+        //   icon: PlaceIcon,
+        //   count: 16,
+        // },
+        // {
+        //   href: "/payment-methods",
+        //   title: "Payment Methods",
+        //   icon: CreditCardIcon,
+        //   count: 4,
+        // },
+      ],
+    },
+  ];
   return (
     <MainContainer>
       {linkList.map((item) => (
@@ -69,7 +121,7 @@ const Navigations = () => {
                   fontSize="small"
                   className="nav-icon"
                 />
-                <span>{item.title}</span>
+                <Span fontWeight="400">{item.title}</Span>
               </FlexBox>
 
               <span>{item.count}</span>
@@ -80,52 +132,5 @@ const Navigations = () => {
     </MainContainer>
   );
 };
-const linkList = [
-  {
-    title: "DASHBOARD",
-    list: [
-      {
-        href: "/orders",
-        title: "Orders",
-        icon: ShoppingBagOutlined,
-        count: 5,
-      },
-      {
-        href: "/wish-list",
-        title: "Wishlist",
-        icon: FavoriteBorderIcon,
-        count: 19,
-      },
-      {
-        href: "/support-tickets",
-        title: "Support Tickets",
-        icon: CustomerService,
-        count: 1,
-      },
-    ],
-  },
-  {
-    title: "ACCOUNT SETTINGS",
-    list: [
-      {
-        href: "/profile",
-        title: "Profile Info",
-        icon: PersonIcon,
-        count: 3,
-      },
-      {
-        href: "/address",
-        title: "Pickup Addresses",
-        icon: PlaceIcon,
-        count: 16,
-      },
-      {
-        href: "/payment-methods",
-        title: "Payment Methods",
-        icon: CreditCardIcon,
-        count: 4,
-      },
-    ],
-  },
-];
+
 export default Navigations;

@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 const StyledLink = styled("a")(({ theme, active_route }) => ({
   position: "relative",
   transition: "color 150ms ease-in-out",
-  color: active_route === "active" ? theme.palette.primary.main : "inherit",
+  color: active_route === "active" ? "#066344" : "inherit",
   "&:hover": {
-    color: `${theme.palette.primary.main} !important`,
+    color: `#B28A3D !important`,
   },
 }));
 const NavLink = ({ href, children, style, className, ...props }) => {

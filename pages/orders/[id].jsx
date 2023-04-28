@@ -18,9 +18,6 @@ import {
   styled,
 } from "@mui/material";
 import TableRow from "components/TableRow";
-import Delivery from "components/icons/Delivery";
-import PackageBox from "components/icons/PackageBox";
-import TruckFilled from "components/icons/TruckFilled";
 import { H5, H6, Paragraph } from "components/Typography";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
@@ -145,7 +142,7 @@ const OrderDetails = ({ order }) => {
                     fontSize="2rem"
                   />
                 </Avatar>
-                <H6 my="0px" color="#066344" textAlign="center">
+                <H6 my="1rem" color="#CC5500" textAlign="center">
                   {Icon.IconDesc}
                 </H6>
 
@@ -159,12 +156,7 @@ const OrderDetails = ({ order }) => {
                         color: "success.main",
                       }}
                     >
-                      <BsFillPatchCheckFill
-                      // color="inherit"
-                      // sx={{
-                      //   fontSize: "1rem",
-                      // }}
-                      />
+                      <BsFillPatchCheckFill color="inherit" fontSize="2rem" />
                     </Avatar>
                   </Box>
                 )}
@@ -186,7 +178,7 @@ const OrderDetails = ({ order }) => {
             textAlign="center"
             borderRadius="300px"
             color="#066344"
-            bgcolor="primary.light"
+            bgcolor="#d0b88a"
           >
             Estimated Delivery Date{" "}
             <b>
@@ -242,18 +234,21 @@ const OrderDetails = ({ order }) => {
 
             <Typography
               fontSize={14}
-              p="0.2rem 0.5rem"
-              borderRadius="10px"
+              p="0.3rem 0.5rem"
+              borderRadius="5px"
               color={
                 singleOrderData?.orderStatus === "processing"
-                  ? "#000000"
+                  ? "#066344"
                   : "#ffffff"
               }
               bgcolor={
                 singleOrderData?.orderStatus === "processing"
-                  ? "yellow"
-                  : "green"
+                  ? "#d0b88a"
+                  : "#066344"
               }
+              sx={{
+                textTransform: "capitalize",
+              }}
             >
               {singleOrderData?.orderStatus}
             </Typography>
@@ -295,7 +290,11 @@ const OrderDetails = ({ order }) => {
               </FlexBox>
 
               <FlexBox flex="160px" m={0.75} alignItems="center">
-                <Button variant="text" color="primary">
+                <Button
+                  variant="text"
+                  color="primary"
+                  sx={{ color: "#CC5500" }}
+                >
                   <Typography fontSize="14px">Write a Review</Typography>
                 </Button>
               </FlexBox>
@@ -403,10 +402,10 @@ const OrderDetails = ({ order }) => {
             />
 
             <FlexBetween mb={2}>
-              <H3 my="0px" color="red">
+              <H3 my="0px" color="#CC5500">
                 Total:
               </H3>
-              <H3 my="0px" color="red">
+              <H3 my="0px" color="#CC5500">
                 {" "}
                 <em> {currency(singleOrderData?.totalPrice)}</em>
               </H3>
