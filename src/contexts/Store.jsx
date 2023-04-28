@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { LoginContext } from "./LoginContext";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -21,9 +21,6 @@ const Store = ({ children }) => {
       })
       .then((response) => {
         setGetAuthUser(response);
-        // if (response) {
-        //   Cookies.set("authToken", response.data.token);
-        // }
       })
       .catch((err) => {
         console.log(err);
@@ -31,16 +28,19 @@ const Store = ({ children }) => {
       .finally(() => setLoadUser(false));
   }, [token]);
 
+  const loginContextValue = useMemo(
+    () => [
+      getAuthUser,
+      setGetAuthUser,
+      loadUser,
+      clientSecret,
+      setClientSecret,
+    ],
+    [clientSecret, setClientSecret, getAuthUser, setGetAuthUser, loadUser]
+  );
+
   return (
-    <LoginContext.Provider
-      value={[
-        getAuthUser,
-        setGetAuthUser,
-        loadUser,
-        clientSecret,
-        setClientSecret,
-      ]}
-    >
+    <LoginContext.Provider value={loginContextValue}>
       {children}
     </LoginContext.Provider>
   );

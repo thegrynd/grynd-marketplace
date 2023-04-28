@@ -24,7 +24,7 @@ const navLinkStyle = {
   cursor: "pointer",
   transition: "color 150ms ease-in-out",
   "&:hover": {
-    color: "primary.main",
+    color: "#B28A3D",
   },
   "&:last-child": {
     marginRight: 0,

@@ -16,6 +16,8 @@ import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
 import "../styles.css";
 import Store from "../src/contexts/Store";
+import AuthUserOrderProvider from "../src/contexts/AuthUserOrderContext";
+
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
@@ -44,16 +46,18 @@ const App = ({ Component, pageProps }) => {
 
       <SettingsProvider>
         <AppProvider>
-          <MuiTheme>
-            <SnackbarProvider>
-              <Store>
-                <RTL>
-                  {getLayout(<AnyComponent {...pageProps} />)}
-                  <Analytics />
-                </RTL>
-              </Store>
-            </SnackbarProvider>
-          </MuiTheme>
+          <AuthUserOrderProvider>
+            <MuiTheme>
+              <SnackbarProvider>
+                <Store>
+                  <RTL>
+                    {getLayout(<AnyComponent {...pageProps} />)}
+                    <Analytics />
+                  </RTL>
+                </Store>
+              </SnackbarProvider>
+            </MuiTheme>
+          </AuthUserOrderProvider>
         </AppProvider>
       </SettingsProvider>
     </Fragment>
