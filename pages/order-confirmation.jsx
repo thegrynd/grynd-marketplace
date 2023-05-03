@@ -25,12 +25,6 @@ const StyledButton = styled(Button)({
 });
 
 const OrderConfirmation = () => {
-  // useEffect(() => {
-  //   const paymentIntentId = new URLSearchParams(window.location.search).get(
-  //     "payment_intent"
-  //   );
-  // });
-
   const router = useRouter();
   const paymentIntentId = router.query.payment_intent;
   console.log(router.query.payment_intent);
@@ -53,8 +47,8 @@ const OrderConfirmation = () => {
   const { data, error } = useSWR(address, fetcher);
 
   const { data: paymentData } = data?.data || {};
-  console.log("paymentData", paymentData);
-  console.log("main error", error);
+  // console.log("paymentData", paymentData);
+  // console.log("main error", error);
 
   return (
     <ShopLayout1>

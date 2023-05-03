@@ -24,10 +24,6 @@ export default function PaymentForm() {
       return;
     }
 
-    // const clientSecret = new URLSearchParams(window.location.search).get(
-    //   "payment_intent_client_secret"
-    // );
-
     if (!clientSecret) {
       return;
     }
@@ -118,14 +114,14 @@ export default function PaymentForm() {
         </span>
       </button>
       {/* Show any error or success messages */}
-      {/* {message && <div id="payment-message">{message}</div>} */}
+
       <Paragraph
         color="red"
         textAlign="center"
         marginBottom="1rem"
         fontSize="16px"
       >
-        {message}
+        {message && `${message}`}
       </Paragraph>
     </form>
   );

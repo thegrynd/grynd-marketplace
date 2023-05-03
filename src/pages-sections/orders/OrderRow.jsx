@@ -10,14 +10,14 @@ import { currency } from "lib";
 const OrderRow = ({ order }) => {
   const getColor = (status) => {
     switch (status) {
-      case "Pending":
-        return "secondary";
-      case "Processing":
-        return "secondary";
-      case "Delivered":
-        return "success";
-      case "Cancelled":
-        return "error";
+      case "pending":
+        return "#F2F2F2";
+      case "processing":
+        return "#E4D00A";
+      case "delivered":
+        return "#50C878";
+      case "cancelled":
+        return "#EE4B2B";
       default:
         return "";
     }
@@ -38,15 +38,15 @@ const OrderRow = ({ order }) => {
         <Box m={0.75}>
           <Chip
             size="small"
-            label={order.status}
+            label={order.orderStatus}
             sx={{
               p: "0.25rem 0.5rem",
               fontSize: 12,
-              color: !!getColor(order.status)
-                ? `${getColor(order.status)}.900`
+              color: !!getColor(order.orderStatus)
+                ? `${getColor(order.orderStatus)}.900`
                 : "inherit",
-              backgroundColor: !!getColor(order.status)
-                ? `${getColor(order.status)}.100`
+              backgroundColor: !!getColor(order.orderStatus)
+                ? `${getColor(order.orderStatus)}`
                 : "none",
             }}
           />
@@ -56,7 +56,7 @@ const OrderRow = ({ order }) => {
           {format(new Date(order.createdAt), "MMM dd, yyyy")}
         </Typography>
 
-        <Typography m={0.75} textAlign="left">
+        <Typography m={0.75} textAlign="left" color="#066344" fontWeight={600}>
           {currency(order.totalPrice)}
         </Typography>
 

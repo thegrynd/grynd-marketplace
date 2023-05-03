@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Pagination } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
 import TableRow from "components/TableRow";
@@ -8,29 +9,39 @@ import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import api from "utils/__api__/orders";
+import { AuthUserOrderContext } from "contexts/AuthUserOrderContext";
 
 // ====================================================
 
 // ====================================================
 
-const Orders = ({
-  orderList
-}) => {
-  return <CustomerDashboardLayout>
+const Orders = ({ orderList }) => {
+  const [authUserOrderData] = useContext(AuthUserOrderContext);
+  console.log("authUserOrderData", authUserOrderData);
+
+  return (
+    <CustomerDashboardLayout>
       {/* TITLE HEADER AREA */}
-      <UserDashboardHeader title="My Orders" icon={ShoppingBag} navigation={<CustomerDashboardNavigation />} />
+      <UserDashboardHeader
+        title="My Orders"
+        icon={ShoppingBag}
+        navigation={<CustomerDashboardNavigation />}
+      />
 
       {/* ORDER LIST AREA */}
-      <TableRow elevation={0} sx={{
-      padding: "0px 18px",
-      background: "none",
-      display: {
-        xs: "none",
-        md: "flex"
-      }
-    }}>
+      <TableRow
+        elevation={0}
+        sx={{
+          padding: "0px 18px",
+          background: "none",
+          display: {
+            xs: "none",
+            md: "flex",
+          },
+        }}
+      >
         <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
-          Order #
+          Order ID
         </H5>
 
         <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
@@ -45,25 +56,39 @@ const Orders = ({
           Total
         </H5>
 
-        <H5 my={0} px={2.75} color="grey.600" flex="0 0 0 !important" display={{
-        xs: "none",
-        md: "block"
-      }} />
+        <H5
+          my={0}
+          px={2.75}
+          color="grey.600"
+          flex="0 0 0 !important"
+          display={{
+            xs: "none",
+            md: "block",
+          }}
+        />
       </TableRow>
 
-      {orderList.map(order => <OrderRow order={order} key={order.id} />)}
+      {authUserOrderData?.docs.map((order) => (
+        <OrderRow order={order} key={order.id} />
+      ))}
 
       <FlexBox justifyContent="center" mt={5}>
-        <Pagination count={5} color="primary" variant="outlined" onChange={data => console.log(data)} />
+        <Pagination
+          count={5}
+          color="primary"
+          variant="outlined"
+          onChange={(data) => console.log(data)}
+        />
       </FlexBox>
-    </CustomerDashboardLayout>;
+    </CustomerDashboardLayout>
+  );
 };
 export const getStaticProps = async () => {
   const orderList = await api.getOrders();
   return {
     props: {
-      orderList
-    }
+      orderList,
+    },
   };
 };
 export default Orders;

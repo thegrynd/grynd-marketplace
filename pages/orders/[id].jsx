@@ -402,10 +402,10 @@ const OrderDetails = ({ order }) => {
             />
 
             <FlexBetween mb={2}>
-              <H3 my="0px" color="#CC5500">
+              <H3 my="0px" color="#066344">
                 Total:
               </H3>
-              <H3 my="0px" color="#CC5500">
+              <H3 my="0px" color="#066344">
                 {" "}
                 <em> {currency(singleOrderData?.totalPrice)}</em>
               </H3>
