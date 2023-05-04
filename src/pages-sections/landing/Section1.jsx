@@ -112,27 +112,6 @@ const Section1 = () => {
             </Button>
           </Link>
         </Box>
-      ) : authUser?.data.role === "admin" ? (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
-          <Link href={"/admin/categories"}>
-            <a target="_blank">
-              <Button
-                sx={{
-                  borderRadius: "4px",
-                  background: "#B28A3D",
-                  color: "white",
-                  padding: "0.5rem 1rem",
-                  ":hover": {
-                    backgroundColor: "grey",
-                    color: "black",
-                  },
-                }}
-              >
-                Admin Dashboard
-              </Button>
-            </a>
-          </Link>
-        </Box>
       ) : authUser === undefined && loadUser === true ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
           <Button

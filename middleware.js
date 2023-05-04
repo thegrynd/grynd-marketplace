@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseCookies } from "./helpers/validation";
 
 export async function middleware(req) {
-  // let cookie = req.headers.get("authToken");
-  // console.log("cookie1", cookie); // => 'fast'
-
-  const { authToken } = parseCookies(req);
   const url = process.env.NEXT_PUBLIC_GRYND_URL;
 
-  const config = {
+  let authToken = req.cookies.get("authToken");
+
+  const headerConfig = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -18,18 +15,14 @@ export async function middleware(req) {
   };
 
   // const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
-  const authResponse = await (
-    await fetch(`${url}/api/v1/auth/me`, config)
-  ).json();
+  const authResponse = await fetch(`${url}/api/v1/auth/me`, headerConfig);
 
-  const authUser = authResponse.data;
-
-  // const userIsAuthenticated = true; // TODO: check if user is authenticated
+  const authUser = await authResponse.json();
 
   if (!authToken) {
-    const signinUrl = new URL("/vendor/login-user", req.url);
-    return NextResponse.redirect(signinUrl);
-  } else if (authUser.role !== "admin") {
+    const loginUrl = new URL("/vendor/login-user", req.url);
+    return NextResponse.redirect(loginUrl);
+  } else if (authUser.data?.role !== "admin") {
     const homeUrl = new URL("/", req.url);
     return NextResponse.redirect(homeUrl);
   }
