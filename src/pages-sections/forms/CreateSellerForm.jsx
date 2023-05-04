@@ -108,7 +108,7 @@ const CreateSellerForm = () => {
       formData.append("file", coverUrl);
       formData.append("upload_preset", "a7plbqa0");
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/grynd/image/upload",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
         formData
       );
       // console.log("res1", res);
@@ -126,7 +126,7 @@ const CreateSellerForm = () => {
       formData.append("file", logourl);
       formData.append("upload_preset", "a7plbqa0");
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/grynd/image/upload",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
         formData
       );
       // console.log("res2", res);

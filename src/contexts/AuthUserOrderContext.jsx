@@ -1,7 +1,7 @@
-import { createContext, useMemo } from "react";
+import { createContext, useMemo, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 
 export const AuthUserOrderContext = createContext([]);
 
@@ -16,9 +16,12 @@ const AuthUserOrderProvider = ({ children }) => {
   const fetcher = async (url) => await axios.get(url, config);
   const { data, error } = useSWR(address, fetcher);
 
+  // preload in effects
+  useEffect(() => {
+    preload(address, fetcher);
+  }, []);
+
   const { data: authUserOrderData } = data?.data || {};
-  //   console.log("authUserOrderData", authUserOrderData);
-  //   console.log("main error", error);
 
   const authUserOrderValue = useMemo(
     () => [authUserOrderData],

@@ -219,36 +219,46 @@ const HomePage = (props) => {
           SideNav={SideNav}
         >
           {authUser?.data.isSeller === true ? (
-            <Stack spacing={6} mt={2}>
-              {selectedCategory ? (
-                // FILTERED PRODUCT LIST
+            <>
+              <SearchProduct
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                setSortProduct={setSortProduct}
+                sortProduct={sortProduct}
+              />
+              <Stack spacing={6} mt={2}>
+                {selectedCategory ? (
+                  // FILTERED PRODUCT LIST
 
-                <Store>
                   <AllProducts
-                    products={sellerProducts}
+                    // products={allProductsClient}
                     title={selectedCategory}
                   />
-                </Store>
-              ) : (
-                <Fragment>
-                  {/* POPULAR PRODUCTS AREA */}
-                  <AllProducts products={allProductsSeller} title="" />
-
-                  {/* <Store>
-                    <ProductCarousel
-                      title="All Products"
-                      products={sellerProducts}
+                ) : (
+                  <Fragment>
+                    {/* POPULAR PRODUCTS AREA */}
+                    <AllProducts
+                      products={searchedProduct}
+                      setSearchedProduct={setSearchedProduct}
+                      title=""
                     />
-                  </Store> */}
-                </Fragment>
-              )}
 
-              {/* DISCOUNT BANNER AREA */}
-              <DiscountSection />
+                    {/* <Store>
+                <ProductCarousel
+                  title="All Products"
+                  products={sellerProducts}
+                />
+              </Store> */}
+                  </Fragment>
+                )}
 
-              {/* FOOTER AREA */}
-              <Footer />
-            </Stack>
+                {/* DISCOUNT BANNER AREA */}
+                <DiscountSection />
+
+                {/* FOOTER AREA */}
+                <Footer />
+              </Stack>
+            </>
           ) : authUser?.data.isSeller === false ? (
             <>
               <SearchProduct
@@ -347,47 +357,4 @@ const HomePage = (props) => {
   );
 };
 
-// export async function getServerSideProps(context) {
-//   const { authToken } = parseCookies(context.req);
-
-//   if (!authToken) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   const url = "https://grynd-staging.vercel.app";
-
-//   const response = await axios.get(`${url}/api/v2/products`, {
-//     headers: {
-//       Authorization: `Bearer ${authToken}`,
-//     },
-//   });
-
-//   const sellerAllProducts = response.data;
-
-//   return {
-//     props: { sellerAllProducts },
-//   };
-// }
-
-// export const getStaticProps = async () => {
-//   const products = await api.getProducts();
-//   const serviceList = await api.getServices();
-//   const popularProducts = await api.getPopularProducts();
-//   const trendingProducts = await api.getTrendingProducts();
-//   const grocery1NavList = await api.getGrocery1Navigation();
-//   return {
-//     props: {
-//       products,
-//       serviceList,
-//       grocery1NavList,
-//       popularProducts,
-//       trendingProducts,
-//     },
-//   };
-// };
 export default HomePage;

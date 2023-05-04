@@ -159,25 +159,26 @@ export async function getServerSideProps(context) {
   const authUser = authResponse.data;
   const categoryData = response.data;
 
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/vendor/login-user",
-        permanent: false,
-      },
-    };
-  } else if (authUser.data.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  } else if (authUser.success === false) {
-    return {
-      notFound: true,
-    };
-  }
+  // if (!authToken) {
+  //   return {
+  //     redirect: {
+  //       destination: "/vendor/login-user",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+  //  else if (authUser.data.role !== "admin") {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // } else if (authUser.success === false) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
 
   return {
     props: { categoryData, authUser },

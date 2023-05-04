@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { Grid } from "@mui/material";
 import PaymentForm from "pages-sections/payment/PaymentForm";
 import PaymentSummary from "pages-sections/payment/PaymentSummary";
@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import { H1, H3, Paragraph, Span } from "components/Typography";
 import { GiShoppingCart } from "react-icons/gi";
 import { IconContext } from "react-icons";
+import { useRouter } from "next/router";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -27,36 +28,23 @@ const Checkout = () => {
   const [clientSecret, getAuthUser, setGetAuthUser] = useContext(LoginContext);
   console.log("clientsecret", clientSecret);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    // Prefetch the order page
+    router.prefetch("/orders");
+  }, [router]);
+
   const { data: authUser } = getAuthUser || {};
   console.log("authUser1", authUser);
 
-  // useEffect(() => {
-  //   // if (authUser?.data.isSeller === true) {
-  //   // setIsLoading(true);
-  //   axios
-  //     .post(
-  //       `${url}/api/v2/client/orders/confirm-order-payment`,
-  //       {
-  //         paymentIntentId: "pi_3N16AkKdfAkbgNXX1L5zST7y",
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log("response", response);
-  //       // if (response.data.status === true) {
-  //       //   router.replace("/profile");
-  //       // }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   // .finally(() => setIsLoading(false));
-  // }, []);
+  const iconContextValue = useMemo(() => {
+    return {
+      color: "#B28A3D",
+      size: "10.25rem",
+      textAlign: "center",
+    };
+  });
 
   const appearance = {
     theme: "flat",
@@ -102,13 +90,7 @@ const Checkout = () => {
               </Span>
             </Paragraph>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <IconContext.Provider
-                value={{
-                  color: "#B28A3D",
-                  size: "10.25rem",
-                  textAlign: "center",
-                }}
-              >
+              <IconContext.Provider value={iconContextValue}>
                 <GiShoppingCart />
               </IconContext.Provider>
             </div>
@@ -124,6 +106,7 @@ const Checkout = () => {
                 },
                 margin: "auto",
               }}
+              onClick={() => router.push(`/orders`)}
             >
               Confirm Last Payment Details
             </Button>

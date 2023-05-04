@@ -47,7 +47,7 @@ const StyledNavLink = styled(({ children, isCurrentPath, ...rest }) => (
 const Navigations = () => {
   const { pathname } = useRouter();
   const [authUserOrderData] = useContext(AuthUserOrderContext);
-  console.log("authUserOrderData", authUserOrderData);
+  // console.log("authUserOrderData", authUserOrderData);
 
   const linkList = [
     {
