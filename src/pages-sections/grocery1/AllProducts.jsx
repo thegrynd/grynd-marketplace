@@ -47,7 +47,7 @@ const AllProducts = ({ products, title = "All Products" }) => {
         ))}
       </Grid>
 
-      {authUser?.success === true && (
+      {/* {authUser?.success === true && (
         <FlexRowCenter mt={6}>
           <Link href="../vendor/upload-product" passHref legacyBehavior>
             <a target="_blank">
@@ -67,7 +67,7 @@ const AllProducts = ({ products, title = "All Products" }) => {
             </a>
           </Link>
         </FlexRowCenter>
-      )}
+      )} */}
       <PaginationRounded />
     </CategorySectionCreator>
   );
