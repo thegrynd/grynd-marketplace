@@ -10,9 +10,9 @@ import PaginationRounded from "components/pagination/PaginationRounded";
 
 const SubTitle = styled(Paragraph)(({ theme }) => ({
   fontSize: 12,
-  marginTop: "-20px",
+  marginTop: "0rem",
   marginBottom: "20px",
-  color: theme.palette.grey[600],
+  color: "#066344",
 }));
 
 // ========================================================

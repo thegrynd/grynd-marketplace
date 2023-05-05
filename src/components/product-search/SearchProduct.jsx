@@ -31,7 +31,7 @@ const SearchProduct = ({
     <>
       <Box className="searchBox">
         <TextField
-          placeholder="Searching products"
+          placeholder="Search products"
           fullWidth
           InputProps={{
             sx: {
