@@ -16,7 +16,13 @@ export const grey = {
   300: "#E3E9EF",
   200: "#F3F5F9",
   // Line Stroke
-  100: "#F6F9FC"
+  100: "#F6F9FC",
+};
+export const grynd = {
+  900: "red",
+  100: "#066344",
+  200: "#B28A3D",
+  300: "#473718",
 };
 export const primary = {
   100: "#FCE9EC",
@@ -27,7 +33,7 @@ export const primary = {
   600: "#E63E58",
   700: "#E3364E",
   800: "#DF2E44",
-  900: "#D91F33"
+  900: "#D91F33",
 };
 export const secondary = {
   100: "#e8e8ee",
@@ -40,7 +46,7 @@ export const secondary = {
   800: "#0e1138",
   900: "#0c0e30",
   main: "#0F3460",
-  dark: "#0c0e30"
+  dark: "#0c0e30",
 };
 export const error = {
   100: "#FFEAEA",
@@ -52,7 +58,7 @@ export const error = {
   700: "#FF4242",
   800: "#FF3939",
   900: "#FF2929",
-  main: "#E94560"
+  main: "#E94560",
 };
 export const success = {
   100: "#E7F9ED",
@@ -64,7 +70,7 @@ export const success = {
   700: "#27C454",
   800: "#20BE4A",
   900: "#0b7724",
-  main: "rgb(51, 208, 103)"
+  main: "rgb(51, 208, 103)",
 };
 export const blue = {
   50: "#f3f5f9",
@@ -78,7 +84,7 @@ export const blue = {
   800: "#183C92",
   900: "#0E2979",
   main: "#4E97FD",
-  contrastText: "#FFFFFF"
+  contrastText: "#FFFFFF",
 };
 export const marron = {
   50: "#f3f5f9",
@@ -90,7 +96,7 @@ export const marron = {
   700: "#883948",
   800: "#6E2438",
   900: "#5B162F",
-  main: "#BE7374"
+  main: "#BE7374",
 };
 export const paste = {
   50: "#F5F5F5",
@@ -103,22 +109,24 @@ export const paste = {
   800: "#175368",
   900: "#0E3D56",
   main: "#4BB4B4",
-  contrastText: "#FFFFFF"
+  contrastText: "#FFFFFF",
 };
+
 export const warning = {
   100: "#FFF8E5",
   main: "#FFCD4E",
-  contrastText: "#FFFFFF"
+  contrastText: "#FFFFFF",
 };
 export const dark = {
-  main: "#222"
+  main: "#222",
 };
 export const white = {
-  main: "#fff"
+  main: "#fff",
 };
 export const themeColors = {
   dark,
   grey,
+  grynd,
   paste,
   error,
   marron,
@@ -128,11 +136,11 @@ export const themeColors = {
   info: blue,
   divider: grey[200],
   background: {
-    default: grey[100]
+    default: grey[100],
   },
   text: {
     primary: grey[900],
     secondary: grey[800],
-    disabled: grey[400]
-  }
+    disabled: grey[400],
+  },
 };

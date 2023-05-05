@@ -151,8 +151,6 @@ const HomePage = (props) => {
   console.log("allProducts", allProductsSeller);
 
   // client
-  // const { data: allProductsClient } = clientProducts;
-
   const { docs: allProductsClient } = clientProducts?.data || {};
   // const { docs } = allProductsClient || {};
   console.log("allProductsClient", allProductsClient);
@@ -206,9 +204,7 @@ const HomePage = (props) => {
       <HomeLayout showNavbar={false} showTopbar={false}>
         <SEO title="Grynd Agro Marketplace" />
         {/* TOP HERO AREA */}
-        <Store>
-          <Section1 id="search" />
-        </Store>
+        <Section1 id="search" />
 
         {/* SERVICE AREA */}
         <Section2 id="services" />
