@@ -26,6 +26,7 @@ import { Small } from "components/Typography";
 import { useAppContext } from "contexts/AppContext";
 import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
 import MiniCart from "components/MiniCart";
+import { useRouter } from "next/router";
 
 import { ThreeCircles } from "react-loader-spinner";
 import AuthUserList from "components/categories/AuthUserList";
@@ -70,6 +71,8 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 const Header = () => {
   const { state } = useAppContext();
   console.log("myState", state);
+
+  const router = useRouter();
 
   const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
@@ -294,6 +297,7 @@ const Header = () => {
                     anchorEl={anchorEl}
                     openList={openList}
                     handleCloseMenu={handleCloseMenu}
+                    setAnchorEl={setAnchorEl}
                   />
                 </>
               )}

@@ -11,16 +11,32 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { H5 } from "components/Typography";
 
-export default function AuthUserList({ anchorEl, openList, handleCloseMenu }) {
+export default function AuthUserList({
+  anchorEl,
+  openList,
+  handleCloseMenu,
+  setAnchorEl,
+}) {
   const router = useRouter();
   const [getAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
   //   console.log("AuthUser", authUser);
 
   const handleLogout = () => {
+    setAnchorEl(null);
     Cookies.remove("authToken");
     window.localStorage.removeItem("GRYND_SHOPPING_CART");
     router.reload();
+  };
+
+  const handleAdminRoute = () => {
+    setAnchorEl(null);
+    router.push("/admin/categories");
+  };
+
+  const handleProfileRoute = () => {
+    setAnchorEl(null);
+    router.push("/profile");
   };
 
   const isUser = authUser?.data.role === "user" || undefined || !authUser;
@@ -35,13 +51,13 @@ export default function AuthUserList({ anchorEl, openList, handleCloseMenu }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleProfileRoute}>
           <IconContext.Provider value={{ color: "#B28A3D", size: "1.25rem" }}>
             <BsFillPersonLinesFill />
           </IconContext.Provider>{" "}
           &nbsp; <H5 fontWeight={400}>Profile</H5>
         </MenuItem>
-        <MenuItem onClick={handleCloseMenu} disabled={isUser}>
+        <MenuItem onClick={handleAdminRoute} disabled={isUser}>
           <IconContext.Provider value={{ color: "#B28A3D", size: "1.25rem" }}>
             <MdDashboardCustomize />
           </IconContext.Provider>{" "}
