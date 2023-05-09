@@ -261,7 +261,7 @@ const ProductForm = ({ subcategoryData }) => {
               size="medium"
               placeholder="Discount of Product "
               onBlur={formik.handleBlur}
-              value={formik.values.countInStock}
+              value={formik.values.discount}
               onChange={formik.handleChange}
               // error={!!touched.tags && !!errors.tags}
               // helperText={touched.tags && errors.tags}
