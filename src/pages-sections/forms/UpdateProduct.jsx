@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik, FormikProvider, FieldArray } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Button, Grid, TextField } from "@mui/material";
-import { H3, H5 } from "components/Typography";
+import { H5, Paragraph } from "components/Typography";
 import { useRouter } from "next/router";
 import { ThreeCircles } from "react-loader-spinner";
 import PreviewImage from "pages-sections/forms/PreviewImage";
@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { FlexBox } from "components/flex-box";
 import { IconContext } from "react-icons";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
+import TagsField from "components/forms/TagsField";
 
 const unitData = [
   "count",
@@ -28,15 +29,14 @@ const unitData = [
   "pallet",
 ];
 
-const ProductForm = ({ subcategoryData }) => {
+const UpdateProduct = ({ singleProductData, query, subcategoryData }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [resData1, setResData1] = useState();
   const [resPublicId1, setResPublicId1] = useState();
   const [inputFile1, setInputFile1] = useState();
-  const [subId, setSubId] = useState();
 
-  const [errorMsg, setErrorMsg] = useState();
+  const [isError, setError] = useState("");
 
   useEffect(() => {
     uploadIconToCloudinary();
@@ -54,7 +54,7 @@ const ProductForm = ({ subcategoryData }) => {
     console.log("values", values);
 
     return axios
-      .post(`${url}/api/v2/products`, values, {
+      .put(`${url}/api/v2/products/${query.id}`, values, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -66,9 +66,15 @@ const ProductForm = ({ subcategoryData }) => {
           router.replace("/vendor/products");
         }
       })
-      .catch((err) => {
-        console.log(err);
-        // setErrorMsg(err.response.data.validationErrors);
+      .catch((error) => {
+        if (error.response) {
+          console.log("server responded", error.response.data.message);
+          setError(error.response.data.message);
+        } else if (error.request) {
+          setError("network error");
+        } else {
+          setError(error.toJSON(error));
+        }
       })
       .finally(() => setIsLoading(false));
   };
@@ -98,26 +104,31 @@ const ProductForm = ({ subcategoryData }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      subcategory: "",
-      tags: [""],
+      name: singleProductData?.name ?? "",
+      subcategory: singleProductData?.subcategory.id ?? "",
+      tags: singleProductData?.tags.map((tag) => tag) ?? [""],
       images: [
         {
           public_id: "",
           url: "",
         },
       ],
-      countInStock: 0,
-      price: 0,
-      unit: "",
-      description: "",
-      specification: [
+      countInStock: singleProductData?.countInStock ?? 0,
+      price: singleProductData?.price ?? 0,
+      unit: singleProductData?.unit ?? "",
+      description: singleProductData?.description ?? "",
+      specification: singleProductData?.specification.map((spec) => {
+        return {
+          title: spec.title,
+          body: spec.body,
+        };
+      }) ?? [
         {
           title: "",
           body: "",
         },
       ],
-      discount: 0,
+      discount: singleProductData?.discount ?? 0,
     },
     validationSchema: Yup.object({}),
     onSubmit: (values) => {
@@ -129,8 +140,6 @@ const ProductForm = ({ subcategoryData }) => {
     },
   });
 
-  // console.log("formik value", formik.values);
-  console.log("subId", subId);
   return (
     <FormikProvider value={formik}>
       <form
@@ -168,44 +177,27 @@ const ProductForm = ({ subcategoryData }) => {
               <H5 color="red">{formik.errors.name}</H5>
             ) : null}
           </Grid>
-          <Grid item md={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Select A Sub Category
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="subcategory"
-                name="subcategory"
-                value={formik.values.subcategory}
-                label="Subcategory"
-                onChange={formik.handleChange}
-              >
-                {subcategoryData?.docs.length > 0
-                  ? subcategoryData?.docs.map((sub) => (
-                      <MenuItem value={sub.id} key={sub.id}>
-                        {sub.name}
-                      </MenuItem>
-                    ))
-                  : "No Sub Categories Present"}
-              </Select>
-            </FormControl>
-          </Grid>
+
           <Grid item md={12} xs={12}>
             <TextField
               fullWidth
-              id="tags"
-              name="tags"
-              label="Tags"
+              type="text"
               color="info"
               size="medium"
-              placeholder="Tags"
+              id="subcategory"
+              name="subcategory"
+              label="Subcategory"
               onBlur={formik.handleBlur}
-              value={formik.values.tags}
               onChange={formik.handleChange}
-              // error={!!touched.tags && !!errors.tags}
-              // helperText={touched.tags && errors.tags}
+              value={formik.values.subcategory}
+              disabled
             />
+            {formik.touched.name && formik.errors.name ? (
+              <H5 color="red">{formik.errors.name}</H5>
+            ) : null}
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TagsField formik={formik} />
           </Grid>
           <Grid item md={12} xs={12}>
             {formik.values.images[0].url && <PreviewImage file={inputFile1} />}
@@ -260,6 +252,23 @@ const ProductForm = ({ subcategoryData }) => {
             />
           </Grid>
           <Grid item md={12} xs={12}>
+            <TextField
+              fullWidth
+              type="number"
+              id="discount"
+              name="discount"
+              label="Discount"
+              color="info"
+              size="medium"
+              placeholder="Discount of Product "
+              onBlur={formik.handleBlur}
+              value={formik.values.discount}
+              onChange={formik.handleChange}
+              // error={!!touched.tags && !!errors.tags}
+              // helperText={touched.tags && errors.tags}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Unit of Product
@@ -274,11 +283,7 @@ const ProductForm = ({ subcategoryData }) => {
               >
                 {unitData.length > 0
                   ? unitData.map((unit, ind) => (
-                      <MenuItem
-                        value={unit}
-                        key={ind}
-                        // onClick={() => setSubId(sub.id)}
-                      >
+                      <MenuItem value={unit} key={ind}>
                         {unit}
                       </MenuItem>
                     ))
@@ -304,38 +309,6 @@ const ProductForm = ({ subcategoryData }) => {
               // helperText={touched.tags && errors.tags}
             />
           </Grid>
-          {/* <Grid item md={12} xs={12}>
-            <TextField
-              fullWidth
-              id="specification[0].title"
-              name="specification[0].title"
-              label="Title of Specification"
-              color="info"
-              size="medium"
-              placeholder="Title of Specification"
-              onBlur={formik.handleBlur}
-              value={formik.values.specification[0].title}
-              onChange={formik.handleChange}
-              // error={!!touched.tags && !!errors.tags}
-              // helperText={touched.tags && errors.tags}
-            />
-          </Grid> */}
-          {/* <Grid item md={12} xs={12}>
-            <TextField
-              fullWidth
-              id="specification[0].body"
-              name="specification[0].body"
-              label="Body of Specification"
-              color="info"
-              size="medium"
-              placeholder="Body of Specification"
-              onBlur={formik.handleBlur}
-              value={formik.values.specification[0].body}
-              onChange={formik.handleChange}
-              // error={!!touched.tags && !!errors.tags}
-              // helperText={touched.tags && errors.tags}
-            />
-          </Grid> */}
           <FieldArray
             name="specification"
             render={(arrayHelpers) => (
@@ -349,7 +322,7 @@ const ProductForm = ({ subcategoryData }) => {
                     xs={12}
                     p={8}
                     sx={{ backgroundColor: "white" }}
-                    key={index}
+                    key={spec.title}
                   >
                     <Grid item md={12} xs={12}>
                       <TextField
@@ -434,6 +407,16 @@ const ProductForm = ({ subcategoryData }) => {
               </div>
             )}
           />
+
+          <Paragraph
+            color="red"
+            textAlign="center"
+            margin="auto"
+            marginBottom="1rem"
+            fontSize="16px"
+          >
+            {isError}
+          </Paragraph>
           <Grid item xs={12}>
             <Button
               type="submit"
@@ -462,7 +445,7 @@ const ProductForm = ({ subcategoryData }) => {
                   middleCircleColor=""
                 />
               ) : (
-                "Upload Product"
+                "Update Product"
               )}
             </Button>
           </Grid>
@@ -472,102 +455,4 @@ const ProductForm = ({ subcategoryData }) => {
   );
 };
 
-export default ProductForm;
-
-// import { useState } from "react";
-// import { Button, Card, Grid, MenuItem, TextField } from "@mui/material";
-// import { Formik } from "formik";
-// import DropZone from "components/DropZone";
-// import { FlexBox } from "components/flex-box";
-// import BazaarImage from "components/BazaarImage";
-// import { UploadImageBox, StyledClear } from "../StyledComponents";
-
-// // ================================================================
-
-// // ================================================================
-
-// const ProductForm = props => {
-//   const {
-//     initialValues,
-//     validationSchema,
-//     handleFormSubmit
-//   } = props;
-//   const [files, setFiles] = useState([]);
-
-//   // HANDLE UPDATE NEW IMAGE VIA DROP ZONE
-//   const handleChangeDropZone = files => {
-//     files.forEach(file => Object.assign(file, {
-//       preview: URL.createObjectURL(file)
-//     }));
-//     setFiles(files);
-//   };
-
-//   // HANDLE DELETE UPLOAD IMAGE
-//   const handleFileDelete = file => () => {
-//     setFiles(files => files.filter(item => item.name !== file.name));
-//   };
-//   return <Card sx={{
-//     p: 6
-//   }}>
-//       <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={validationSchema}>
-//         {({
-//         values,
-//         errors,
-//         touched,
-//         handleChange,
-//         handleBlur,
-//         handleSubmit
-//       }) => <form onSubmit={handleSubmit}>
-//             <Grid container spacing={3}>
-//               <Grid item sm={6} xs={12}>
-//                 <TextField fullWidth name="name" label="Name" color="info" size="medium" placeholder="Name" value={values.name} onBlur={handleBlur} onChange={handleChange} error={!!touched.name && !!errors.name} helperText={touched.name && errors.name} />
-//               </Grid>
-//               <Grid item sm={6} xs={12}>
-//                 <TextField select fullWidth color="info" size="medium" name="category" onBlur={handleBlur} placeholder="Category" onChange={handleChange} value={values.category} label="Select Category" SelectProps={{
-//               multiple: true
-//             }} error={!!touched.category && !!errors.category} helperText={touched.category && errors.category}>
-//                   <MenuItem value="electronics">Electronics</MenuItem>
-//                   <MenuItem value="fashion">Fashion</MenuItem>
-//                 </TextField>
-//               </Grid>
-
-//               <Grid item xs={12}>
-//                 <DropZone onChange={files => handleChangeDropZone(files)} />
-
-//                 <FlexBox flexDirection="row" mt={2} flexWrap="wrap" gap={1}>
-//                   {files.map((file, index) => {
-//                 return <UploadImageBox key={index}>
-//                         <BazaarImage src={file.preview} width="100%" />
-//                         <StyledClear onClick={handleFileDelete(file)} />
-//                       </UploadImageBox>;
-//               })}
-//                 </FlexBox>
-//               </Grid>
-
-//               <Grid item xs={12}>
-//                 <TextField rows={6} multiline fullWidth color="info" size="medium" name="description" label="Description" onBlur={handleBlur} onChange={handleChange} placeholder="Description" value={values.description} error={!!touched.description && !!errors.description} helperText={touched.description && errors.description} />
-//               </Grid>
-//               <Grid item sm={6} xs={12}>
-//                 <TextField fullWidth name="stock" color="info" size="medium" label="Stock" placeholder="Stock" onBlur={handleBlur} value={values.stock} onChange={handleChange} error={!!touched.stock && !!errors.stock} helperText={touched.stock && errors.stock} />
-//               </Grid>
-// <Grid item sm={6} xs={12}>
-//   <TextField fullWidth name="tags" label="Tags" color="info" size="medium" placeholder="Tags" onBlur={handleBlur} value={values.tags} onChange={handleChange} error={!!touched.tags && !!errors.tags} helperText={touched.tags && errors.tags} />
-// </Grid>
-//               <Grid item sm={6} xs={12}>
-//                 <TextField fullWidth name="price" color="info" size="medium" type="number" onBlur={handleBlur} value={values.price} label="Regular Price" onChange={handleChange} placeholder="Regular Price" error={!!touched.price && !!errors.price} helperText={touched.price && errors.price} />
-//               </Grid>
-//               <Grid item sm={6} xs={12}>
-//                 <TextField fullWidth color="info" size="medium" type="number" name="sale_price" label="Sale Price" onBlur={handleBlur} onChange={handleChange} placeholder="Sale Price" value={values.sale_price} error={!!touched.sale_price && !!errors.sale_price} helperText={touched.sale_price && errors.sale_price} />
-//               </Grid>
-
-//               <Grid item sm={6} xs={12}>
-//                 <Button variant="contained" color="info" type="submit">
-//                   Save product
-//                 </Button>
-//               </Grid>
-//             </Grid>
-//           </form>}
-//       </Formik>
-//     </Card>;
-// };
-// export default ProductForm;
+export default UpdateProduct;
