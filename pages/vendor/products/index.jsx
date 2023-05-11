@@ -136,7 +136,7 @@ export default function ProductList(props) {
         <Stack alignItems="center" my={4}>
           <TablePagination
             onChange={handleChangePage}
-            count={Math.ceil(products.length / rowsPerPage)}
+            count={Math.ceil(productData?.docs.length / rowsPerPage)}
           />
         </Stack>
       </Card>

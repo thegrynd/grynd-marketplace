@@ -68,13 +68,17 @@ const ProductRow = ({ product }) => {
       <StyledTableCell align="center">
         <StyledIconButton
           onClick={() => {
-            router.push(`/vendor/products/${id}`);
+            router.push(`/vendor/products/edit/${id}`);
           }}
         >
           <Edit />
         </StyledIconButton>
 
-        <StyledIconButton>
+        <StyledIconButton
+          onClick={() => {
+            router.push(`/vendor/products/${id}`);
+          }}
+        >
           <RemoveRedEye />
         </StyledIconButton>
 

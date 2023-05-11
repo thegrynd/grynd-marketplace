@@ -107,7 +107,12 @@ const UpdateProduct = ({ singleProductData, query, subcategoryData }) => {
       name: singleProductData?.name ?? "",
       subcategory: singleProductData?.subcategory.id ?? "",
       tags: singleProductData?.tags.map((tag) => tag) ?? [""],
-      images: [
+      images: singleProductData?.images.map((img) => {
+        return {
+          public_id: img.public_id,
+          url: img.url,
+        };
+      }) ?? [
         {
           public_id: "",
           url: "",

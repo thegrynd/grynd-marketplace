@@ -39,7 +39,6 @@ const HomePage = (props) => {
 
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  // console.log("authUser", authUser);
 
   const token = Cookies.get("authToken");
   const config = {
@@ -50,15 +49,14 @@ const HomePage = (props) => {
   };
 
   let url = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?`;
-
-  // isLoading ? "Loading.." : null;
+  let urlSeller = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products?`;
 
   // FETCH ALL PRODUCTS FOR SELLER
   useEffect(() => {
     if (authUser?.data.isSeller === true) {
       setIsLoading(true);
       axios
-        .get(url, config)
+        .get(urlSeller, config)
         .then(({ data }) => {
           setSellerProducts(data);
           // console.log("sellerProducts", sellerProducts);
@@ -66,7 +64,7 @@ const HomePage = (props) => {
         .catch((err) => err)
         .finally(() => setIsLoading(false));
     }
-  }, [authUser, url]);
+  }, [authUser, urlSeller]);
 
   // FETCH ALL PRODUCTS FOR CLIENT OR NOT LOGGED IN USER
   useEffect(() => {
@@ -146,27 +144,37 @@ const HomePage = (props) => {
     }
   }, [authUser, sortProduct]);
 
-  // seller
-  const { data: allProductsSeller } = sellerProducts;
-  console.log("allProducts", allProductsSeller);
+  // seller data
+  const { docs: allProductsSeller } = sellerProducts?.data || {};
+  console.log("allProductsSeller", allProductsSeller);
 
-  // client
+  // client data
   const { docs: allProductsClient } = clientProducts?.data || {};
-  // const { docs } = allProductsClient || {};
-  console.log("allProductsClient", allProductsClient);
+  // console.log("allProductsClient", allProductsClient);
 
-  console.log("searchedProduct", searchedProduct);
+  // console.log("searchedProduct", searchedProduct);
 
   // FILTER PRODUCTS BY SEARCH
   useEffect(() => {
-    setSearchedProduct(allProductsClient);
+    if (authUser?.data.isSeller === true) {
+      setSearchedProduct(allProductsSeller);
+      const filteredProductsSeller = allProductsSeller?.filter((item) =>
+        item.name.toLowerCase().includes(searchValue)
+      );
 
-    const filteredProducts = allProductsClient?.filter((item) =>
-      item.name.toLowerCase().includes(searchValue)
-    );
+      setSearchedProduct(filteredProductsSeller);
+    } else if (
+      authUser?.data.isSeller === false ||
+      (!authUser && authUser === undefined)
+    ) {
+      setSearchedProduct(allProductsClient);
+      const filteredProductsClient = allProductsClient?.filter((item) =>
+        item.name.toLowerCase().includes(searchValue)
+      );
 
-    setSearchedProduct(filteredProducts);
-  }, [allProductsClient, searchValue]);
+      setSearchedProduct(filteredProductsClient);
+    }
+  }, [allProductsClient, allProductsSeller, searchValue]);
 
   // FETCH PRODUCTS BASED ON THE SELECTED CATEGORY
   useEffect(() => {
