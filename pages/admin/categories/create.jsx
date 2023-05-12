@@ -60,7 +60,7 @@ export async function getServerSideProps(context) {
   if (!authToken) {
     return {
       redirect: {
-        destination: "/vendor/login-user",
+        destination: "/login-user",
         permanent: false,
       },
     };

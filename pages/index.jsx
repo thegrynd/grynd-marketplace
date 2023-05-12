@@ -40,6 +40,8 @@ const HomePage = (props) => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
 
+  console.log("authUser", authUser);
+
   const token = Cookies.get("authToken");
   const config = {
     headers: {
@@ -48,7 +50,7 @@ const HomePage = (props) => {
     },
   };
 
-  let url = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?`;
+  let urlClient = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/products?`;
   let urlSeller = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products?`;
 
   // FETCH ALL PRODUCTS FOR SELLER
@@ -74,7 +76,7 @@ const HomePage = (props) => {
     ) {
       setIsLoading(true);
       axios
-        .get(url)
+        .get(urlClient)
         .then(({ data }) => {
           setClientProducts(data);
         })
@@ -134,7 +136,7 @@ const HomePage = (props) => {
       default:
         setIsLoading(true);
         axios
-          .get(url)
+          .get(urlClient)
           .then(({ data }) => {
             setClientProducts(data);
           })

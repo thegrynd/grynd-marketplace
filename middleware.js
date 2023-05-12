@@ -19,10 +19,24 @@ export async function middleware(req) {
 
   const authUser = await authResponse.json();
 
-  if (!authToken) {
-    const loginUrl = new URL("/vendor/login-user", req.url);
+  if (
+    (!authToken && req.nextUrl.pathname.startsWith("/admin")) ||
+    (!authToken && req.nextUrl.pathname.startsWith("/vendor"))
+  ) {
+    const loginUrl = new URL("/login-user", req.url);
     return NextResponse.redirect(loginUrl);
-  } else if (authUser.data?.role !== "admin") {
+  } else if (
+    authUser.data?.role !== "admin" &&
+    req.nextUrl.pathname.startsWith("/admin")
+  ) {
+    const homeUrl = new URL("/", req.url);
+    return NextResponse.redirect(homeUrl);
+  }
+
+  if (
+    authUser.data?.isSeller === false &&
+    req.nextUrl.pathname.startsWith("/vendor")
+  ) {
     const homeUrl = new URL("/", req.url);
     return NextResponse.redirect(homeUrl);
   }
@@ -32,6 +46,7 @@ export async function middleware(req) {
 
 // Here you can specify all the paths for which this middleware function should run
 // Supports both a single string value or an array of matchers
-export const config = {
-  matcher: ["/admin/:path*"],
-};
+
+// export const config = {
+//   matcher: ["/admin/:path*", ],
+// };

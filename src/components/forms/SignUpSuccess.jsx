@@ -133,7 +133,7 @@ const SignUpSuccess = () => {
             <Paragraph fontWeight={600} textAlign="center" marginTop="1rem">
               {getVerifiedData.data.message}
             </Paragraph>
-            <Link href="/vendor/login-user">
+            <Link href="/login-user">
               <Button
                 variant="contained"
                 sx={{

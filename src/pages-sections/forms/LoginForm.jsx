@@ -143,7 +143,7 @@ const LoginForm = () => {
           <H5>
             Don&apos;t have a Grynd account?{" "}
             <span style={{ color: "#066344" }}>
-              <Link href="../vendor/signup-user"> Create One</Link>
+              <Link href="/signup-user"> Create One</Link>
             </span>
           </H5>
         </Grid>

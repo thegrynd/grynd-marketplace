@@ -245,7 +245,7 @@ export async function getServerSideProps(context) {
   } else if (authUser.data?.role !== "admin") {
     return {
       redirect: {
-        destination: "/vendor/login-user",
+        destination: "/login-user",
         permanent: false,
       },
     };
