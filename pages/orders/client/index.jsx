@@ -83,12 +83,5 @@ const Orders = ({ orderList }) => {
     </CustomerDashboardLayout>
   );
 };
-// export const getStaticProps = async () => {
-//   const orderList = await api.getOrders();
-//   return {
-//     props: {
-//       orderList,
-//     },
-//   };
-// };
+
 export default Orders;
