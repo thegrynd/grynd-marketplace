@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import * as yup from "yup";
 import { H3 } from "components/Typography";
-import { ProductForm } from "pages-sections/admin";
+import ProductForm from "pages-sections/forms/ProductForm";
 import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import axios from "axios";
 import useSWR from "swr";

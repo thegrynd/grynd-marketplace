@@ -114,6 +114,7 @@ const ProductCard13 = (props) => {
     isPublished,
     subcategory,
   } = props;
+
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
@@ -152,7 +153,7 @@ const ProductCard13 = (props) => {
           <StyledChip color="primary" size="small" label={`${off}% off`} />
         )} */}
 
-        <Link href={`/product/seller/${id}`}>
+        <Link href={`/vendor/products/${id}`}>
           {/* <a> */}
           <LazyImage
             alt={name}
@@ -209,7 +210,6 @@ const ProductCard13 = (props) => {
       <ContentWrapper>
         <Box flex="1 1 0" minWidth="0px" mr={1}>
           <Link href={`/product/${slug}`}>
-            {/* <a> */}
             <H3
               mb={1}
               title={name}
@@ -221,7 +221,6 @@ const ProductCard13 = (props) => {
             >
               {name}
             </H3>
-            {/* </a> */}
           </Link>
 
           {!hideRating && (

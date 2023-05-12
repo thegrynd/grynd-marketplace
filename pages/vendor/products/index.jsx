@@ -10,6 +10,10 @@ import useMuiTable from "hooks/useMuiTable";
 import Scrollbar from "components/Scrollbar";
 import { ProductRow } from "pages-sections/admin";
 import api from "utils/__api__/dashboard";
+import axios from "axios";
+import useSWR from "swr";
+import Cookies from "js-cookie";
+
 // TABLE HEADING DATA LIST
 const tableHeading = [
   {
@@ -55,16 +59,29 @@ ProductList.getLayout = function getLayout(page) {
 export default function ProductList(props) {
   const { products } = props;
 
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/products`;
+
+  const fetcher = async (url) => await axios.get(url, config);
+  const { data, error } = useSWR(address, fetcher);
+
+  const { data: productData } = data?.data || {};
+  // console.log("productData", productData);
+
   // RESHAPE THE PRODUCT LIST BASED TABLE HEAD CELL ID
-  const filteredProducts = products.map((item) => ({
+  const filteredProducts = productData?.docs.map((item) => ({
     id: item.id,
     slug: item.slug,
-    name: item.title,
+    name: item.name,
     brand: item.brand,
     price: item.price,
-    image: item.thumbnail,
-    published: item.published,
-    category: item.categories[0],
+    image: item.images[0].url,
+    published: item.isPublished,
+    category: item.subcategory.name,
   }));
   const {
     order,
@@ -77,6 +94,7 @@ export default function ProductList(props) {
   } = useMuiTable({
     listData: filteredProducts,
   });
+
   return (
     <Box py={4}>
       <H3 mb={2}>Product List</H3>
@@ -118,7 +136,7 @@ export default function ProductList(props) {
         <Stack alignItems="center" my={4}>
           <TablePagination
             onChange={handleChangePage}
-            count={Math.ceil(products.length / rowsPerPage)}
+            count={Math.ceil(productData?.docs.length / rowsPerPage)}
           />
         </Stack>
       </Card>

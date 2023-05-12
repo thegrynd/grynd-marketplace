@@ -39,7 +39,7 @@ const SignUpForm = () => {
         if (response.data.status === true) {
           Cookies.set("VerificationToken", response.data.verificationKey);
           Cookies.set("SignUpToken", response.data.token);
-          router.push("/vendor/signup-success");
+          router.push("/signup-success");
         }
       })
       .catch((err) => {
@@ -306,7 +306,7 @@ const SignUpForm = () => {
           <H5>
             Already have a Grynd account?{" "}
             <span style={{ color: "#066344" }}>
-              <Link href="../vendor/login-user"> Log in</Link>
+              <Link href="./login-user"> Log in</Link>
             </span>
           </H5>
         </Grid>
