@@ -20,7 +20,7 @@ export default function AuthUserList({
   const router = useRouter();
   const [getAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  //   console.log("AuthUser", authUser);
+  // console.log("AuthUser", authUser);
 
   const handleLogout = () => {
     setAnchorEl(null);
@@ -31,7 +31,12 @@ export default function AuthUserList({
 
   const handleAdminRoute = () => {
     setAnchorEl(null);
-    router.push("/admin/categories");
+    router.push("/admin/dashboard");
+  };
+
+  const handleSellerRoute = () => {
+    setAnchorEl(null);
+    router.push("/vendor/products");
   };
 
   const handleProfileRoute = () => {
@@ -40,6 +45,8 @@ export default function AuthUserList({
   };
 
   const isUser = authUser?.data.role === "user" || undefined || !authUser;
+  const isSeller = authUser?.data.isSeller === false || !authUser;
+
   return (
     <div>
       <Menu
@@ -62,6 +69,12 @@ export default function AuthUserList({
             <MdDashboardCustomize />
           </IconContext.Provider>{" "}
           &nbsp; <H5 fontWeight={400}> Admin Dashboard</H5>
+        </MenuItem>
+        <MenuItem onClick={handleSellerRoute} disabled={isSeller}>
+          <IconContext.Provider value={{ color: "#B28A3D", size: "1.25rem" }}>
+            <MdDashboardCustomize />
+          </IconContext.Provider>{" "}
+          &nbsp; <H5 fontWeight={400}> Seller Dashboard</H5>
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <IconContext.Provider value={{ color: "#B28A3D", size: "1.25rem" }}>

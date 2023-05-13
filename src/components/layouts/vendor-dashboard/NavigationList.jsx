@@ -59,10 +59,10 @@ export const navigations = [
         name: "Order List",
         path: "/admin/orders",
       },
-      {
-        name: "Order Details",
-        path: "/admin/orders/f0ba538b-c8f3-45ce-b6c1-209cf07ba5f8",
-      },
+      // {
+      //   name: "Order Details",
+      //   path: "/admin/orders/f0ba538b-c8f3-45ce-b6c1-209cf07ba5f8",
+      // },
     ],
   },
   // {
@@ -194,7 +194,7 @@ export const navigations = [
     children: [
       {
         name: "Orders",
-        path: "/orders/client",
+        path: "/vendor/orders",
       },
       // {
       //   name: "Order Details",

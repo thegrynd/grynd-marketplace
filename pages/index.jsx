@@ -34,6 +34,9 @@ const HomePage = (props) => {
   // state to contain searched products
   const [searchedProduct, setSearchedProduct] = useState([]);
 
+  // state to contain main data for paginating
+  const [mainData, setMainData] = useState([]);
+
   // state to receive search terms
   const [searchValue, setSearchValue] = useState("");
 
@@ -165,6 +168,7 @@ const HomePage = (props) => {
       );
 
       setSearchedProduct(filteredProductsSeller);
+      setMainData(sellerProducts);
     } else if (
       authUser?.data.isSeller === false ||
       (!authUser && authUser === undefined)
@@ -175,6 +179,7 @@ const HomePage = (props) => {
       );
 
       setSearchedProduct(filteredProductsClient);
+      setMainData(clientProducts);
     }
   }, [allProductsClient, allProductsSeller, searchValue]);
 
@@ -245,6 +250,7 @@ const HomePage = (props) => {
                     {/* POPULAR PRODUCTS AREA */}
                     <AllProducts
                       products={searchedProduct}
+                      mainData={mainData}
                       setSearchedProduct={setSearchedProduct}
                       title=""
                     />
