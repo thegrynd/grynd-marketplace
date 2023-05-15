@@ -8,30 +8,41 @@ import { FlexBox } from "components/flex-box";
 import OrderRow from "pages-sections/orders/OrderRow";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
+import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import { AuthSellerOrderContext } from "contexts/AuthSellerOrderContext";
+import { LoginContext } from "contexts/LoginContext";
 
 // ====================================================
 
 // ====================================================
 
-const Orders = ({ orderList }) => {
+SellerOrders.getLayout = function getLayout(page) {
+  return <VendorDashboardLayout>{page}</VendorDashboardLayout>;
+};
+
+export default function SellerOrders({ orderList }) {
   const [authSellerOrderData, pageIndex, setPageIndex] = useContext(
     AuthSellerOrderContext
   );
 
-  // console.log("authSellerOrderData", authSellerOrderData);
-  console.log("pageIndex", pageIndex);
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+
+  console.log("authUser1", authUser);
 
   const handleChange = (event, value) => {
     setPageIndex(value);
   };
 
   return (
-    <CustomerDashboardLayout>
+    <>
+      {/* <CustomerDashboardLayout> */}
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
-        title="My Orders"
+        title={`Orders For ${authUser?.data.firstname ?? "Loading..."} ${
+          authUser?.data.surname ?? ""
+        }`}
         icon={ShoppingBag}
         navigation={<CustomerDashboardNavigation />}
       />
@@ -80,7 +91,7 @@ const Orders = ({ orderList }) => {
         <OrderRow order={order} key={order.id} />
       ))}
 
-      <FlexBox justifyContent="center" mt={5}>
+      <FlexBox justifyContent="center" mt={5} mb={5}>
         <Stack spacing={2}>
           <Pagination
             count={authSellerOrderData?.totalPages ?? 5}
@@ -92,8 +103,9 @@ const Orders = ({ orderList }) => {
           />
         </Stack>
       </FlexBox>
-    </CustomerDashboardLayout>
+      {/* </CustomerDashboardLayout> */}
+    </>
   );
-};
+}
 
-export default Orders;
+// export default SellerOrders;

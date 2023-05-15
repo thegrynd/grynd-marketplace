@@ -24,8 +24,6 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 const AllProducts = ({ products, mainData, title = "All Products" }) => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  console.log("mainData", mainData);
-
   const handlePageChange = (event, value) => {
     setPageIndex(value);
   };

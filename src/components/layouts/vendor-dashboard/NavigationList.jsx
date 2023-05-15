@@ -193,7 +193,7 @@ export const navigations = [
     icon: duotone.Order,
     children: [
       {
-        name: "Orders",
+        name: "Your Orders",
         path: "/vendor/orders",
       },
       // {

@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
-import { Done, ShoppingBag } from "@mui/icons-material";
 import { GiShoppingBag } from "react-icons/gi";
 import { IoCube } from "react-icons/io5";
 import { FaShuttleVan } from "react-icons/fa";
@@ -51,7 +50,7 @@ const StyledFlexbox = styled(FlexBetween)(({ theme }) => ({
 }));
 // =============================================================
 
-const OrderDetails = ({ order }) => {
+const OrderDetails = () => {
   const router = useRouter();
   const width = useWindowSize();
   const orderStatus = "Shipping";
@@ -69,7 +68,7 @@ const OrderDetails = ({ order }) => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/client/orders/${router.query.id}`;
+  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v2/orders/products/${router.query.id}`;
 
   const fetcher = async (url) => await axios.get(url, config);
   const { data, error } = useSWR(address, fetcher);
@@ -81,6 +80,7 @@ const OrderDetails = ({ order }) => {
   const HEADER_BUTTON = (
     <Button
       color="primary"
+      onClick={() => router.push(`/vendor/orders`)}
       sx={{
         bgcolor: "#066344",
         color: "#FFFFFF",
@@ -91,7 +91,7 @@ const OrderDetails = ({ order }) => {
         },
       }}
     >
-      Order Again
+      View All Orders
     </Button>
   );
 
@@ -170,24 +170,6 @@ const OrderDetails = ({ order }) => {
             </Fragment>
           ))}
         </StyledFlexbox>
-
-        <FlexBox justifyContent={width < breakpoint ? "center" : "flex-end"}>
-          <Typography
-            p="0.5rem 1rem"
-            textAlign="center"
-            borderRadius="300px"
-            color="#066344"
-            bgcolor="#d0b88a"
-          >
-            Estimated Delivery Date{" "}
-            <b>
-              {format(
-                new Date(singleOrderData?.estimatedDeliveryDate ?? null),
-                "dd MMM, yyyy"
-              )}
-            </b>
-          </Typography>
-        </FlexBox>
       </Card>
 
       {/* ORDERED PRODUCT LIST */}
@@ -253,53 +235,6 @@ const OrderDetails = ({ order }) => {
             </Typography>
           </FlexBox>
         </TableRow>
-
-        <Box py={1}>
-          {singleOrderData?.orderItems.map((item, ind) => (
-            <FlexBox
-              px={2}
-              py={1}
-              flexWrap="wrap"
-              alignItems="center"
-              key={item.id}
-            >
-              <FlexBox flex="2 2 260px" m={0.75} alignItems="center">
-                <Avatar
-                  src={item.product.images[0]?.url}
-                  sx={{
-                    height: 64,
-                    width: 64,
-                  }}
-                />
-                <Box ml={2.5}>
-                  <H6 my="0px" color="#066344">
-                    {item.product.name}
-                  </H6>
-
-                  <Typography fontSize="14px" color="grey.600">
-                    {currency(item.price)} x {item.quantity}
-                  </Typography>
-                </Box>
-              </FlexBox>
-
-              <FlexBox flex="1 1 260px" m={0.75} alignItems="center">
-                <Typography fontSize="14px" color="grey.600">
-                  Description
-                </Typography>
-              </FlexBox>
-
-              <FlexBox flex="160px" m={0.75} alignItems="center">
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{ color: "#CC5500" }}
-                >
-                  <Typography fontSize="14px">Write a Review</Typography>
-                </Button>
-              </FlexBox>
-            </FlexBox>
-          ))}
-        </Box>
       </Card>
 
       {/* SHIPPING AND ORDER SUMMERY */}
@@ -311,43 +246,44 @@ const OrderDetails = ({ order }) => {
             }}
           >
             <H4 mt={0} mb={2} color="#066344">
-              Shipping Address
+              Buyer Details
             </H4>
 
             <FlexBetween mb={1}>
               <Typography fontSize={14} color="grey.600">
                 {" "}
-                Address: {""}
+                Quantity: {""}
               </Typography>
               <H6 my="0px" color="#B28A3D">
-                {singleOrderData?.shippingAddress.address}
+                {currency(singleOrderData?.price) ?? "Loading..."} x{" "}
+                {singleOrderData?.quantity}
               </H6>
             </FlexBetween>
             <FlexBetween mb={1}>
               <Typography fontSize={14} color="grey.600">
                 {" "}
-                City: {""}
+                Buyer Name: {""}
               </Typography>
               <H6 my="0px" color="#B28A3D">
-                {singleOrderData?.shippingAddress.city}
+                {singleOrderData?.user.fullname ?? "Loading..."}
               </H6>
             </FlexBetween>
             <FlexBetween mb={1}>
               <Typography fontSize={14} color="grey.600">
                 {" "}
-                Country: {""}
+                Buyer Contact: {""}
               </Typography>
               <H6 my="0px" color="#B28A3D">
-                {singleOrderData?.shippingAddress.country}
+                +{singleOrderData?.user.phone ?? "Loading..."}
               </H6>
             </FlexBetween>
             <FlexBetween mb={1}>
               <Typography fontSize={14} color="grey.600">
                 {" "}
-                Zip Code: {""}
+                Buyer Country: {""}
               </Typography>
               <H6 my="0px" color="#B28A3D">
-                {singleOrderData?.shippingAddress.zipCode}
+                {singleOrderData?.user.country ?? "Loading..."}
               </H6>
             </FlexBetween>
           </Card>
@@ -360,80 +296,64 @@ const OrderDetails = ({ order }) => {
             }}
           >
             <H4 mt={0} mb={2} color="#066344">
-              Total Summary
+              Order Details
             </H4>
-
-            <FlexBetween mb={1}>
-              <Typography fontSize={14} color="grey.600">
-                Subtotal:
-              </Typography>
-
-              <H6 my="0px">
-                {/* {currency(order.totalPrice)} */}
-                {singleOrderData?.totalPrice}
-              </H6>
-            </FlexBetween>
-
-            <FlexBetween mb={1}>
-              <Typography fontSize={14} color="grey.600">
-                Shipping fee:
-              </Typography>
-
-              <H6 my="0px">
-                <em>{currency(singleOrderData?.shippingPrice)}</em>
-              </H6>
-            </FlexBetween>
-
-            <FlexBetween mb={1}>
-              <Typography fontSize={14} color="grey.600">
-                Discount:
-              </Typography>
-
-              <H6 my="0px">
-                <em> {currency(singleOrderData?.discount)}</em>
-              </H6>
-            </FlexBetween>
-
             <Divider
               sx={{
                 mb: 1,
               }}
             />
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Item(s): {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.product.name ?? "Loading..."}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Order Total Price: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {currency(singleOrderData?.order.totalPrice ?? "Loading...")}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Count in Stock: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.product.countInStock ?? "Loading..."}
+              </H6>
+            </FlexBetween>
+            <FlexBetween mb={1}>
+              <Typography fontSize={14} color="grey.600">
+                {" "}
+                Rating: {""}
+              </Typography>
+              <H6 my="0px" color="#B28A3D">
+                {singleOrderData?.product.rating ?? "Loading..."}
+              </H6>
+            </FlexBetween>
 
             <FlexBetween mb={2}>
               <H3 my="0px" color="#066344">
-                Total:
+                Price:
               </H3>
               <H3 my="0px" color="#066344">
                 {" "}
                 <em> {currency(singleOrderData?.totalPrice)}</em>
               </H3>
             </FlexBetween>
-
-            <Typography fontSize={14}>Paid by Credit/Debit Card</Typography>
           </Card>
         </Grid>
       </Grid>
     </CustomerDashboardLayout>
   );
 };
-// export const getStaticPaths = async () => {
-//   const paths = await api.getIds();
-//   return {
-//     paths: paths,
-//     //indicates that no page needs be created at build time
-//     fallback: "blocking" //indicates the type of fallback
-//   };
-// };
 
-// export const getStaticProps = async ({
-//   params
-// }) => {
-//   const order = await api.getOrder(String(params.id));
-//   return {
-//     props: {
-//       order
-//     }
-//   };
-// };
 export default OrderDetails;

@@ -13,13 +13,11 @@ import AllProducts from "pages-sections/grocery1/AllProducts";
 import DiscountSection from "pages-sections/grocery1/DiscountSection";
 import ProductCarousel from "pages-sections/grocery1/ProductCarousel";
 import { MobileNavigationBar2 } from "components/mobile-navigation";
-import api from "utils/__api__/grocery1-shop";
 import Header from "../src/pages-sections/landing/Header";
 import Store from "../src/contexts/Store";
 import Footer from "../src/pages-sections/landing/Footer";
 import { LoginContext } from "contexts/LoginContext";
 import Cookies from "js-cookie";
-import { parseCookies } from "../helpers/validation";
 
 const HomePage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -43,8 +41,6 @@ const HomePage = (props) => {
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
 
-  console.log("authUser", authUser);
-
   const token = Cookies.get("authToken");
   const config = {
     headers: {
@@ -64,7 +60,6 @@ const HomePage = (props) => {
         .get(urlSeller, config)
         .then(({ data }) => {
           setSellerProducts(data);
-          // console.log("sellerProducts", sellerProducts);
         })
         .catch((err) => err)
         .finally(() => setIsLoading(false));
@@ -155,9 +150,6 @@ const HomePage = (props) => {
 
   // client data
   const { docs: allProductsClient } = clientProducts?.data || {};
-  // console.log("allProductsClient", allProductsClient);
-
-  // console.log("searchedProduct", searchedProduct);
 
   // FILTER PRODUCTS BY SEARCH
   useEffect(() => {
@@ -192,7 +184,6 @@ const HomePage = (props) => {
         },
       })
       .then(({ data }) => {
-        // console.log("data", data);
         setCategoryProducts(data);
       });
   }, [selectedCategory]);
@@ -265,7 +256,7 @@ const HomePage = (props) => {
                 )}
 
                 {/* DISCOUNT BANNER AREA */}
-                <DiscountSection />
+                {/* <DiscountSection /> */}
 
                 {/* FOOTER AREA */}
                 <Footer />
@@ -306,7 +297,7 @@ const HomePage = (props) => {
                 )}
 
                 {/* DISCOUNT BANNER AREA */}
-                <DiscountSection />
+                {/* <DiscountSection /> */}
 
                 {/* FOOTER AREA */}
                 <Footer />
@@ -345,7 +336,7 @@ const HomePage = (props) => {
                 )}
 
                 {/* DISCOUNT BANNER AREA */}
-                <DiscountSection />
+                {/* <DiscountSection /> */}
 
                 {/* FOOTER AREA */}
                 <Footer />
