@@ -17,6 +17,7 @@ import "../src/__server__";
 import "../styles.css";
 import Store from "../src/contexts/Store";
 import AuthUserOrderProvider from "../src/contexts/AuthUserOrderContext";
+import AuthUSellerOrderProvider from "../src/contexts/AuthSellerOrderContext";
 
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
@@ -46,18 +47,20 @@ const App = ({ Component, pageProps }) => {
 
       <SettingsProvider>
         <AppProvider>
-          <AuthUserOrderProvider>
-            <MuiTheme>
-              <SnackbarProvider>
-                <Store>
-                  <RTL>
-                    {getLayout(<AnyComponent {...pageProps} />)}
-                    <Analytics />
-                  </RTL>
-                </Store>
-              </SnackbarProvider>
-            </MuiTheme>
-          </AuthUserOrderProvider>
+          <AuthUSellerOrderProvider>
+            <AuthUserOrderProvider>
+              <MuiTheme>
+                <SnackbarProvider>
+                  <Store>
+                    <RTL>
+                      {getLayout(<AnyComponent {...pageProps} />)}
+                      <Analytics />
+                    </RTL>
+                  </Store>
+                </SnackbarProvider>
+              </MuiTheme>
+            </AuthUserOrderProvider>
+          </AuthUSellerOrderProvider>
         </AppProvider>
       </SettingsProvider>
     </Fragment>

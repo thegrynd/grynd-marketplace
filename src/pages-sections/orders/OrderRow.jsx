@@ -23,7 +23,7 @@ const OrderRow = ({ order }) => {
     }
   };
   return (
-    <Link href={`/orders/${order.id}`} passHref>
+    <Link href={`/vendor/orders/${order.id}`} passHref>
       {/* <a> */}
       <TableRow
         sx={{

@@ -1,5 +1,6 @@
-import { useContext } from "react";
-import { Pagination } from "@mui/material";
+import { useContext, useState } from "react";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { ShoppingBag } from "@mui/icons-material";
 import TableRow from "components/TableRow";
 import { H5 } from "components/Typography";
@@ -7,23 +8,41 @@ import { FlexBox } from "components/flex-box";
 import OrderRow from "pages-sections/orders/OrderRow";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
+import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
-import api from "utils/__api__/orders";
-import { AuthUserOrderContext } from "contexts/AuthUserOrderContext";
+import { AuthSellerOrderContext } from "contexts/AuthSellerOrderContext";
+import { LoginContext } from "contexts/LoginContext";
 
 // ====================================================
 
 // ====================================================
 
-const Orders = ({ orderList }) => {
-  const [authUserOrderData] = useContext(AuthUserOrderContext);
-  console.log("authUserOrderData", authUserOrderData);
+SellerOrders.getLayout = function getLayout(page) {
+  return <VendorDashboardLayout>{page}</VendorDashboardLayout>;
+};
+
+export default function SellerOrders({ orderList }) {
+  const [authSellerOrderData, pageIndex, setPageIndex] = useContext(
+    AuthSellerOrderContext
+  );
+
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+
+  console.log("authUser1", authUser);
+
+  const handleChange = (event, value) => {
+    setPageIndex(value);
+  };
 
   return (
-    <CustomerDashboardLayout>
+    <>
+      {/* <CustomerDashboardLayout> */}
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
-        title="My Orders"
+        title={`Orders For ${authUser?.data.firstname ?? "Loading..."} ${
+          authUser?.data.surname ?? ""
+        }`}
         icon={ShoppingBag}
         navigation={<CustomerDashboardNavigation />}
       />
@@ -68,27 +87,25 @@ const Orders = ({ orderList }) => {
         />
       </TableRow>
 
-      {authUserOrderData?.docs.map((order) => (
+      {authSellerOrderData?.docs.map((order) => (
         <OrderRow order={order} key={order.id} />
       ))}
 
-      <FlexBox justifyContent="center" mt={5}>
-        <Pagination
-          count={5}
-          color="primary"
-          variant="outlined"
-          onChange={(data) => console.log(data)}
-        />
+      <FlexBox justifyContent="center" mt={5} mb={5}>
+        <Stack spacing={2}>
+          <Pagination
+            count={authSellerOrderData?.totalPages ?? 5}
+            page={pageIndex}
+            onChange={handleChange}
+            color="secondary"
+            variant="outlined"
+            shape="rounded"
+          />
+        </Stack>
       </FlexBox>
-    </CustomerDashboardLayout>
+      {/* </CustomerDashboardLayout> */}
+    </>
   );
-};
-export const getStaticProps = async () => {
-  const orderList = await api.getOrders();
-  return {
-    props: {
-      orderList,
-    },
-  };
-};
-export default Orders;
+}
+
+// export default SellerOrders;

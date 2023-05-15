@@ -75,7 +75,7 @@ const OrderConfirmation = () => {
             Here is your{" "}
             <Span color="red">
               <Link
-                href={`/orders/${paymentData?._id}`}
+                href={`/client/orders/${paymentData?._id}`}
                 style={{ cursor: "pointer", color: "red" }}
               >
                 {data === undefined ? (

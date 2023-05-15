@@ -32,7 +32,7 @@ const Checkout = () => {
 
   useEffect(() => {
     // Prefetch the order page
-    router.prefetch("/orders");
+    router.prefetch("/client/orders");
   }, [router]);
 
   const { data: authUser } = getAuthUser || {};
@@ -106,7 +106,7 @@ const Checkout = () => {
                 },
                 margin: "auto",
               }}
-              onClick={() => router.push(`/orders`)}
+              onClick={() => router.push(`/client/orders`)}
             >
               Confirm Last Payment Details
             </Button>

@@ -7,6 +7,7 @@ import Scrollbar from "components/Scrollbar";
 import { FlexBetween } from "components/flex-box";
 import { navigations } from "./NavigationList";
 import SidebarAccordion from "./SidebarAccordion";
+import Link from "next/link";
 import {
   ListLabel,
   BadgeValue,
@@ -19,6 +20,7 @@ import {
   ChevronLeftIcon,
   ListIconWrapper,
 } from "./LayoutStyledComponents";
+
 const TOP_HEADER_AREA = 70;
 
 // -----------------------------------------------------------------------------
@@ -164,18 +166,20 @@ const DashboardSidebar = (props) => {
         maxHeight={TOP_HEADER_AREA}
         justifyContent={COMPACT ? "center" : "space-between"}
       >
-        <Avatar
-          src={
-            COMPACT
-              ? "/assets/images/gryndicon.svg"
-              : "/assets/images/gryndlogo.svg"
-          }
-          sx={{
-            borderRadius: 0,
-            width: "auto",
-            marginLeft: COMPACT ? 0 : 1,
-          }}
-        />
+        <Link href="/">
+          <Avatar
+            src={
+              COMPACT
+                ? "/assets/images/gryndicon.svg"
+                : "/assets/images/gryndlogo.svg"
+            }
+            sx={{
+              borderRadius: 0,
+              width: "auto",
+              marginLeft: COMPACT ? 0 : 1,
+            }}
+          />
+        </Link>
 
         <ChevronLeftIcon
           color="disabled"

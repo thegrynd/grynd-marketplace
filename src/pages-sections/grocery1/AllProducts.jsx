@@ -1,12 +1,14 @@
-import { useContext } from "react";
+import { useState } from "react";
 import { Button, Grid, styled } from "@mui/material";
 import { Paragraph } from "components/Typography";
-import { FlexRowCenter } from "components/flex-box";
+import { FlexBox } from "components/flex-box";
 import ProductCard13 from "components/product-cards/ProductCard13";
 import CategorySectionCreator from "components/CategorySectionCreator";
 import Link from "next/link";
 import { LoginContext } from "contexts/LoginContext";
 import PaginationRounded from "components/pagination/PaginationRounded";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const SubTitle = styled(Paragraph)(({ theme }) => ({
   fontSize: 12,
@@ -19,10 +21,12 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 
 // ========================================================
 
-const AllProducts = ({ products, title = "All Products" }) => {
-  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
-  const { data: authUser } = getAuthUser || {};
-  // const { docs } = products || {};
+const AllProducts = ({ products, mainData, title = "All Products" }) => {
+  const [pageIndex, setPageIndex] = useState(0);
+
+  const handlePageChange = (event, value) => {
+    setPageIndex(value);
+  };
   return (
     <CategorySectionCreator title={title}>
       <SubTitle>Browse through quality agro products for you</SubTitle>
@@ -46,29 +50,18 @@ const AllProducts = ({ products, title = "All Products" }) => {
           </Grid>
         ))}
       </Grid>
-
-      {/* {authUser?.success === true && (
-        <FlexRowCenter mt={6}>
-          <Link href="../vendor/upload-product" passHref legacyBehavior>
-            <a target="_blank">
-              <Button
-                color="primary"
-                variant="contained"
-                sx={{
-                  mx: "auto",
-                  mt: "2.25rem",
-                  display: "block",
-                  minWidth: "125px",
-                  backgroundColor: "#066344",
-                }}
-              >
-                Upload Your Product
-              </Button>
-            </a>
-          </Link>
-        </FlexRowCenter>
-      )} */}
-      <PaginationRounded />
+      <FlexBox justifyContent="center" mt={5}>
+        <Stack spacing={2}>
+          <Pagination
+            count={mainData?.data?.totalPages ?? 5}
+            page={pageIndex}
+            onChange={handlePageChange}
+            color="secondary"
+            variant="outlined"
+            shape="rounded"
+          />
+        </Stack>
+      </FlexBox>
     </CategorySectionCreator>
   );
 };
