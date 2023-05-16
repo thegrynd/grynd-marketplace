@@ -220,7 +220,7 @@ const HomePage = (props) => {
           navFixedComponentID="grocery1Services"
           SideNav={SideNav}
         >
-          {authUser?.data.isSeller === true ? (
+          {authUser?.data.isSeller === true && (
             <>
               <SearchProduct
                 searchValue={searchValue}
@@ -262,7 +262,8 @@ const HomePage = (props) => {
                 <Footer />
               </Stack>
             </>
-          ) : authUser?.data.isSeller === false ? (
+          )}
+          {authUser?.data.isSeller === false && (
             <>
               <SearchProduct
                 searchValue={searchValue}
@@ -284,6 +285,7 @@ const HomePage = (props) => {
                     <AllProducts
                       products={searchedProduct}
                       setSearchedProduct={setSearchedProduct}
+                      mainData={mainData}
                       title=""
                     />
 
@@ -303,7 +305,8 @@ const HomePage = (props) => {
                 <Footer />
               </Stack>
             </>
-          ) : !authUser ? (
+          )}
+          {!authUser && (
             <>
               <SearchProduct
                 searchValue={searchValue}
@@ -324,7 +327,11 @@ const HomePage = (props) => {
                 ) : (
                   <Fragment>
                     {/* POPULAR PRODUCTS AREA */}
-                    <AllProducts products={searchedProduct} title="" />
+                    <AllProducts
+                      products={searchedProduct}
+                      mainData={mainData}
+                      title=""
+                    />
 
                     {/* <Store>
                   <ProductCarousel
@@ -342,7 +349,7 @@ const HomePage = (props) => {
                 <Footer />
               </Stack>
             </>
-          ) : null}
+          )}
         </SidenavContainer>
 
         {/* POPUP NEWSLETTER FORM */}

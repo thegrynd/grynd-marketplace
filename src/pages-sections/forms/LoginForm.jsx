@@ -26,7 +26,7 @@ const LoginForm = () => {
       .then((response) => {
         // console.log("response", response);
         if (response) {
-          Cookies.set("authToken", response.data.token);
+          Cookies.set("authToken", response.data.token, { expires: 3 });
           router.push("/");
         }
       })
