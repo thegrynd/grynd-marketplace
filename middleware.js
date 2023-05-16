@@ -14,7 +14,6 @@ export async function middleware(req) {
     credentials: "include",
   };
 
-  // const authResponse = await axios.get(`${url}/api/v1/auth/me`, config);
   const authResponse = await fetch(`${url}/api/v1/auth/me`, headerConfig);
 
   const authUser = await authResponse.json();

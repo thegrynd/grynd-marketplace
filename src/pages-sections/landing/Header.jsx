@@ -284,6 +284,12 @@ const Header = () => {
                                 ? authUser.data.avatar.url
                                 : ""
                             }
+                            sx={{
+                              border: "2px dotted #066344",
+                              ":hover": {
+                                border: "2px dotted #B28A3D",
+                              },
+                            }}
                           />
                         </Button>
                       }

@@ -7,27 +7,39 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import TableRow from "components/TableRow";
-import { H3 } from "../../src/components/Typography";
-import { Small } from "../../src/components/Typography";
+import { H3, Small } from "../../src/components/Typography";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import { currency } from "lib";
-import api from "utils/__api__/users";
+import useSWR from "swr";
+import axios from "axios";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { parseCookies } from "../../helpers/validation";
 
 // ============================================================
 
-const Profile = ({ authUser }) => {
+const Profile = () => {
   const downMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
-  const { data: user } = authUser || {};
-  console.log("user", user);
+
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`;
+
+  const fetcher = async (url) => await axios.get(url, config);
+  const { data, error } = useSWR(address, fetcher);
+
+  const { data: userData } = data?.data || {};
+  console.log("userData", userData);
 
   // SECTION TITLE HEADER LINK
   const HEADER_LINK = (
-    <Link href={`/profile/${authUser ? user.id : null}`} passHref>
+    <Link href={`/profile/${userData ? userData?.id : null}`} passHref>
       <Button
         color="primary"
         sx={{
@@ -67,11 +79,11 @@ const Profile = ({ authUser }) => {
       <UserDashboardHeader
         // icon={Person}
         title={
-          user?.role === "admin" && user?.isSeller === false
+          userData?.role === "admin" && userData?.isSeller === false
             ? "Admin"
-            : user?.isSeller === true
+            : userData?.isSeller === true
             ? "Seller"
-            : user?.isSeller === false
+            : userData?.isSeller === false
             ? "User"
             : null
         }
@@ -123,8 +135,8 @@ const Profile = ({ authUser }) => {
                 <FlexBetween flexWrap="wrap" flexDirection="column">
                   <div>
                     <H3 my="0px" color="primary.main">{`${
-                      authUser ? user.firstname : ""
-                    } ${authUser ? user.surname : ""}`}</H3>
+                      userData ? userData?.firstname : ""
+                    } ${userData ? userData?.surname : ""}`}</H3>
                     <FlexBox alignItems="center">
                       <Typography color="black.900">Balance:</Typography>
                       <Typography ml={0.5} color="primary.main">
@@ -137,7 +149,7 @@ const Profile = ({ authUser }) => {
                     <FlexBox alignItems="center">
                       <Typography color="grey.600" ml={0.5}>
                         {" "}
-                        {authUser ? user.country : ""}
+                        {userData ? userData?.country : ""}
                       </Typography>
                     </FlexBox>
                   </FlexBox>
@@ -193,13 +205,22 @@ const Profile = ({ authUser }) => {
       >
         <TableRowItem
           title="First Name"
-          value={authUser ? user.firstname : ""}
+          value={userData ? userData?.firstname : ""}
         />
-        <TableRowItem title="Last Name" value={authUser ? user.surname : ""} />
-        <TableRowItem title="Username" value={authUser ? user.username : ""} />
-        <TableRowItem title="Email" value={authUser ? user.email : ""} />
-        <TableRowItem title="Phone" value={authUser ? user.phone : ""} />
-        <TableRowItem title="Country" value={authUser ? user.country : ""} />
+        <TableRowItem
+          title="Last Name"
+          value={userData ? userData.surname : ""}
+        />
+        <TableRowItem
+          title="Username"
+          value={userData ? userData.username : ""}
+        />
+        <TableRowItem title="Email" value={userData ? userData.email : ""} />
+        <TableRowItem title="Phone" value={userData ? userData.phone : ""} />
+        <TableRowItem
+          title="Country"
+          value={userData ? userData.country : ""}
+        />
       </TableRow>
     </CustomerDashboardLayout>
   );
@@ -216,59 +237,4 @@ const TableRowItem = ({ title, value }) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const { authToken } = parseCookies(context.req);
-  // const { origin } = absoluteUrl(context.req);
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`,
-    {
-      method: "GET",
-
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `token=${authToken}`,
-      },
-      credentials: "include",
-    }
-  );
-
-  const authUser = await response.json();
-
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  } else if (authUser.data?.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/login-user",
-        permanent: false,
-      },
-    };
-  }
-
-  if (authUser?.success === false) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: { authUser },
-  };
-}
 export default Profile;
-
-// export const getStaticProps = async () => {
-//   const user = await api.getUser();
-
-//   return {
-//     props: {
-//       user,
-//     },
-//   };
-// };

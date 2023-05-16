@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
+import useSWR, { preload } from "swr";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { ThreeCircles } from "react-loader-spinner";
@@ -24,20 +25,36 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { parseCookies } from "../../helpers/validation";
+
 // ===========================================================
 
-const ProfileEditor = ({ authUser }) => {
+const ProfileEditor = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const [coords, setCoords] = useState();
-  const { data: user } = authUser || {};
-  console.log("user", user);
+
+  const token = Cookies.get("authToken");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const address = `${process.env.NEXT_PUBLIC_GRYND_URL}/api/v1/auth/me`;
+
+  const fetcher = async (url) => await axios.get(url, config);
+  const { data, error } = useSWR(address, fetcher);
+
+  const { data: userData } = data?.data || {};
+  console.log("userData", userData);
 
   useEffect(() => {
     getLocation();
   }, [coords]);
+
+  // preload in effects
+  useEffect(() => {
+    preload(address, fetcher);
+  }, []);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -50,7 +67,6 @@ const ProfileEditor = ({ authUser }) => {
           setCoords(
             `${position.coords.latitude}, ${position.coords.longitude}`
           );
-          console.log("coords", coords);
         },
         () => {
           console.log("Unable to retrieve your location");
@@ -99,23 +115,15 @@ const ProfileEditor = ({ authUser }) => {
     </Link>
   );
 
-  // const INITIAL_VALUES = {
-  //   email: user.email || "",
-  //   contact: user.phone || "",
-  //   last_name: user.name.lastName || "",
-  //   first_name: user.name.firstName || "",
-  //   birth_date: user.dateOfBirth || new Date()
-  // };
-
   const formik = useFormik({
     initialValues: {
-      name: user.sellerAccount.storeName || "",
-      description: user.sellerAccount.description,
-      accountType: user.sellerAccount.accountType,
+      name: userData?.sellerAccount.storeName || "",
+      description: userData?.sellerAccount.description,
+      accountType: userData?.sellerAccount.accountType,
       location: {
-        address: user.sellerAccount.location.address,
-        city: user.sellerAccount.location.city,
-        country: user.sellerAccount.location.country,
+        address: userData?.sellerAccount.location.address,
+        city: userData?.sellerAccount.location.city,
+        country: userData?.sellerAccount.location.country,
         coordinates: "",
       },
       socialHandles: {
@@ -124,8 +132,8 @@ const ProfileEditor = ({ authUser }) => {
         youtube: "https://youtube.com",
         twitter: "https://twitter.com",
       },
-      email: user.email,
-      phone: user.phone,
+      email: userData?.email,
+      phone: userData?.phone,
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -509,134 +517,4 @@ const ProfileEditor = ({ authUser }) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const { authToken } = parseCookies(context.req);
-
-  const url = "https://grynd-staging.vercel.app";
-
-  const response = await axios.get(`${url}/api/v1/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  const authUser = response.data;
-  if (!authToken) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { authUser },
-  };
-}
 export default ProfileEditor;
-
-{
-  /* <Formik
-onSubmit={handleFormSubmit}
-initialValues={INITIAL_VALUES}
-validationSchema={checkoutSchema}
->
-{({
-  values,
-  errors,
-  touched,
-  handleChange,
-  handleBlur,
-  handleSubmit,
-  setFieldValue,
-}) => (
-  <form onSubmit={handleSubmit}>
-    <Box mb={4}>
-      <Grid container spacing={3}>
-        <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            name="first_name"
-            label="First Name"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.first_name}
-            error={!!touched.first_name && !!errors.first_name}
-            helperText={touched.first_name && errors.first_name}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            name="last_name"
-            label="Last Name"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.last_name}
-            error={!!touched.last_name && !!errors.last_name}
-            helperText={touched.last_name && errors.last_name}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            name="email"
-            type="email"
-            label="Email"
-            onBlur={handleBlur}
-            value={values.email}
-            onChange={handleChange}
-            error={!!touched.email && !!errors.email}
-            helperText={touched.email && errors.email}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <TextField
-            fullWidth
-            label="Phone"
-            name="contact"
-            onBlur={handleBlur}
-            value={values.contact}
-            onChange={handleChange}
-            error={!!touched.contact && !!errors.contact}
-            helperText={touched.contact && errors.contact}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Birth Date"
-              maxDate={new Date()}
-              value={values.birth_date}
-              inputFormat="dd MMMM, yyyy"
-              renderInput={(props) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  helperText={touched.birth_date && errors.birth_date}
-                  error={
-                    (!!touched.birth_date && !!errors.birth_date) ||
-                    props.error
-                  }
-                  {...props}
-                />
-              )}
-              onChange={(newValue) =>
-                setFieldValue("birth_date", newValue)
-              }
-            />
-          </LocalizationProvider>
-        </Grid>
-      </Grid>
-    </Box>
-
-    <Button type="submit" variant="contained" color="primary">
-      Save Changes
-    </Button>
-  </form>
-)}
-</Formik> */
-}
