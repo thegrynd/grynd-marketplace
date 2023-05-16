@@ -36,13 +36,15 @@ const ShopLayout1 = ({
       {/* {showTopbar && <Topbar bgColor={topbarBgColor} />} */}
 
       {/* HEADER */}
-      <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={300}>
+      {/* <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={300}>
         <Header isFixed={isFixed} searchInput={<SearchInputWithCategory />} />
-      </Sticky>
+      </Sticky> */}
 
       <div className="section-after-sticky">
         {/* NAVIGATION BAR */}
-        {showNavbar && <Navbar elevation={0} border={1} />}
+        <Sticky fixedOn={0} onSticky={toggleIsFixed} scrollDistance={300}>
+          {showNavbar && <Navbar elevation={0} border={1} />}
+        </Sticky>
 
         {/* BODY CONTENT */}
         {children}

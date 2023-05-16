@@ -37,7 +37,13 @@ const UserDashboardHeader = ({ title, button, navigation, ...props }) => {
       <FlexBox mt={2} className="headerHold">
         <FlexBox alignItems="center">
           {props.icon && <props.icon color="#B28A3D" size="2.25rem" />}
-          <H2 ml={1.5} my="0px" lineHeight="2" whiteSpace="pre" color="#066344">
+          <H2
+            ml={1.5}
+            my="0px"
+            lineHeight="2"
+            whiteSpace="pre"
+            color="primary.main"
+          >
             {title}
           </H2>
         </FlexBox>
