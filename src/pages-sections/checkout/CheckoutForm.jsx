@@ -25,8 +25,6 @@ import { IconContext } from "react-icons";
 import { FaShippingFast } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 
-// import { checkout } from "lib";
-
 const LoginForm = () => {
   const router = useRouter();
   const { state } = useAppContext();

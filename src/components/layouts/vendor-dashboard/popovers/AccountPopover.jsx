@@ -17,7 +17,6 @@ const AccountPopover = () => {
 
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  console.log("authUserrr", authUser);
 
   const handleClose = () => setAnchorEl(null);
   const handleClick = (event) => setAnchorEl(event.currentTarget);

@@ -27,17 +27,11 @@ export default function CreateProduct() {
   const { data: subcategoryData } = data?.data || {};
   // console.log("subcategoryData", subcategoryData);
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
   return (
     <Box py={4}>
       <H3 mb={2}>Add New Product</H3>
 
-      <ProductForm
-        subcategoryData={subcategoryData}
-        handleFormSubmit={handleFormSubmit}
-      />
+      <ProductForm subcategoryData={subcategoryData} />
     </Box>
   );
 }
