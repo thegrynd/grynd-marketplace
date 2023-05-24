@@ -9,20 +9,17 @@ import StockOutProducts from "pages-sections/dashboard/StockOutProducts";
 import api from "utils/__api__/dashboard";
 
 // =============================================================================
-VendorDashboard.getLayout = function getLayout(page) {
+AdminDashboard.getLayout = function getLayout(page) {
   return <VendorDashboardLayout>{page}</VendorDashboardLayout>;
 };
 // =============================================================================
 
 // =============================================================================
 
-export default function VendorDashboard(props) {
-  const {
-    cardList,
-    recentPurchase,
-    stockOutProducts
-  } = props;
-  return <Box py={4}>
+export default function AdminDashboard(props) {
+  const { cardList, recentPurchase, stockOutProducts } = props;
+  return (
+    <Box py={4}>
       <Grid container spacing={3}>
         {/* WISHING CARD */}
         <Grid item md={6} xs={12}>
@@ -31,9 +28,18 @@ export default function VendorDashboard(props) {
 
         {/* ALL TRACKING CARDS */}
         <Grid container item md={6} xs={12} spacing={3}>
-          {cardList.map(item => <Grid item md={6} sm={6} xs={12} key={item.id}>
-              <Card1 title={item.title} color={item.color} amount1={item.amount1} amount2={item.amount2} percentage={item.percentage} status={item.status === "down" ? "down" : "up"} />
-            </Grid>)}
+          {cardList.map((item) => (
+            <Grid item md={6} sm={6} xs={12} key={item.id}>
+              <Card1
+                title={item.title}
+                color={item.color}
+                amount1={item.amount1}
+                amount2={item.amount2}
+                percentage={item.percentage}
+                status={item.status === "down" ? "down" : "up"}
+              />
+            </Grid>
+          ))}
         </Grid>
 
         {/* SALES AREA */}
@@ -56,7 +62,8 @@ export default function VendorDashboard(props) {
           <StockOutProducts data={stockOutProducts} />
         </Grid>
       </Grid>
-    </Box>;
+    </Box>
+  );
 }
 export const getStaticProps = async () => {
   const cardList = await api.getAllCard();
@@ -66,7 +73,7 @@ export const getStaticProps = async () => {
     props: {
       cardList,
       recentPurchase,
-      stockOutProducts
-    }
+      stockOutProducts,
+    },
   };
 };
