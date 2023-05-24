@@ -16,6 +16,7 @@ import { FlexBox } from "components/flex-box";
 import { IconContext } from "react-icons";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import TagsField from "components/forms/TagsField";
+import useCloudinary from "hooks/useCloudinary";
 
 const unitData = [
   "count",
@@ -32,20 +33,53 @@ const unitData = [
 const ProductForm = ({ subcategoryData }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [resData1, setResData1] = useState();
-  const [resPublicId1, setResPublicId1] = useState();
-  const [inputFile1, setInputFile1] = useState();
+
+  const {
+    resIcon1,
+    resIcon2,
+    resIcon3,
+    resPublicIdIcon1,
+    resPublicIdIcon2,
+    resPublicIdIcon3,
+    inputIcon1,
+    inputIcon2,
+    inputIcon3,
+    uploadIconToCloudinary,
+    uploadIconToCloudinary2,
+    uploadIconToCloudinary3,
+    handleCropImageInput1,
+    handleCropImageInput2,
+    handleCropImageInput3,
+  } = useCloudinary();
 
   const [isError, setError] = useState("");
 
   useEffect(() => {
     uploadIconToCloudinary();
-  }, [inputFile1]);
+  }, [inputIcon1]);
 
   useEffect(() => {
-    formik.setFieldValue("images[0].url", resData1);
-    formik.setFieldValue("images[0].public_id", resPublicId1);
-  }, [resData1, resPublicId1]);
+    uploadIconToCloudinary2();
+  }, [inputIcon2]);
+
+  useEffect(() => {
+    uploadIconToCloudinary3();
+  }, [inputIcon3]);
+
+  useEffect(() => {
+    formik.setFieldValue("images[0].url", resIcon1);
+    formik.setFieldValue("images[0].public_id", resPublicIdIcon1);
+  }, [resIcon1, resPublicIdIcon1]);
+
+  useEffect(() => {
+    formik.setFieldValue("images[1].url", resIcon2);
+    formik.setFieldValue("images[1].public_id", resPublicIdIcon2);
+  }, [resIcon2, resPublicIdIcon2]);
+
+  useEffect(() => {
+    formik.setFieldValue("images[2].url", resIcon3);
+    formik.setFieldValue("images[2].public_id", resPublicIdIcon3);
+  }, [resIcon3, resPublicIdIcon3]);
 
   const submitData = async (values) => {
     const url = process.env.NEXT_PUBLIC_GRYND_URL;
@@ -79,35 +113,20 @@ const ProductForm = ({ subcategoryData }) => {
       .finally(() => setIsLoading(false));
   };
 
-  const uploadIconToCloudinary = async () => {
-    const iconUrl = inputFile1;
-    const formData = new FormData();
-    try {
-      formData.append("file", iconUrl);
-      formData.append("upload_preset", "kqyvyqbp");
-      const res = await axios.post(
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
-        formData
-      );
-      console.log("res1", res);
-      setResData1(() => res.data.secure_url);
-      setResPublicId1(() => res.data.public_id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCropImageInput = (e) => {
-    setInputFile1(e.target.files[0]);
-    uploadIconToCloudinary();
-  };
-
   const formik = useFormik({
     initialValues: {
       name: "",
       subcategory: "",
       tags: [""],
       images: [
+        {
+          public_id: "",
+          url: "",
+        },
+        {
+          public_id: "",
+          url: "",
+        },
         {
           public_id: "",
           url: "",
@@ -131,7 +150,6 @@ const ProductForm = ({ subcategoryData }) => {
       setTimeout(() => {
         submitData(values);
       }, 10000);
-      console.log("form-values", values);
     },
   });
 
@@ -198,7 +216,7 @@ const ProductForm = ({ subcategoryData }) => {
           <Grid item md={12} xs={12}>
             <TagsField formik={formik} />
           </Grid>
-          <Grid item md={12} xs={12}>
+          {/* <Grid item md={12} xs={12}>
             {formik.values.images[0].url && <PreviewImage file={inputFile1} />}
             <TextField
               fullWidth
@@ -215,7 +233,118 @@ const ProductForm = ({ subcategoryData }) => {
             {formik.touched.images && formik.errors.images ? (
               <H5 color="red">{formik.errors.images[0].url}</H5>
             ) : null}
-          </Grid>
+          </Grid> */}
+          <FieldArray
+            name="images"
+            render={(arrayHelpers) => (
+              <div
+                style={{
+                  margin: "2em auto",
+                }}
+              >
+                {formik.values.images.map((img, index) => (
+                  // <div key={index}>
+                  <Grid
+                    container
+                    spacing={1}
+                    md={12}
+                    xs={12}
+                    p={8}
+                    sx={{ backgroundColor: "#B28A3D", borderRadius: "10px" }}
+                    key={index}
+                  >
+                    <Grid item md={12} xs={12}>
+                      {formik.values.images[index].url && (
+                        <PreviewImage
+                          file={
+                            index === 0
+                              ? inputIcon1
+                              : index === 1
+                              ? inputIcon2
+                              : index === 2
+                              ? inputIcon3
+                              : ""
+                          }
+                        />
+                      )}
+                      <TextField
+                        fullWidth
+                        color="info"
+                        type="file"
+                        size="medium"
+                        id={`images[${index}].url`}
+                        name={`images[${index}].url`}
+                        label="Product Image"
+                        onBlur={formik.handleBlur}
+                        onChange={
+                          index === 0
+                            ? (e) => handleCropImageInput1(e)
+                            : index === 1
+                            ? (e) => handleCropImageInput2(e)
+                            : index === 2
+                            ? (e) => handleCropImageInput3(e)
+                            : ""
+                        }
+                        value={undefined}
+                      />
+                    </Grid>
+
+                    <FlexBox margin="auto">
+                      <Button
+                        type="button"
+                        color="info"
+                        variant="contained"
+                        sx={{
+                          mt: 4,
+                          backgroundColor: "#473718",
+                          // width: "100px",
+                          ":hover": {
+                            backgroundColor: "grey",
+                          },
+                        }}
+                        disabled={formik.values.images.length === 1}
+                        onClick={() => arrayHelpers.remove(index)}
+                      >
+                        <IconContext.Provider
+                          value={{
+                            color: "red",
+                            size: "1.25rem",
+                          }}
+                        >
+                          <AiFillMinusCircle />
+                        </IconContext.Provider>
+                      </Button>
+                    </FlexBox>
+                  </Grid>
+                ))}
+                <Button
+                  type="button"
+                  color="info"
+                  variant="contained"
+                  sx={{
+                    mt: 4,
+                    backgroundColor: "#066344",
+                    // width: "100px",
+                    ":hover": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                  onClick={() => arrayHelpers.push({ url: "", public_id: "" })}
+                  disabled={formik.values.images.length === 3}
+                >
+                  {/* <IconContext.Provider
+                    value={{
+                      color: "green",
+                      size: "1.25rem",
+                    }}
+                  >
+                    <AiFillPlusCircle />
+                  </IconContext.Provider> */}
+                  Add additional image
+                </Button>
+              </div>
+            )}
+          />
           <Grid item md={12} xs={12}>
             <TextField
               fullWidth
@@ -311,7 +440,11 @@ const ProductForm = ({ subcategoryData }) => {
           <FieldArray
             name="specification"
             render={(arrayHelpers) => (
-              <div>
+              <div
+                style={{
+                  margin: "2em auto",
+                }}
+              >
                 {formik.values.specification.map((spec, index) => (
                   // <div key={index}>
                   <Grid
@@ -320,10 +453,9 @@ const ProductForm = ({ subcategoryData }) => {
                     md={12}
                     xs={12}
                     p={8}
-                    sx={{ backgroundColor: "white" }}
-                    key={spec.title}
+                    sx={{ backgroundColor: "#B28A3D", borderRadius: "10px" }}
                   >
-                    <Grid item md={12} xs={12}>
+                    <Grid item md={12} xs={12} key={index}>
                       <TextField
                         fullWidth
                         id={`specification[${index}].title`}
@@ -336,7 +468,7 @@ const ProductForm = ({ subcategoryData }) => {
                         placeholder="Title of Specification"
                       />
                     </Grid>
-                    <Grid item md={12} xs={12}>
+                    <Grid item md={12} xs={12} key={index}>
                       <TextField
                         fullWidth
                         id={`specification.${index}.body`}
@@ -364,6 +496,7 @@ const ProductForm = ({ subcategoryData }) => {
                         }}
                         disabled={(index = 0)}
                         onClick={() => arrayHelpers.remove(index)}
+                        key={index}
                       >
                         <IconContext.Provider
                           value={{
@@ -374,35 +507,33 @@ const ProductForm = ({ subcategoryData }) => {
                           <AiFillMinusCircle />
                         </IconContext.Provider>
                       </Button>
-
-                      <Button
-                        type="button"
-                        color="info"
-                        variant="contained"
-                        sx={{
-                          mt: 4,
-                          backgroundColor: "#473718",
-                          // width: "100px",
-                          ":hover": {
-                            backgroundColor: "grey",
-                          },
-                        }}
-                        onClick={() =>
-                          arrayHelpers.push({ title: "", body: "" })
-                        }
-                      >
-                        <IconContext.Provider
-                          value={{
-                            color: "green",
-                            size: "1.25rem",
-                          }}
-                        >
-                          <AiFillPlusCircle />
-                        </IconContext.Provider>
-                      </Button>
                     </FlexBox>
                   </Grid>
                 ))}
+                <Button
+                  type="button"
+                  color="info"
+                  variant="contained"
+                  sx={{
+                    mt: 4,
+                    backgroundColor: "#066344",
+                    // width: "100px",
+                    ":hover": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                  onClick={() => arrayHelpers.push({ title: "", body: "" })}
+                >
+                  {/* <IconContext.Provider
+                    value={{
+                      color: "green",
+                      size: "1.25rem",
+                    }}
+                  >
+                    <AiFillPlusCircle />
+                  </IconContext.Provider> */}
+                  Add additional specs
+                </Button>
               </div>
             )}
           />

@@ -15,20 +15,25 @@ import "react-phone-number-input/style.css";
 import { ThreeCircles } from "react-loader-spinner";
 import PhoneInput from "react-phone-number-input";
 import PreviewImage from "./PreviewImage";
+import useCloudinary from "hooks/useCloudinary";
 
 const CreateSellerForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    resData1,
+    resData2,
+    resPublicId1,
+    resPublicId2,
+    inputFile1,
+    inputFile2,
+    uploadCoverImageToCloudinary,
+    uploadLogoToCloudinary,
+    handleCoverInput,
+    handleLogoInput,
+  } = useCloudinary();
 
   const [coords, setCoords] = useState();
-
-  const [resData1, setResData1] = useState();
-  const [resPublicId1, setResPublicId1] = useState();
-  const [resData2, setResData2] = useState();
-  const [resPublicId2, setResPublicId2] = useState();
-
-  const [inputFile1, setInputFile1] = useState();
-  const [inputFile2, setInputFile2] = useState();
 
   const [errorMsg, setErrorMsg] = useState();
 
@@ -99,52 +104,6 @@ const CreateSellerForm = () => {
         setErrorMsg(err.response.data.validationErrors);
       })
       .finally(() => setIsLoading(false));
-  };
-
-  const uploadCoverImageToCloudinary = async () => {
-    const coverUrl = inputFile1;
-    const formData = new FormData();
-    try {
-      formData.append("file", coverUrl);
-      formData.append("upload_preset", "a7plbqa0");
-      const res = await axios.post(
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
-        formData
-      );
-      // console.log("res1", res);
-      setResData1(() => res.data.secure_url);
-      setResPublicId1(() => res.data.public_id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const uploadLogoToCloudinary = async () => {
-    const logourl = inputFile2;
-    const formData = new FormData();
-    try {
-      formData.append("file", logourl);
-      formData.append("upload_preset", "a7plbqa0");
-      const res = await axios.post(
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD,
-        formData
-      );
-      // console.log("res2", res);
-      setResData2(() => res.data.secure_url);
-      setResPublicId2(() => res.data.public_id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCoverInput = (e) => {
-    setInputFile1(e.target.files[0]);
-    uploadCoverImageToCloudinary();
-  };
-
-  const handleLogoInput = (e) => {
-    setInputFile2(e.target.files[0]);
-    uploadLogoToCloudinary();
   };
 
   const formik = useFormik({
