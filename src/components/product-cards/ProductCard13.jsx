@@ -113,7 +113,10 @@ const ProductCard13 = (props) => {
     description,
     isPublished,
     subcategory,
+    authUser,
   } = props;
+
+  console.log("auth1200", authUser);
 
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch } = useAppContext();
@@ -153,8 +156,16 @@ const ProductCard13 = (props) => {
           <StyledChip color="primary" size="small" label={`${off}% off`} />
         )} */}
 
-        <Link href={`/vendor/products/${id}`}>
-          {/* <a> */}
+        <Link
+          href={
+            authUser?.data.isSeller === true
+              ? `/vendor/products/${id}`
+              : authUser?.data.isSeller === false ||
+                (!authUser && authUser === undefined)
+              ? `/client/products/${slug}`
+              : ""
+          }
+        >
           <LazyImage
             alt={name}
             width={190}
@@ -163,7 +174,6 @@ const ProductCard13 = (props) => {
             layout="responsive"
             objectFit="contain"
           />
-          {/* </a> */}
         </Link>
 
         <HoverWrapper className="controller">

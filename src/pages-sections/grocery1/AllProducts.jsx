@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Grid, styled } from "@mui/material";
 import { Paragraph } from "components/Typography";
 import { FlexBox } from "components/flex-box";
@@ -24,6 +24,9 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 const AllProducts = ({ products, mainData, title = "All Products" }) => {
   const [pageIndex, setPageIndex] = useState(0);
 
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+
   const handlePageChange = (event, value) => {
     setPageIndex(value);
   };
@@ -35,8 +38,9 @@ const AllProducts = ({ products, mainData, title = "All Products" }) => {
         {products?.map((item) => (
           <Grid key={item.id} item md={6} sm={6} xs={12}>
             <ProductCard13
+              authUser={authUser}
               id={item.id}
-              slug={item.slug}
+              slug={item?.slug}
               title={item.title}
               price={item.price}
               off={item.discount}
