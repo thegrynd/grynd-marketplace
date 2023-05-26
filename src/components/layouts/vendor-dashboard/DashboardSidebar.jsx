@@ -177,6 +177,7 @@ const DashboardSidebar = (props) => {
               borderRadius: 0,
               width: "auto",
               marginLeft: COMPACT ? 0 : 1,
+              cursor: "pointer",
             }}
           />
         </Link>

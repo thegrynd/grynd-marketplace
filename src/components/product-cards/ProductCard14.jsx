@@ -9,7 +9,7 @@ import { useSnackbar } from "notistack";
 import LazyImage from "components/LazyImage";
 import BazaarCard from "components/BazaarCard";
 import { H3, Span } from "components/Typography";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { useAppContext } from "contexts/AppContext";
@@ -245,7 +245,7 @@ const ProductCard14 = (props) => {
 
           {!hideRating && (
             <Box display="flex" alignItems="center">
-              <BazaarRating value={rating || 0} color="warn" readOnly />{" "}
+              <GryndRating value={rating || 0} color="warn" readOnly />{" "}
               <Span
                 sx={{
                   color: palette.grey[600],

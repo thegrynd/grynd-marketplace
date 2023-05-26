@@ -41,7 +41,7 @@ const AllProducts = ({ products, mainData, title = "All Products" }) => {
               authUser={authUser}
               id={item.id}
               slug={item?.slug}
-              title={item.title}
+              title={item?.title}
               price={item.price}
               off={item.discount}
               rating={item.rating}

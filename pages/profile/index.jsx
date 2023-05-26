@@ -39,7 +39,7 @@ const Profile = () => {
 
   // SECTION TITLE HEADER LINK
   const HEADER_LINK = (
-    <Link href={`/profile/${userData ? userData?.id : null}`} passHref>
+    <Link href={`/profile/${userData?.id ?? null}`} passHref>
       <Button
         color="primary"
         sx={{

@@ -7,7 +7,7 @@ import ShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useSnackbar } from "notistack";
 import LazyImage from "components/LazyImage";
 import { H3, Span } from "components/Typography";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexBetween, FlexRowCenter } from "components/flex-box";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { useAppContext } from "contexts/AppContext";
@@ -219,7 +219,7 @@ const ProductCard16 = (props) => {
 
         {!hideRating && (
           <FlexRowCenter>
-            <BazaarRating value={rating || 0} color="warn" readOnly />{" "}
+            <GryndRating value={rating || 0} color="warn" readOnly />{" "}
             <Span
               sx={{
                 color: palette.grey[600],

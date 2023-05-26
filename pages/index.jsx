@@ -246,12 +246,12 @@ const HomePage = (props) => {
                       title=""
                     />
 
-                    {/* <Store>
+                    {/* 
                 <ProductCarousel
                   title="All Products"
                   products={sellerProducts}
                 />
-              </Store> */}
+               */}
                   </Fragment>
                 )}
 
@@ -280,7 +280,7 @@ const HomePage = (props) => {
                     title={selectedCategory}
                   />
                 ) : (
-                  <Fragment>
+                  <div id="all-products">
                     {/* POPULAR PRODUCTS AREA */}
                     <AllProducts
                       products={searchedProduct}
@@ -295,7 +295,7 @@ const HomePage = (props) => {
                     products={sellerProducts}
                   />
                 </Store> */}
-                  </Fragment>
+                  </div>
                 )}
 
                 {/* DISCOUNT BANNER AREA */}
