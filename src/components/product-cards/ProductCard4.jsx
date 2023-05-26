@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import HoverBox from "components/HoverBox";
 import LazyImage from "components/LazyImage";
 import { H4, Small } from "components/Typography";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexRowCenter } from "components/flex-box";
 import { currency } from "lib";
 
@@ -15,15 +15,23 @@ const ProductCard4 = ({
   price,
   imgUrl,
   rating = 5,
-  reviewCount = 0
+  reviewCount = 0,
 }) => {
-  return <Box>
+  return (
+    <Box>
       <HoverBox mb={2} mx="auto" borderRadius="8px">
-        <LazyImage src={imgUrl} width={0} height={0} layout="responsive" alt={title} mx="auto" />
+        <LazyImage
+          src={imgUrl}
+          width={0}
+          height={0}
+          layout="responsive"
+          alt={title}
+          mx="auto"
+        />
       </HoverBox>
 
       <FlexRowCenter mb={0.5}>
-        <BazaarRating value={rating} color="warn" readOnly />
+        <GryndRating value={rating} color="warn" readOnly />
         <Small fontWeight={600} pl={0.5}>
           ({reviewCount})
         </Small>
@@ -36,6 +44,7 @@ const ProductCard4 = ({
       <H4 fontSize={14} textAlign="center" color="primary.main">
         {currency(price)}
       </H4>
-    </Box>;
+    </Box>
+  );
 };
 export default ProductCard4;

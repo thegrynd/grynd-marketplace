@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack";
 import LazyImage from "components/LazyImage";
 import BazaarCard from "components/BazaarCard";
 import { H3, Span } from "components/Typography";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { useAppContext } from "contexts/AppContext";
@@ -116,8 +116,6 @@ const ProductCard13 = (props) => {
     authUser,
   } = props;
 
-  console.log("auth1200", authUser);
-
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
@@ -159,10 +157,10 @@ const ProductCard13 = (props) => {
         <Link
           href={
             authUser?.data.isSeller === true
-              ? `/vendor/products/${id}`
+              ? `/vendor/singleproduct/${id}`
               : authUser?.data.isSeller === false ||
                 (!authUser && authUser === undefined)
-              ? `/client/products/${slug}`
+              ? `/client/singleproduct/${slug}`
               : ""
           }
         >
@@ -219,7 +217,16 @@ const ProductCard13 = (props) => {
 
       <ContentWrapper>
         <Box flex="1 1 0" minWidth="0px" mr={1}>
-          <Link href={`/product/${slug}`}>
+          <Link
+            href={
+              authUser?.data.isSeller === true
+                ? `/vendor/singleproduct/${id}`
+                : authUser?.data.isSeller === false ||
+                  (!authUser && authUser === undefined)
+                ? `/client/singleproduct/${slug}`
+                : ""
+            }
+          >
             <H3
               mb={1}
               title={name}
@@ -228,6 +235,7 @@ const ProductCard13 = (props) => {
               fontWeight="600"
               className="title"
               color="#fff"
+              cursor="pointer"
             >
               {name}
             </H3>
@@ -235,7 +243,7 @@ const ProductCard13 = (props) => {
 
           {!hideRating && (
             <FlexBox gap={1} alignItems="center">
-              <BazaarRating value={rating || 0} color="warn" readOnly />
+              <GryndRating value={rating || 0} color="warn" readOnly />
               <Span color="#000">{`(${rating})`}</Span>
             </FlexBox>
           )}

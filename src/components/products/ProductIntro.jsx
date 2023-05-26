@@ -1,22 +1,41 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Add, Remove } from "@mui/icons-material";
 import { Avatar, Box, Button, Chip, Grid } from "@mui/material";
 import LazyImage from "components/LazyImage";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { H1, H2, H3, H4, H6 } from "components/Typography";
 import { useAppContext } from "contexts/AppContext";
 import { FlexBox, FlexRowCenter } from "../flex-box";
 import { currency } from "lib";
 import productVariants from "data/product-variants";
+import { Paragraph, Span } from "components/Typography";
+import { LoginContext } from "contexts/LoginContext";
 
 // ================================================================
 
 // ================================================================
 
 const ProductIntro = ({ product }) => {
-  const { id, price, regularPrice, images, slug, name, rating, seller } =
-    product;
+  const {
+    id,
+    price,
+    regularPrice,
+    images,
+    slug,
+    name,
+    rating,
+    seller,
+    subcategory,
+    tags,
+    numReviews,
+    description,
+  } = product || {};
+
+  const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
+  const { data: authUser } = getAuthUser || {};
+  console.log("auth", authUser);
+
   const { state, dispatch } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectVariants, setSelectVariants] = useState({
@@ -33,7 +52,10 @@ const ProductIntro = ({ product }) => {
   };
 
   // CHECK PRODUCT EXIST OR NOT IN THE CART
-  const cartItem = state.cart.find((item) => item.id === id);
+  const cartItem =
+    id !== undefined
+      ? state.cart.find((item) => item.id === id)
+      : state.cart.find((item) => item.slug === slug);
 
   // HANDLE SELECT IMAGE
   const handleImageClick = (ind) => () => setSelectedImage(ind);
@@ -49,6 +71,7 @@ const ProductIntro = ({ product }) => {
         imgUrl: images[0]?.url,
         id,
         slug,
+        description,
       },
     });
   };
@@ -56,19 +79,19 @@ const ProductIntro = ({ product }) => {
     <Box width="100%">
       <Grid container spacing={3} justifyContent="space-around">
         <Grid item md={6} xs={12} alignItems="center">
-          <FlexBox justifyContent="center" mb={6}>
+          <FlexBox justifyContent="center" mb={2}>
             <LazyImage
               alt={name}
               width={300}
               height={300}
               loading="eager"
               objectFit="contain"
-              src={product.images[selectedImage].url}
+              src={product?.images[selectedImage].url ?? "/"}
             />
           </FlexBox>
 
           <FlexBox overflow="auto">
-            {images.map((url, ind) => (
+            {images?.map((url, ind) => (
               <FlexRowCenter
                 key={url._id}
                 width={64}
@@ -98,22 +121,26 @@ const ProductIntro = ({ product }) => {
         </Grid>
 
         <Grid item md={6} xs={12} alignItems="center">
-          <H1 mb={1}>{name}</H1>
+          <H1 color="#066344">{name ?? "Loading Product Name..."}</H1>
 
           <FlexBox alignItems="center" mb={1}>
             <Box>Brand:</Box> &nbsp;
             <H6>{name}</H6>
           </FlexBox>
+          <Paragraph my={2}>{description ?? "Loading..."}</Paragraph>
 
           <FlexBox alignItems="center" mb={2}>
             <Box lineHeight="1">Rated:</Box>
             <Box mx={1} lineHeight="1">
-              <BazaarRating
-                color="warn"
-                fontSize="1.25rem"
-                value={rating}
-                readOnly
-              />
+              <FlexBox alignItems="center" gap={1}>
+                <GryndRating
+                  color="warn"
+                  fontSize="1.25rem"
+                  value={rating}
+                  readOnly
+                />
+                <H6 lineHeight="1">({numReviews ?? "Loading..."})</H6>
+              </FlexBox>
             </Box>
             {/* <H6 lineHeight="1">(50)</H6> */}
           </FlexBox>
@@ -149,75 +176,78 @@ const ProductIntro = ({ product }) => {
           ))}
 
           <Box pt={1} mb={3}>
-            <H2 color="#066344" mb={0.5} lineHeight="1">
-              {currency(price)}
-            </H2>
+            <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>
+              TAGS:{" "}
+              {tags?.map((tag, ind) => {
+                return <Span color="#B28A3D" key={ind}>{` ${tag}, `}</Span>;
+              }) ?? "Loading tags..."}
+            </Paragraph>
+            <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>
+              CATEGORY:{" "}
+              <Span color="#B28A3D">
+                {" "}
+                {subcategory?.category.name ?? "Loading categories"}
+              </Span>
+            </Paragraph>
+            <H1 color="#B28A3D">{currency(price) ?? null}</H1>
             <H4 color="grey" fontWeight={300}>
               <s>
                 {" "}
                 <i> {currency(regularPrice)}</i>
               </s>
             </H4>
-            <Box color="inherit">Stock Available</Box>
           </Box>
 
-          {!cartItem?.qty ? (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleCartAmountChange(1)}
-              sx={{
-                mb: 4.5,
-                px: "1.75rem",
-                height: 40,
-                backgroundColor: "#066344",
-                "&:hover": {
-                  backgroundColor: "grey",
-                },
-              }}
-            >
-              Add to Cart
-            </Button>
-          ) : (
-            <FlexBox alignItems="center" mb={4.5}>
+          {authUser?.data.isSeller === false ? (
+            !cartItem?.qty ? (
               <Button
-                size="small"
-                sx={{
-                  p: 1,
-                }}
                 color="primary"
-                variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty - 1)}
-              >
-                <Remove fontSize="small" />
-              </Button>
-
-              <H3 fontWeight="600" mx={2.5}>
-                {cartItem?.qty.toString().padStart(2, "0")}
-              </H3>
-
-              <Button
-                size="small"
+                variant="contained"
+                onClick={handleCartAmountChange(1)}
                 sx={{
-                  p: 1,
+                  mb: 4.5,
+                  px: "1.75rem",
+                  height: 40,
+                  backgroundColor: "#DC143C",
+                  "&:hover": {
+                    backgroundColor: "grey",
+                  },
                 }}
-                color="primary"
-                variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty + 1)}
               >
-                <Add fontSize="small" />
+                Add to Cart
               </Button>
-            </FlexBox>
-          )}
+            ) : (
+              <FlexBox alignItems="center" mb={4.5}>
+                <Button
+                  size="small"
+                  sx={{
+                    p: 1,
+                  }}
+                  color="primary"
+                  variant="outlined"
+                  onClick={handleCartAmountChange(cartItem?.qty - 1)}
+                >
+                  <Remove fontSize="small" />
+                </Button>
 
-          <FlexBox alignItems="center" mb={2}>
-            <Box>Sold By:</Box>
-            <Link href="/shops/scarlett-beauty" passHref>
-              {/* <a> */}
-              <H6 ml={1}>{seller.storeName}</H6>
-              {/* </a> */}
-            </Link>
-          </FlexBox>
+                <H3 fontWeight="600" mx={2.5}>
+                  {cartItem?.qty.toString().padStart(2, "0")}
+                </H3>
+
+                <Button
+                  size="small"
+                  sx={{
+                    p: 1,
+                  }}
+                  color="primary"
+                  variant="outlined"
+                  onClick={handleCartAmountChange(cartItem?.qty + 1)}
+                >
+                  <Add fontSize="small" />
+                </Button>
+              </FlexBox>
+            )
+          ) : null}
         </Grid>
       </Grid>
     </Box>

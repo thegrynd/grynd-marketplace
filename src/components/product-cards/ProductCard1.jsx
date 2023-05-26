@@ -7,7 +7,7 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import LazyImage from "components/LazyImage";
 import BazaarCard from "components/BazaarCard";
 import { H3, Span } from "components/Typography";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { useAppContext } from "contexts/AppContext";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { FlexBox } from "../flex-box";
@@ -172,7 +172,7 @@ const ProductCard1 = ({
             </Link>
 
             {!hideRating && (
-              <BazaarRating value={rating || 0} color="warn" readOnly />
+              <GryndRating value={rating || 0} color="warn" readOnly />
             )}
 
             {showProductSize && (

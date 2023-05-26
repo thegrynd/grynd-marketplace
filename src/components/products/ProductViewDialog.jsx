@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FlexBox } from "components/flex-box";
 import BazaarImage from "components/BazaarImage";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import Carousel from "components/carousel/Carousel";
 import { H1, H2, H3, H6, Paragraph } from "components/Typography";
 import { useAppContext } from "contexts/AppContext";
@@ -118,7 +118,7 @@ const ProductViewDialog = (props) => {
               <H1 color="#066344">{currency(product.price)}</H1>
 
               <FlexBox alignItems="center" gap={1}>
-                <BazaarRating
+                <GryndRating
                   color="warn"
                   fontSize="1.25rem"
                   value={product.rating}

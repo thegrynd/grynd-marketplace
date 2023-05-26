@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { Search } from "@mui/icons-material";
-import { Box, Button, styled, useMediaQuery } from "@mui/material";
+import Link from "next/link";
+import { Box, Button, styled, useMediaQuery, Avatar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -63,6 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const DashboardNavbar = ({ handleDrawerToggle }) => {
   const router = useRouter();
+
   const downLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   return (
     <DashboardNavbarRoot position="sticky">
@@ -86,11 +88,25 @@ const DashboardNavbar = ({ handleDrawerToggle }) => {
           >
             Browse Website
           </CustomButton> */}
+          {/* {router.pathname === "/client/singleproduct/[slug]" ||
+          router.pathname === "/vendor/singleproduct/[id]" ? (
+            <Link href="/">
+              <Avatar
+                src={"/assets/images/gryndlogo.svg"}
+                sx={{
+                  borderRadius: 0,
+                  width: "auto",
+                  marginLeft: 1,
+                  cursor: "pointer",
+                }}
+              />
+            </Link>
+          ) : null} */}
 
           <Box flexGrow={1} />
 
           <FlexBox alignItems="center" gap={2}>
-            <StyledInputBase
+            {/* <StyledInputBase
               placeholder="Search anything..."
               startAdornment={
                 <Search
@@ -100,7 +116,7 @@ const DashboardNavbar = ({ handleDrawerToggle }) => {
                   }}
                 />
               }
-            />
+            /> */}
 
             <NotificationsPopover />
             <AccountPopover />

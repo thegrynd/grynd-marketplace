@@ -5,7 +5,7 @@ import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import HoverBox from "components/HoverBox";
 import { H4 } from "components/Typography";
 import LazyImage from "components/LazyImage";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import { calculateDiscount, currency } from "lib";
 
@@ -52,7 +52,7 @@ const ProductCard3 = ({
             {title}
           </H4>
 
-          {!hideReview && <BazaarRating value={rating} color="warn" readOnly />}
+          {!hideReview && <GryndRating value={rating} color="warn" readOnly />}
 
           <FlexBox gap={1} alignItems="center">
             <Box fontWeight="600" color="primary.main">
