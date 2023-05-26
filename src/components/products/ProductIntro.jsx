@@ -178,8 +178,8 @@ const ProductIntro = ({ product }) => {
           <Box pt={1} mb={3}>
             <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>
               TAGS:{" "}
-              {tags?.map((tag) => {
-                return <Span color="#B28A3D">{` ${tag}, `}</Span>;
+              {tags?.map((tag, ind) => {
+                return <Span color="#B28A3D" key={ind}>{` ${tag}, `}</Span>;
               }) ?? "Loading tags..."}
             </Paragraph>
             <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>
