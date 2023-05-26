@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Box, Button, Chip, styled, useTheme } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import BazaarRating from "components/BazaarRating";
+import GryndRating from "components/GryndRating";
 import { FlexBox } from "components/flex-box";
 import LazyImage from "components/LazyImage";
 import { H3, Span } from "components/Typography";
@@ -207,7 +207,7 @@ const ProductCard17 = (props) => {
 
             {!hideRating && (
               <Box display="flex" alignItems="center">
-                <BazaarRating
+                <GryndRating
                   fontSize={18}
                   value={rating || 0}
                   color="warn"

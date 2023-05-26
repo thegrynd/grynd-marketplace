@@ -34,19 +34,31 @@ function createData(name, text) {
   return { name, text };
 }
 
-export default function SellerInfo({ singleProductData }) {
+export default function SellerInfo({ singleProductData, GryndRating }) {
   const rows = [
-    createData("Seller:", `${singleProductData?.seller.storeName}`),
-    createData("Seller Rating:", `${singleProductData?.seller.rating}`),
-    createData("Product Unit:", `${singleProductData?.unit}`),
-    createData("Category:", `${singleProductData?.subcategory.category.name}`),
-    createData("Subcategory:", `${singleProductData?.subcategory.name}`),
+    createData(
+      "Seller:",
+      `${singleProductData?.seller.storeName ?? "Loading..."}`
+    ),
+    createData("Seller Rating:", GryndRating ?? "Loading..."),
+    createData("Product Unit:", `${singleProductData?.unit ?? "Loading..."}`),
+    createData(
+      "Category:",
+      `${singleProductData?.subcategory.category.name ?? "Loading..."}`
+    ),
+    createData(
+      "Subcategory:",
+      `${singleProductData?.subcategory.name ?? "Loading..."}`
+    ),
     createData(
       "Published:",
       `${singleProductData?.isPublished ? "Yes" : "No"}`
     ),
     createData("Featured:", `${singleProductData?.isFeatured ? "Yes" : "No"}`),
-    createData("Number of Reviews:", `${singleProductData?.numReviews}`),
+    createData(
+      "Number of Reviews:",
+      `${singleProductData?.numReviews ?? "Loading..."}`
+    ),
   ];
 
   return (
@@ -61,7 +73,10 @@ export default function SellerInfo({ singleProductData }) {
           {rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
-                <H4 fontSize="14px"> {row.name}</H4>
+                <H4 fontSize="14px" color="#B28A3D">
+                  {" "}
+                  {row.name}
+                </H4>
               </StyledTableCell>
 
               <StyledTableCell align="center">{row.text}</StyledTableCell>

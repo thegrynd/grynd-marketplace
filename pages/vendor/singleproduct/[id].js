@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Box } from "@mui/material";
-import * as yup from "yup";
-import { H1, H2, H3, H6, Paragraph } from "components/Typography";
+import Link from "next/link";
 import Button from "@mui/material/Button";
 import { Add, Close, Remove } from "@mui/icons-material";
 import { Divider, Grid, IconButton, styled } from "@mui/material";
@@ -10,22 +9,19 @@ import { FlexBox } from "components/flex-box";
 import BazaarImage from "components/BazaarImage";
 import GryndRating from "components/GryndRating";
 import Carousel from "components/carousel/Carousel";
-import VendorDashboardLayout from "components/layouts/vendor-dashboard";
 import axios from "axios";
 import Cookies from "js-cookie";
 import useSWR, { preload } from "swr";
 import SellerInfo from "../../../src/components/SellerInfo";
-import { currency } from "lib";
-
-// =============================================================================
-UploadProduct.getLayout = function getLayout(page) {
-  return <VendorDashboardLayout>{page}</VendorDashboardLayout>;
-};
-// =============================================================================
+import ShopLayout1 from "components/layouts/ShopLayout1";
+import ProductIntro from "components/products/ProductIntro";
 
 // styled components
 const ContentWrapper = styled(Box)(({ theme }) => ({
-  marginBottom: "10rem",
+  "@media (max-width: 760px)": {
+    margin: "2rem 1rem 1rem 1rem",
+  },
+  margin: "3rem 5rem 5rem 5rem",
   "& .carousel:hover": {
     cursor: "pointer",
     "& .carousel__back-button": {
@@ -85,62 +81,67 @@ export default function UploadProduct({ product }) {
   console.log("singleProductData", singleProductData);
 
   return (
-    <ContentWrapper>
-      <Grid container spacing={3}>
-        <Grid item md={6} xs={12}>
-          <Carousel
-            totalSlides={singleProductData?.images.length}
-            visibleSlides={1}
-          >
-            {singleProductData?.images?.map((item, index) => (
-              <BazaarImage
-                key={index}
-                src={item.url}
-                sx={{
-                  mx: "auto",
-                  width: "100%",
-                  objectFit: "contain",
-                  height: {
-                    sm: 400,
-                    xs: 250,
-                  },
-                }}
-              />
-            ))}
-          </Carousel>
-        </Grid>
-
-        <Grid item md={6} xs={12} alignSelf="center">
-          <H2 color="#066344">{singleProductData?.name}</H2>
-
-          <Paragraph py={1} color="grey.500" fontWeight={600} fontSize={13}>
-            CATEGORY: {singleProductData?.subcategory?.category.name}
-          </Paragraph>
-
-          <H1 color="#B28A3D">{currency(singleProductData?.price)}</H1>
-
-          <FlexBox alignItems="center" gap={1}>
-            <GryndRating
-              color="warn"
-              fontSize="1.25rem"
-              value={singleProductData?.rating}
-              readOnly
-            />
-            <H6 lineHeight="1">({singleProductData?.numReviews})</H6>
-          </FlexBox>
-
-          <Paragraph my={2}>{singleProductData?.description}</Paragraph>
-
-          <Divider
+    <ShopLayout1>
+      <ContentWrapper>
+        <Link href={``} passHref>
+          <Button
+            color="primary"
+            onClick={() => back()}
             sx={{
-              mb: 2,
+              px: 4,
+              bgcolor: "#066344",
+              color: "#ffffff",
+              ":hover": {
+                color: "#000000",
+                backgroundColor: "grey",
+              },
             }}
-          />
+          >
+            Go Back
+          </Button>
+        </Link>
+        <Grid container spacing={3}>
+          {/* <Grid item md={6} xs={12}>
+            <Carousel
+              totalSlides={singleProductData?.images.length}
+              visibleSlides={1}
+            >
+              {singleProductData?.images?.map((item, index) => (
+                <BazaarImage
+                  key={index}
+                  src={item.url}
+                  sx={{
+                    mx: "auto",
+                    width: "100%",
+                    objectFit: "contain",
+                    height: {
+                      sm: 400,
+                      xs: 250,
+                    },
+                  }}
+                />
+              ))}
+            </Carousel>
+          </Grid> */}
+          <Grid item md={12} xs={12}>
+            <ProductIntro product={singleProductData} />
+          </Grid>
+
+          <Grid item md={12} xs={12} alignSelf="center">
+            <SellerInfo
+              singleProductData={singleProductData}
+              GryndRating={
+                <GryndRating
+                  color="warn"
+                  fontSize="1.25rem"
+                  value={singleProductData?.rating}
+                  readOnly
+                />
+              }
+            />
+          </Grid>
         </Grid>
-        <Grid item md={12} xs={12} alignSelf="center">
-          <SellerInfo singleProductData={singleProductData} />
-        </Grid>
-      </Grid>
-    </ContentWrapper>
+      </ContentWrapper>
+    </ShopLayout1>
   );
 }
