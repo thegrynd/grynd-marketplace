@@ -7,32 +7,13 @@ import { Box, Button, Chip, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
 import LazyImage from "components/LazyImage";
 import BazaarCard from "components/BazaarCard";
-import { H3, Span } from "components/Typography";
+import { H3, Small, Span } from "components/Typography";
 import GryndRating from "components/GryndRating";
 import { FlexBetween, FlexBox } from "components/flex-box";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { useAppContext } from "contexts/AppContext";
 import { calculateDiscount, currency } from "lib";
 
-const StyledBazaarCard = styled(BazaarCard)(({ theme }) => ({
-  height: "100%",
-  margin: "auto",
-  display: "flex",
-  overflow: "hidden",
-  borderRadius: "1px",
-  position: "relative",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  transition: "all 250ms ease-in-out",
-  background: "#B28A3D",
-  "&:hover": {
-    boxShadow: theme.shadows[2],
-    "& .controller": {
-      display: "flex",
-      bottom: 20,
-    },
-  },
-}));
 const ImageWrapper = styled(Box)(({ theme }) => ({
   overflow: "hidden",
   textAlign: "center",
@@ -70,10 +51,10 @@ const HoverWrapper = styled(FlexBetween)(({ theme }) => ({
   "& span": {
     padding: "0px 10px",
   },
-  "& svg": {
-    fontSize: 18,
-    color: theme.palette.grey[600],
-  },
+  // "& svg": {
+  //   fontSize: 18,
+  //   color: "#ff0000",
+  // },
 }));
 const StyledChip = styled(Chip)({
   zIndex: 11,
@@ -114,6 +95,7 @@ const ProductCard13 = (props) => {
     isPublished,
     subcategory,
     authUser,
+    countInStock,
   } = props;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -135,6 +117,7 @@ const ProductCard13 = (props) => {
         slug,
         description,
         off,
+        countInStock,
       },
     });
     if (type === "remove") {
@@ -147,8 +130,29 @@ const ProductCard13 = (props) => {
       });
     }
   };
+
+  const StyledProductCard = styled(BazaarCard)(({ theme }) => ({
+    height: "100%",
+    margin: "auto",
+    display: "flex",
+    overflow: "hidden",
+    borderRadius: "1px",
+    position: "relative",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    transition: "all 250ms ease-in-out",
+    background: countInStock < 1 ? "#B2BEB5" : "#B28A3D",
+    "&:hover": {
+      boxShadow: theme.shadows[2],
+      "& .controller": {
+        display: "flex",
+        bottom: 20,
+      },
+    },
+  }));
+
   return (
-    <StyledBazaarCard hoverEffect={hoverEffect}>
+    <StyledProductCard hoverEffect={hoverEffect}>
       <ImageWrapper>
         {/* {off !== 0 && (
           <StyledChip color="primary" size="small" label={`${off}% off`} />
@@ -174,9 +178,27 @@ const ProductCard13 = (props) => {
           />
         </Link>
 
+        {countInStock < 1 ? (
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <div
+              style={{
+                transform: "rotate(45deg)",
+                fontSize: "16px",
+                backgroundColor: "#B2BEB5",
+                color: "#222935",
+                padding: "0.5rem 1rem",
+                margin: "0.2rem",
+                borderRadius: "0.2rem",
+              }}
+            >
+              Out of Stock
+            </div>
+          </div>
+        ) : null}
+
         <HoverWrapper className="controller">
           <Span onClick={toggleDialog}>
-            <RemoveRedEye />
+            <RemoveRedEye fontSize="20" color="success" />
           </Span>
 
           <Span
@@ -188,14 +210,20 @@ const ProductCard13 = (props) => {
             }}
           >
             {isFavorite ? (
-              <Favorite color="primary" fontSize="small" />
+              <Favorite color="primary" fontSize="20" />
             ) : (
-              <FavoriteBorder fontSize="small" color="disabled" />
+              <FavoriteBorder fontSize="20" color="primary" />
             )}
           </Span>
 
-          <Span onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}>
-            <ShoppingCartIcon />
+          <Span
+            onClick={
+              countInStock < 1
+                ? () => {}
+                : handleCartAmountChange((cartItem?.qty || 0) + 1)
+            }
+          >
+            <ShoppingCartIcon fontSize="20" color="grey.300" />
           </Span>
         </HoverWrapper>
       </ImageWrapper>
@@ -280,6 +308,7 @@ const ProductCard13 = (props) => {
               borderWidth: "2px",
             }}
             onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}
+            disabled={countInStock < 1}
           >
             <Add fontSize="small" />
           </Button>
@@ -305,7 +334,7 @@ const ProductCard13 = (props) => {
           )}
         </FlexBox>
       </ContentWrapper>
-    </StyledBazaarCard>
+    </StyledProductCard>
   );
 };
 export default ProductCard13;

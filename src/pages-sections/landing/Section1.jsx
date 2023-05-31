@@ -95,7 +95,7 @@ const Section1 = () => {
 
       {authUser?.data.isSeller === false && authUser?.data.role !== "admin" ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: "1rem" }}>
-          <Link href={"/vendor/create-seller"}>
+          <Link href={"/client/create-seller"}>
             <Button
               sx={{
                 borderRadius: "4px",

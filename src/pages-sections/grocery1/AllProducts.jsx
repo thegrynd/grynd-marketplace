@@ -24,6 +24,8 @@ const SubTitle = styled(Paragraph)(({ theme }) => ({
 const AllProducts = ({ products, mainData, title = "All Products" }) => {
   const [pageIndex, setPageIndex] = useState(0);
 
+  console.log("product", products);
+
   const [getAuthUser, setGetAuthUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
 
@@ -50,6 +52,7 @@ const AllProducts = ({ products, mainData, title = "All Products" }) => {
               description={item.description}
               isPublished={item.isPublished}
               subcategory={item.subcategory}
+              countInStock={item.countInStock}
             />
           </Grid>
         ))}

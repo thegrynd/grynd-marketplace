@@ -70,13 +70,12 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 }));
 const Header = () => {
   const { state } = useAppContext();
-  console.log("myState", state);
+  // console.log("myState", state);
 
   const router = useRouter();
 
   const [getAuthUser, setGetAuthUser, loadUser] = useContext(LoginContext);
   const { data: authUser } = getAuthUser || {};
-  // console.log("AuthUser", authUser);
 
   // user options
   const [anchorEl, setAnchorEl] = useState(null);
@@ -413,7 +412,9 @@ const Header = () => {
         </Box>
       </HeaderWrapper>
       <FlexBox justifyContent="flex-end">
-        {isHovering && <MiniCart handleMouseOut={handleMouseOut} />}
+        {isHovering && (
+          <MiniCart handleMouseOut={handleMouseOut} authUser={authUser} />
+        )}
       </FlexBox>
       {isFixed && <Box height={headerHeight} />}
     </Fragment>
