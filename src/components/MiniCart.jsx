@@ -19,10 +19,12 @@ import { currency } from "lib";
 
 // =========================================================
 
-const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
+const MiniCart = ({ toggleSidenav, handleMouseOut, authUser }) => {
   const { palette } = useTheme();
   const { state, dispatch } = useAppContext();
   const cartList = state.cart;
+  console.log("cart", cartList);
+
   const handleCartAmountChange = (amount, product) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -141,7 +143,6 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
             </FlexBox>
 
             <Link href={`/product/${item.id}`}>
-              {/* <a> */}
               <Avatar
                 alt={item.name}
                 src={item.imgUrl}
@@ -151,7 +152,6 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
                   height: 76,
                 }}
               />
-              {/* </a> */}
             </Link>
 
             <Box
@@ -162,24 +162,26 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
                 textOverflow: "ellipsis",
               }}
             >
-              <Link href={`/product/${item.slug}`}>
-                {/* <a> */}
-                <H5 ellipsis fontSize="14px" className="title">
+              <Link
+                href={
+                  authUser?.data.isSeller === true
+                    ? `/vendor/singleproduct/${item.id}`
+                    : authUser?.data.isSeller === false ||
+                      (!authUser && authUser === undefined)
+                    ? `/client/singleproduct/${item.slug}`
+                    : ""
+                }
+              >
+                <H5 ellipsis fontSize="14px" className="title" color="#066344">
                   {item.name}
                 </H5>
-                {/* </a> */}
               </Link>
 
               <Tiny color="grey.600">
                 {currency(item.price)} x {item.qty}
               </Tiny>
 
-              <Box
-                fontWeight={600}
-                fontSize="14px"
-                color="primary.main"
-                mt={0.5}
-              >
+              <Box fontWeight={600} fontSize="14px" color="#B28A3D" mt={0.5}>
                 {currency(item.qty * item.price)}
               </Box>
             </Box>
@@ -208,6 +210,9 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
                 mb: "0.75rem",
                 height: "40px",
                 backgroundColor: "#066344",
+                ":hover": {
+                  backgroundColor: "#B28A3D",
+                },
               }}
               onClick={toggleSidenav}
             >
@@ -223,8 +228,11 @@ const MiniCart = ({ toggleSidenav, handleMouseOut }) => {
               variant="outlined"
               sx={{
                 height: 40,
-                border: "#066344 1px solid",
-                color: "#066344",
+                border: "primary 1px solid",
+                color: "primary",
+                ":hover": {
+                  borderColor: "#B28A3D",
+                },
               }}
               onClick={toggleSidenav}
             >

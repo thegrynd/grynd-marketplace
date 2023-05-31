@@ -28,7 +28,6 @@ import { currency } from "lib";
 import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
-import api from "utils/__api__/orders";
 import { H3, H4, Span } from "../../../src/components/Typography";
 
 // styled components

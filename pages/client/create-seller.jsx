@@ -1,14 +1,12 @@
 import React from "react";
-import Store from "../../src/contexts/Store";
 import CreateSellerForm from "../../src/pages-sections/forms/CreateSellerForm";
+import ShopLayout1 from "components/layouts/ShopLayout1";
 
 const createSeller = () => {
   return (
-    <div>
-      <Store>
-        <CreateSellerForm />
-      </Store>
-    </div>
+    <ShopLayout1>
+      <CreateSellerForm />
+    </ShopLayout1>
   );
 };
 

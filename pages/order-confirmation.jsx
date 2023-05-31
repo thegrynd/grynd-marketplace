@@ -71,8 +71,6 @@ const OrderConfirmation = () => {
             Congratulations! <br />
           </H1>
           <H3 color="#066344">
-            {" "}
-            Here is your{" "}
             <Span color="red">
               <Link
                 href={`/client/orders/${paymentData?._id}`}
@@ -94,14 +92,14 @@ const OrderConfirmation = () => {
                     middleCircleColor=""
                   />
                 ) : (
-                  "Order Details"
+                  "View Order Details"
                 )}
               </Link>
             </Span>
           </H3>
 
           <Paragraph color="grey.800" mt="0.3rem">
-            You will receive a confirmation email.
+            Check your mail for confirmation details
           </Paragraph>
 
           <Link href="/" passHref>
@@ -110,7 +108,7 @@ const OrderConfirmation = () => {
               sx={{
                 backgroundColor: "#066344",
                 "&:hover": {
-                  backgroundColor: "#808080",
+                  backgroundColor: "#B28A3D",
                 },
               }}
               disableElevation
